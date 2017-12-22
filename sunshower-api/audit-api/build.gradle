@@ -1,0 +1,5 @@
+
+dependencies {
+    compile project(":core-api")
+    compile project(":common-api")
+}

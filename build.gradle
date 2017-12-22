@@ -1,0 +1,153 @@
+
+
+
+buildscript {
+    apply from: 'gradle/buildscript.gradle', to: buildscript
+}
+apply plugin: 'nebula-aggregate-javadocs'
+
+allprojects {
+    apply plugin: 'idea'
+    apply plugin: 'java'
+    apply plugin: 'maven-publish'
+    apply plugin: 'project-report'
+    apply plugin: 'com.bmuschko.clover'
+    apply plugin: 'io.spring.dependency-management'
+
+    clover {
+        report {
+            html = true
+        }
+    }
+
+
+    def repos = [
+            'https://mymavenrepo.com/repo/Bwb7CZ1J9Ud5KCkBvnhI',
+            'http://repo.spring.io/snapshot',
+            "http://repo.spring.io/libs-milestone",
+            "http://oss.sonatype.org/content/repositories/snapshots"
+    ]
+
+
+
+
+    task sourceJar(type: Jar, dependsOn: classes) {
+        classifier = 'sources'
+        from sourceSets.main.allSource
+    }
+
+
+    dependencies {
+        clover 'org.openclover:clover:4.2.0'
+    }
+
+    repositories {
+        mavenLocal()
+        mavenCentral()
+
+        maven {
+            url mavenRepositoryUrl
+
+            credentials {
+                username mavenRepositoryUsername
+                password mavenRepositoryPassword
+            }
+        }
+        repos.each { repo ->
+            maven { url "$repo" }
+        }
+    }
+
+    dependencyManagement {
+        imports {
+            mavenBom("io.sunshower.core:bom-imported:${version}") {
+                bomProperties([
+                        'env.version': '1.0.0.Final'
+                ])
+            }
+        }
+    }
+
+    plugins.withType(JavaPlugin) {
+
+        dependencies {
+            compile 'javax.ws.rs:javax.ws.rs-api'
+            compile 'org.eclipse.persistence:org.eclipse.persistence.moxy'
+            compile 'org.hibernate.javax.persistence:hibernate-jpa-2.1-api'
+
+
+            testCompile 'javax.mail:mail'
+            testCompile('org.mockito:mockito-core')
+            testCompile('org.junit.platform:junit-platform-launcher')
+            testCompile('org.junit.platform:junit-platform-commons')
+            testCompile('org.junit.jupiter:junit-jupiter-engine')
+            testCompile('org.junit.vintage:junit-vintage-engine')
+        }
+    }
+
+
+    publishing {
+        repositories {
+            maven {
+                url mavenRepositoryUrl
+
+                credentials {
+                    username mavenRepositoryUsername
+                    password mavenRepositoryPassword
+                }
+            }
+        }
+
+        publications {
+            maven(MavenPublication) {
+                from components.java
+
+                artifact sourceJar {
+                    classifier "sources"
+                }
+            }
+        }
+    }
+
+}
+
+
+publishing {
+    repositories {
+        maven {
+            url mavenRepositoryUrl
+
+            credentials {
+                username mavenRepositoryUsername
+                password mavenRepositoryPassword 
+            }
+        }
+    }
+
+    publications {
+        maven(MavenPublication) {
+            artifact archiveReports {
+                classifier 'reports'
+            }
+        }
+    }
+}
+
+task archiveReports(type: Zip) {
+    from "$buildDir/docs"
+    include "/**/*"
+
+    from "$buildDir/reports/clover"
+
+    archiveName 'reports.zip'
+}
+
+assemble.dependsOn cloverAggregateReports
+assemble.dependsOn 'aggregateJavadocs'
+
+assemble.dependsOn archiveReports
+archiveReports.mustRunAfter cloverAggregateReports
+archiveReports.mustRunAfter 'aggregateJavadocs'
+
+
+defaultTasks 'clean', 'build', 'cloverAggregateReports', 'aggregateJavadocs'

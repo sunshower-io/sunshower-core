@@ -1,0 +1,12 @@
+include(
+        'sunshower-schemata',
+        'sunshower-schemata:schemata',
+        'sunshower-api:common-api',
+        'sunshower-api:core-api',
+        'sunshower-api:security-api'
+)
+
+
+
+
+

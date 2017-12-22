@@ -1,0 +1,18 @@
+dependencies {
+
+    compile 'com.zaxxer:HikariCP'
+
+    compile "io.sunshower.common:core"
+    compile "io.sunshower.common:annotations"
+    compile 'io.sunshower.persist:persist-api'
+    compile 'org.springframework.security:spring-security-core'
+    compile 'org.hibernate.validator:hibernate-validator'
+    
+    
+    testCompile 'io.sunshower.test:test-persist'
+    testCompile 'org.hibernate:hibernate-search-orm'
+    testCompile 'io.sunshower.persist:persist-hibernate'
+
+    compile project(':sunshower-api:common-api')
+    compile project(":sunshower-schemata:schemata")
+}

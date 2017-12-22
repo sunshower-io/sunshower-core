@@ -1,0 +1,5 @@
+dependencies {
+    compile project(":sunshower-api:core-api")
+    compile project(":sunshower-api:audit-api")
+    compile project(":sunshower-api:security-api")
+}
