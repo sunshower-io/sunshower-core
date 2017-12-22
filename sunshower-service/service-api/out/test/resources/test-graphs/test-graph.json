@@ -1,0 +1,61 @@
+{
+  "id": "9f2264aa-26aa-4c4d-99af-6894be2d0ebb",
+  "edges": [
+    {
+      "id": "5fc08f95-96f8-43bb-8452-697fcad10d37",
+      "node-id": "CpnZajH7ETgTRdF4RSAqHY",
+      "ref": "io.sunshower.service.hal.core.TestElement",
+      "layout": {
+        "x": 235.0,
+        "y": 235.0,
+        "width": 100.0,
+        "height": 100.0
+      },
+      "properties": {
+        "properties": {
+          "cool": "beans"
+        }
+      },
+      "target": "3vS4VjFf3bBXLyhz9vv8rC",
+      "source": "M29VEihpXifS5rSoXWDX42"
+    }
+  ],
+  "vertices": [
+    {
+      "id": "a21fbf46-745d-4aab-9f35-f1b15be56b57",
+      "node-id": "M29VEihpXifS5rSoXWDX42",
+      "ref": "io.sunshower.service.hal.core.TestElement",
+      "layout": {
+        "x": 99.0,
+        "y": 99.0,
+        "width": 10.0,
+        "height": 45.0
+      },
+      "content": {
+        "type": "reference",
+        "ref": "frapper"
+      },
+      "properties": {
+        "properties": {
+          "label": "fst"
+        }
+      }
+    },
+    {
+      "id": "17a8241c-ee8d-4806-9786-de60c5bfc8f9",
+      "node-id": "3vS4VjFf3bBXLyhz9vv8rC",
+      "ref": "io.sunshower.service.hal.core.TestElement",
+      "layout": {
+        "x": 99.0,
+        "y": 99.0,
+        "width": 10.0,
+        "height": 45.0
+      },
+      "properties": {
+        "properties": {
+          "label": "snd"
+        }
+      }
+    }
+  ]
+}

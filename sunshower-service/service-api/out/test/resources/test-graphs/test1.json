@@ -1,0 +1,202 @@
+{
+  "id": "29ab6c77-388f-471a-9a96-11c6d88c801e",
+  "edges": [
+    {
+      "id": "b1d3bb82-3c72-44c0-84fd-2c77ac2202bc",
+      "ref": "io.sunshower.service.hal.core.TestElement",
+      "layout": {
+        "x": 235.0,
+        "y": 235.0,
+        "width": 100.0,
+        "height": 100.0
+      },
+      "properties": {
+        "properties": {
+          "cool": "beans"
+        }
+      },
+      "source": {
+        "id": "81a08b29-2df3-42ca-a96e-e625672afbb8",
+        "ref": "io.sunshower.service.hal.core.TestElement",
+        "layout": {
+          "x": 99.0,
+          "y": 99.0,
+          "width": 10.0,
+          "height": 45.0
+        },
+        "properties": {
+          "properties": {
+            "label": "third"
+          }
+        }
+      },
+      "target": {
+        "id": "845a0b31-8b7b-4373-b4b9-af471bbe4839",
+        "ref": "io.sunshower.service.hal.core.TestElement",
+        "layout": {
+          "x": 99.0,
+          "y": 99.0,
+          "width": 10.0,
+          "height": 45.0
+        },
+        "properties": {
+          "properties": {
+            "label": "fourth"
+          }
+        }
+      }
+    },
+    {
+      "id": "fdd5fb16-18f7-4186-9304-52c23d0829f2",
+      "ref": "io.sunshower.service.hal.core.TestElement",
+      "layout": {
+        "x": 235.0,
+        "y": 235.0,
+        "width": 100.0,
+        "height": 100.0
+      },
+      "properties": {
+        "properties": {
+          "cool": "beans"
+        }
+      },
+      "source": {
+        "id": "90fc5694-2cf7-4b7a-a274-df3a43434eac",
+        "ref": "io.sunshower.service.hal.core.TestElement",
+        "layout": {
+          "x": 99.0,
+          "y": 99.0,
+          "width": 10.0,
+          "height": 45.0
+        },
+        "properties": {
+          "properties": {
+            "label": "fst"
+          }
+        }
+      },
+      "target": {
+        "id": "845a0b31-8b7b-4373-b4b9-af471bbe4839",
+        "ref": "io.sunshower.service.hal.core.TestElement",
+        "layout": {
+          "x": 99.0,
+          "y": 99.0,
+          "width": 10.0,
+          "height": 45.0
+        },
+        "properties": {
+          "properties": {
+            "label": "fourth"
+          }
+        }
+      }
+    },
+    {
+      "id": "e68c8444-364b-4e9b-9aeb-cfbe60026821",
+      "ref": "io.sunshower.service.hal.core.TestElement",
+      "layout": {
+        "x": 235.0,
+        "y": 235.0,
+        "width": 100.0,
+        "height": 100.0
+      },
+      "properties": {
+        "properties": {
+          "cool": "beans"
+        }
+      },
+      "source": {
+        "id": "90fc5694-2cf7-4b7a-a274-df3a43434eac",
+        "ref": "io.sunshower.service.hal.core.TestElement",
+        "layout": {
+          "x": 99.0,
+          "y": 99.0,
+          "width": 10.0,
+          "height": 45.0
+        },
+        "properties": {
+          "properties": {
+            "label": "fst"
+          }
+        }
+      },
+      "target": {
+        "id": "1e3c47a6-620a-402b-9b42-20aa3284a948",
+        "ref": "io.sunshower.service.hal.core.TestElement",
+        "layout": {
+          "x": 99.0,
+          "y": 99.0,
+          "width": 10.0,
+          "height": 45.0
+        },
+        "properties": {
+          "properties": {
+            "label": "snd"
+          }
+        }
+      }
+    }
+  ],
+  "vertices": [
+    {
+      "id": "90fc5694-2cf7-4b7a-a274-df3a43434eac",
+      "ref": "io.sunshower.service.hal.core.TestElement",
+      "layout": {
+        "x": 99.0,
+        "y": 99.0,
+        "width": 10.0,
+        "height": 45.0
+      },
+      "properties": {
+        "properties": {
+          "label": "fst"
+        }
+      }
+    },
+    {
+      "id": "81a08b29-2df3-42ca-a96e-e625672afbb8",
+      "ref": "io.sunshower.service.hal.core.TestElement",
+      "layout": {
+        "x": 99.0,
+        "y": 99.0,
+        "width": 10.0,
+        "height": 45.0
+      },
+      "properties": {
+        "properties": {
+          "label": "third"
+        }
+      }
+    },
+    {
+      "id": "845a0b31-8b7b-4373-b4b9-af471bbe4839",
+      "ref": "io.sunshower.service.hal.core.TestElement",
+      "layout": {
+        "x": 99.0,
+        "y": 99.0,
+        "width": 10.0,
+        "height": 45.0
+      },
+      "properties": {
+        "properties": {
+          "label": "fourth"
+        }
+      }
+    },
+    {
+      "id": "1e3c47a6-620a-402b-9b42-20aa3284a948",
+      "ref": "io.sunshower.service.hal.core.TestElement",
+      "layout": {
+        "x": 99.0,
+        "y": 99.0,
+        "width": 10.0,
+        "height": 45.0
+      },
+      "properties": {
+        "properties": {
+          "label": "snd"
+        }
+      }
+    }
+  ]
+}
