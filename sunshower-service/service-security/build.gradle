@@ -17,10 +17,8 @@ dependencies {
     compile 'org.springframework.security:spring-security-config'
     compile 'javax.servlet:javax.servlet-api'
     testCompile 'com.fasterxml.jackson.core:jackson-databind'
-    
 
     testCompile 'net.bytebuddy:byte-buddy:1.7.5'
     testCompile "io.sunshower.test:test-persist"
-    testCompile('io.sunshower.barometer.modules:jaxrs')
 
 }
