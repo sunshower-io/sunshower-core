@@ -1,0 +1,215 @@
+{
+  "type": "io.sunshower.service.hal.core.Graph",
+  "edges": [
+    {
+      "id": "2Pjc3zVAUujEkStrxCRQEk",
+      "type": "io.sunshower.service.hal.core.TestElement",
+      "ref": "io.sunshower.service.hal.core.TestElement",
+      "layout": {
+        "x": 235.0,
+        "y": 235.0,
+        "width": 100.0,
+        "height": 100.0
+      },
+      "properties": {
+        "properties": {
+          "cool": "beans"
+        }
+      },
+      "source": {
+        "id": "F1YjKexEwke5uQ6nhs1SZr",
+        "ref": "io.sunshower.service.hal.core.TestElement",
+        "type": "io.sunshower.service.hal.core.TestElement",
+        "layout": {
+          "x": 99.0,
+          "y": 99.0,
+          "width": 10.0,
+          "height": 45.0
+        },
+        "properties": {
+          "properties": {
+            "label": "fst"
+          }
+        }
+      },
+      "target": {
+        "id": "JWQ7xE3v929Jod7dKX2nPU",
+        "ref": "io.sunshower.service.hal.core.TestElement",
+        "type": "io.sunshower.service.hal.core.TestElement",
+        "layout": {
+          "x": 99.0,
+          "y": 99.0,
+          "width": 10.0,
+          "height": 45.0
+        },
+        "properties": {
+          "properties": {
+            "label": "snd"
+          }
+        }
+      }
+    },
+    {
+      "id": "DbdtKxDq5ouLvncM1ABUGY",
+      "ref": "io.sunshower.service.hal.core.TestElement",
+      "type": "io.sunshower.service.hal.core.TestElement",
+      "layout": {
+        "x": 235.0,
+        "y": 235.0,
+        "width": 100.0,
+        "height": 100.0
+      },
+      "properties": {
+        "properties": {
+          "cool": "beans"
+        }
+      },
+      "source": {
+        "id": "K26VSksSEYTbTfVHbYcFf8",
+        "ref": "io.sunshower.service.hal.core.TestElement",
+        "type": "io.sunshower.service.hal.core.TestElement",
+        "layout": {
+          "x": 99.0,
+          "y": 99.0,
+          "width": 10.0,
+          "height": 45.0
+        },
+        "properties": {
+          "properties": {
+            "label": "fst"
+          }
+        }
+      },
+      "target": {
+        "id": "8bq7ZsG5Rq3bsLUuadweBZ",
+        "ref": "io.sunshower.service.hal.core.TestElement",
+        "type": "io.sunshower.service.hal.core.Edge",
+        "layout": {
+          "x": 99.0,
+          "y": 99.0,
+          "width": 10.0,
+          "height": 45.0
+        },
+        "properties": {
+          "properties": {
+            "label": "fourth"
+          }
+        }
+      }
+    },
+    {
+      "id": "K1PR6BqQRSLGyXsA89iyv6",
+      "ref": "io.sunshower.service.hal.core.TestElement",
+      "type": "io.sunshower.service.hal.core.Edge",
+      "layout": {
+        "x": 235.0,
+        "y": 235.0,
+        "width": 100.0,
+        "height": 100.0
+      },
+      "properties": {
+        "properties": {
+          "cool": "beans"
+        }
+      },
+      "source": {
+        "id": "J9YNv99FHoq8YaFpipKuzb",
+        "ref": "io.sunshower.service.hal.core.TestElement",
+        "type": "io.sunshower.service.hal.core.Edge",
+        "layout": {
+          "x": 99.0,
+          "y": 99.0,
+          "width": 10.0,
+          "height": 45.0
+        },
+        "properties": {
+          "properties": {
+            "label": "third"
+          }
+        }
+      },
+      "target": {
+        "id": "XACFXWzufpAvkCvnDGfktc",
+        "ref": "io.sunshower.service.hal.core.TestElement",
+        "type": "io.sunshower.service.hal.core.Edge",
+        "layout": {
+          "x": 99.0,
+          "y": 99.0,
+          "width": 10.0,
+          "height": 45.0
+        },
+        "properties": {
+          "properties": {
+            "label": "fourth"
+          }
+        }
+      }
+    }
+  ],
+  "vertices": [
+    {
+      "id": "HxafZGVbzmHspq9sHpMbTY",
+      "ref": "io.sunshower.service.hal.core.TestElement",
+      "type": "io.sunshower.service.hal.core.Vertex",
+      "layout": {
+        "x": 99.0,
+        "y": 99.0,
+        "width": 10.0,
+        "height": 45.0
+      },
+      "properties": {
+        "properties": {
+          "label": "fst"
+        }
+      }
+    },
+    {
+      "id": "Q7tdgz7NB3Z42FjgcdCgGc",
+      "ref": "io.sunshower.service.hal.core.TestElement",
+      "type": "io.sunshower.service.hal.core.Vertex",
+      "layout": {
+        "x": 99.0,
+        "y": 99.0,
+        "width": 10.0,
+        "height": 45.0
+      },
+      "properties": {
+        "properties": {
+          "label": "third"
+        }
+      }
+    },
+    {
+      "id": "QoWW1cxwwSnkihCDgbEG2M",
+      "type": "io.sunshower.service.hal.core.Vertex",
+      "ref": "io.sunshower.service.hal.core.TestElement",
+      "layout": {
+        "x": 99.0,
+        "y": 99.0,
+        "width": 10.0,
+        "height": 45.0
+      },
+      "properties": {
+        "properties": {
+          "label": "snd"
+        }
+      }
+    },
+    {
+      "id": "9kZMUFMwySm5NhZvkKoosK",
+      "type": "io.sunshower.service.hal.core.Vertex",
+      "ref": "io.sunshower.service.hal.core.TestElement",
+      "layout": {
+        "x": 99.0,
+        "y": 99.0,
+        "width": 10.0,
+        "height": 45.0
+      },
+      "properties": {
+        "properties": {
+          "label": "fourth"
+        }
+      }
+    }
+  ]
+}

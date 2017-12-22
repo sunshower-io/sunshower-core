@@ -4,7 +4,6 @@ import io.sunshower.barometer.jaxrs.SerializationAware;
 import io.sunshower.barometer.jaxrs.SerializationTestCase;
 import io.sunshower.vault.api.Secret;
 import io.sunshower.vault.api.SecretMetadata;
-import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;

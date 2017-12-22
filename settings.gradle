@@ -3,7 +3,11 @@ include(
         'sunshower-schemata:schemata',
         'sunshower-api:common-api',
         'sunshower-api:core-api',
-        'sunshower-api:security-api'
+        'sunshower-api:security-api',
+	'sunshower-service:service-api',
+	'sunshower-service:service-common',
+	'sunshower-service:service-core',
+	'sunshower-service:service-security'
 )
 
 

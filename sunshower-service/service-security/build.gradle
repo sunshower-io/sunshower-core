@@ -1,0 +1,26 @@
+apply plugin: 'java'
+dependencies {
+    compile 'com.zaxxer:HikariCP'
+
+    compile project(':sunshower-service:service-api')
+    compile project(":sunshower-api:core-api")
+    compile project(":sunshower-api:security-api")
+    
+    compile 'io.sunshower.persist:persist-ignite'
+    compile 'io.sunshower.persist:persist-hibernate'
+
+    compile "org.jasypt:jasypt"
+    compile 'org.springframework:spring-web'
+    compile 'org.springframework.security:spring-security-core'
+    compile 'org.springframework.security:spring-security-acl'
+    compile 'org.springframework.security:spring-security-web'
+    compile 'org.springframework.security:spring-security-config'
+    compile 'javax.servlet:javax.servlet-api'
+    testCompile 'com.fasterxml.jackson.core:jackson-databind'
+    
+
+    testCompile 'net.bytebuddy:byte-buddy:1.7.5'
+    testCompile "io.sunshower.test:test-persist"
+    testCompile('io.sunshower.barometer.modules:jaxrs')
+
+}

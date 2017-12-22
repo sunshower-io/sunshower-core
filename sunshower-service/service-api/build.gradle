@@ -1,0 +1,12 @@
+dependencies {
+    compile project(':sunshower-api:core-api')
+    compile project(':sunshower-service:service-common')
+
+    testCompile 'io.sunshower.test:test-persist'
+    compile 'org.springframework:spring-core'
+
+    compile 'org.hibernate:hibernate-search-orm'
+    compile 'org.springframework:spring-websocket'
+    compile 'io.sunshower.common:core'
+    compile 'io.reactivex.rxjava2:rxjava'
+}

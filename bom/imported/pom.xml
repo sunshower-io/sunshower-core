@@ -28,6 +28,12 @@
             <artifactId>test-persist</artifactId>
             <version>${sunshower-base.version}</version>
           </dependency>
+
+          <dependency>
+            <groupId>io.sunshower.persist</groupId>
+            <artifactId>persist-ignite</artifactId>
+            <version>${sunshower-base.version}</version>
+          </dependency>
           <dependency>
             <groupId>io.sunshower.persist</groupId>
             <artifactId>persist-hibernate</artifactId>

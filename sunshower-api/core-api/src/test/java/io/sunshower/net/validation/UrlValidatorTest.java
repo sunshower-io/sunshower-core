@@ -1,8 +1,10 @@
 package io.sunshower.net.validation;
 
 import org.jetbrains.annotations.NotNull;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.platform.runner.JUnitPlatform;
+import org.junit.runner.RunWith;
 
 import java.util.*;
 
@@ -12,6 +14,7 @@ import static org.junit.Assert.*;
 /**
  * Created by haswell on 5/22/17.
  */
+@RunWith(JUnitPlatform.class)
 public class UrlValidatorTest {
 
     private UrlValidator urlValidator;
@@ -26,8 +29,6 @@ public class UrlValidatorTest {
     }
 
 
-//    Anne, Lisa, Joe, Peter, Lily, Frapper
-//    [10, 15, 75, 25, 90, 10]
 
     @Test
     public void checkGoogler() {
@@ -48,7 +49,7 @@ public class UrlValidatorTest {
 
     }
 
-    @Before
+    @BeforeEach
     public void setUp() {
         urlValidator = new UrlValidator();
     }

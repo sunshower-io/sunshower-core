@@ -18,6 +18,11 @@ allprojects {
         report {
             html = true
         }
+        
+        compiler {
+            debug = true
+            additionalArgs = '-parameters'
+        }
     }
 
 
