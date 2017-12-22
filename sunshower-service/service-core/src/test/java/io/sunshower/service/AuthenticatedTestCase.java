@@ -35,8 +35,6 @@ import javax.persistence.PersistenceContext;
         mergeMode = TestExecutionListeners.MergeMode.MERGE_WITH_DEFAULTS
 )
 @ContextConfiguration(classes = SecurityConfiguration.class)
-
-
 public abstract class AuthenticatedTestCase extends ServiceTestCase {
 
 

@@ -11,7 +11,9 @@ import io.sunshower.persist.hibernate.HibernateConfiguration;
 import io.sunshower.service.security.SecurityConfiguration;
 import io.sunshower.service.signup.RegistrationRequest;
 import io.sunshower.service.signup.SignupService;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -19,7 +21,7 @@ import org.springframework.security.test.context.support.WithSecurityContextTest
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
@@ -34,12 +36,14 @@ import javax.persistence.PersistenceContext;
 
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * Created by haswell on 10/22/16.
  */
 @SpringBootTest
-@RunWith(SpringRunner.class)
+@RunWith(JUnitPlatform.class)
+@ExtendWith(SpringExtension.class)
 @ContextConfiguration(
         classes = {
                 SecurityConfiguration.class,
@@ -113,7 +117,7 @@ public class AuthenticationTest {
         try {
             authenticationService.authenticate(user2);
             fail("Should have failed with inactive user");
-        } catch(InvalidCredentialException ex) {
+        } catch (InvalidCredentialException ex) {
 
         }
         service.approve(singleResult.getRequestId());
@@ -122,20 +126,21 @@ public class AuthenticationTest {
         assertThat(token, is(not(nullValue())));
     }
 
+    @Test
     @Rollback
-    @Test(expected = InvalidCredentialException.class)
     public void ensureAuthenticatingWithBadPasswordFails() {
-
-        final User user = new User();
-        user.setUsername("Josiah3");
-        user.setPassword("password1");
-        user.getDetails().setEmailAddress("josiah@whatever");
-        service.signup(user);
-        User fake = new User();
-        fake.setUsername("Josiah3");
-        fake.setPassword("password");
-        user.getDetails().setEmailAddress("josiah@whatever2");
-        authenticationService.authenticate(fake);
+        assertThrows(InvalidCredentialException.class, () -> {
+            final User user = new User();
+            user.setUsername("Josiah3");
+            user.setPassword("password1");
+            user.getDetails().setEmailAddress("josiah@whatever");
+            service.signup(user);
+            User fake = new User();
+            fake.setUsername("Josiah3");
+            fake.setPassword("password");
+            user.getDetails().setEmailAddress("josiah@whatever2");
+            authenticationService.authenticate(fake);
+        });
     }
 
 
@@ -148,9 +153,9 @@ public class AuthenticationTest {
         user.setPassword("password1");
         final User signedup = service.signup(user).getUser();
 
-        long t1 = System.currentTimeMillis();
+        long   t1    = System.currentTimeMillis();
         String token = encryptionService.createToken(signedup);
-        User found = encryptionService.findByToken(token);
+        User   found = encryptionService.findByToken(token);
         assertThat(found, is(not(nullValue())));
         long t2 = System.currentTimeMillis();
 

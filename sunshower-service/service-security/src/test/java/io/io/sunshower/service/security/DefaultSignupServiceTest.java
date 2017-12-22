@@ -12,15 +12,20 @@ import io.sunshower.security.api.SecurityPersistenceConfiguration;
 import io.sunshower.service.security.SecurityConfiguration;
 import io.sunshower.service.signup.RegistrationRequest;
 import io.sunshower.service.signup.SignupService;
-import org.junit.Test;
+import io.sunshower.test.persist.AuthenticationTestExecutionListener;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.context.support.WithSecurityContextTestExecutionListener;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.TestExecutionListeners;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
 
@@ -28,18 +33,15 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
-import javax.validation.ConstraintViolationException;
 
 import java.util.List;
 import java.util.UUID;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-/**
- * Created by haswell on 11/17/16.
- */
-@RunWith(SpringRunner.class)
+@RunWith(JUnitPlatform.class)
 @ContextConfiguration(
         classes = {
                 SecurityConfiguration.class,
@@ -51,8 +53,16 @@ import static org.junit.Assert.*;
                 TestSecurityConfiguration.class,
         })
 @Rollback
+@ExtendWith(SpringExtension.class)
 @Transactional
 @SpringBootTest
+@TestExecutionListeners(
+        listeners = {
+                AuthenticationTestExecutionListener.class,
+                WithSecurityContextTestExecutionListener.class
+        },
+        mergeMode = TestExecutionListeners.MergeMode.MERGE_WITH_DEFAULTS
+)
 public class DefaultSignupServiceTest {
 
     @PersistenceContext
@@ -67,29 +77,37 @@ public class DefaultSignupServiceTest {
         assertThat(localService, is(not(nullValue())));
     }
 
-    @Test(expected = AuthenticationCredentialsNotFoundException.class)
+    @Test
     public void ensureRevokeIsInaccessibleForUnauthenticatedUser() {
-        localService.revoke(Identifier.random());
+        assertThrows(AuthenticationCredentialsNotFoundException.class, () -> {
+            localService.revoke(Identifier.random());
+        });
     }
 
-    @Test(expected = AuthenticationCredentialsNotFoundException.class)
+    @Test
     public void ensureApproveIsInaccessibleForUnauthenticatedUser() {
-        localService.approve(Hashes.create(Multihash.Type.SHA_2_256).hash(UUID.randomUUID()));
+        assertThrows(AuthenticationCredentialsNotFoundException.class, () -> {
+            localService.approve(Hashes.create(Multihash.Type.SHA_2_256).hash(UUID.randomUUID()));
+        });
     }
 
-    @Test(expected = AccessDeniedException.class)
+    @Test
     @WithMockUser(
             username = "frap",
             password = "cool",
             authorities = "russian:hacker"
     )
     public void ensureApproveIsInaccessibleForUserWithoutAdminRole() {
-        localService.approve(Hashes.create(Multihash.Type.SHA_2_256).hash(UUID.randomUUID()));
+        assertThrows(AccessDeniedException.class, () -> {
+            localService.approve(Hashes.create(Multihash.Type.SHA_2_256).hash(UUID.randomUUID()));
+        });
     }
 
-    @Test(expected = AuthenticationCredentialsNotFoundException.class)
+    @Test
     public void ensurePendingRegistrationsAreInaccessibleForUserWithoutAdminRole() {
-        localService.pendingRegistrations();
+        assertThrows(AuthenticationCredentialsNotFoundException.class, () -> {
+            localService.pendingRegistrations();
+        });
     }
 
 
@@ -127,7 +145,7 @@ public class DefaultSignupServiceTest {
         user.setPassword("frap");
         user.getDetails().setEmailAddress("frapadap@gmail.com");
         RegistrationRequest request = localService.signup(user);
-        User u = request.getUser();
+        User                u       = request.getUser();
         assertThat(u.isEnabled(), is(false));
         List<RegistrationRequest> registrationRequests =
                 localService.pendingRegistrations();
@@ -144,13 +162,13 @@ public class DefaultSignupServiceTest {
             authorities = "admin"
     )
     public void ensureApprovingRegistrationApprovesTheCorrectUserWhenMultipleOptionsAreAvailable() {
-        final User fst = create();
-        final User snd = create();
+        final User fst   = create();
+        final User snd   = create();
         final User third = create();
 
 
-        RegistrationRequest fstr = localService.signup(fst);
-        RegistrationRequest sndr = localService.signup(snd);
+        RegistrationRequest fstr   = localService.signup(fst);
+        RegistrationRequest sndr   = localService.signup(snd);
         RegistrationRequest thirdr = localService.signup(third);
 
 
@@ -171,7 +189,7 @@ public class DefaultSignupServiceTest {
     )
     public void ensureRevokingUserSetsUserActiveToFalse() {
 
-        final User fst = create();
+        final User          fst    = create();
         RegistrationRequest signup = localService.signup(fst);
         localService.approve(signup.getRequestId());
         localService.revoke(fst.getId());
@@ -193,7 +211,7 @@ public class DefaultSignupServiceTest {
         user.setPassword("frap");
         user.getDetails().setEmailAddress("fraadfafpadap@gmail.com");
         RegistrationRequest request = localService.signup(user);
-        User u = request.getUser();
+        User                u       = request.getUser();
         List<RegistrationRequest> registrationRequests =
                 localService.pendingRegistrations();
         assertThat(registrationRequests.isEmpty(), is(false));
@@ -206,20 +224,22 @@ public class DefaultSignupServiceTest {
     }
 
 
-    @Test(expected = PersistenceException.class)
+    @Test
     public void ensureAttemptingToSignUpSameUsernameResultsInFailure() {
-        final User user = new User();
-        user.setUsername("duplicate");
-        user.setPassword("password");
-        user.getDetails().setEmailAddress("unique@gmail.com");
+        assertThrows(PersistenceException.class, () -> {
+            final User user = new User();
+            user.setUsername("duplicate");
+            user.setPassword("password");
+            user.getDetails().setEmailAddress("unique@gmail.com");
 
-        final User snd = new User();
-        snd.setUsername("duplicate");
-        snd.setPassword("password");
-        user.getDetails().setEmailAddress("unique2@gmail.com");
+            final User snd = new User();
+            snd.setUsername("duplicate");
+            snd.setPassword("password");
+            user.getDetails().setEmailAddress("unique2@gmail.com");
 
-        localService.signup(user);
-        localService.signup(snd);
+            localService.signup(user);
+            localService.signup(snd);
+        });
     }
 
     final User create() {

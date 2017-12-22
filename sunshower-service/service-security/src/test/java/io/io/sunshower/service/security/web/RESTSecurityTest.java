@@ -12,27 +12,26 @@ import io.sunshower.security.api.SecurityPersistenceConfiguration;
 import io.sunshower.service.security.SecurityConfiguration;
 import io.sunshower.service.signup.SignupService;
 import io.io.sunshower.service.security.TestSecurityConfiguration;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 import java.util.List;
+import java.util.logging.Logger;
+
 import static org.junit.Assert.fail;
 
-/**
- * Created by haswell on 10/21/16.
- */
-
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
+@RunWith(JUnitPlatform.class)
 @ContextConfiguration(
         classes = {
                 FlywayConfiguration.class,
@@ -49,7 +48,7 @@ import static org.junit.Assert.fail;
 public class RESTSecurityTest {
 
 
-    static Logger logger = LogManager.getLogger(RESTSecurityTest.class);
+    static Logger logger = Logger.getLogger(RESTSecurityTest.class.getName());
 
 
 
