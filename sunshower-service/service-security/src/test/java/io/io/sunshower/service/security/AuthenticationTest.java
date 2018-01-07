@@ -9,13 +9,13 @@ import io.sunshower.model.core.auth.User;
 import io.sunshower.persist.core.DataSourceConfiguration;
 import io.sunshower.persist.hibernate.HibernateConfiguration;
 import io.sunshower.service.security.SecurityConfiguration;
+import io.sunshower.service.security.SecurityTest;
 import io.sunshower.service.signup.RegistrationRequest;
 import io.sunshower.service.signup.SignupService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.context.support.WithSecurityContextTestExecutionListener;
 import org.springframework.test.annotation.Rollback;
@@ -38,30 +38,7 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-/**
- * Created by haswell on 10/22/16.
- */
-@SpringBootTest
-@RunWith(JUnitPlatform.class)
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(
-        classes = {
-                SecurityConfiguration.class,
-                HibernateConfiguration.class,
-                FlywayConfiguration.class,
-                DataSourceConfiguration.class,
-                TestSecurityConfiguration.class,
-        })
-@TestExecutionListeners(listeners = {
-        ServletTestExecutionListener.class,
-        TransactionalTestExecutionListener.class,
-        DirtiesContextTestExecutionListener.class,
-        DependencyInjectionTestExecutionListener.class,
-        WithSecurityContextTestExecutionListener.class
-})
-@Rollback
-@Transactional
-public class AuthenticationTest {
+class AuthenticationTest extends SecurityTest {
 
 
     @Inject

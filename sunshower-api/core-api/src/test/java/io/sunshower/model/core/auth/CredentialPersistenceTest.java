@@ -9,9 +9,6 @@ import javax.persistence.PersistenceContext;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
-/**
- * Created by haswell on 5/22/17.
- */
 public class CredentialPersistenceTest extends PersistenceTest {
 
     @PersistenceContext

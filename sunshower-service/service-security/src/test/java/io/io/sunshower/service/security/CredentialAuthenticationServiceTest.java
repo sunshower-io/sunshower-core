@@ -4,16 +4,11 @@ import io.sunshower.common.Identifier;
 import io.sunshower.core.security.CredentialService;
 import io.sunshower.core.security.RoleService;
 import io.sunshower.core.security.crypto.EncryptionService;
-import io.sunshower.jpa.flyway.FlywayConfiguration;
-import io.sunshower.model.core.PersistenceConfiguration;
 import io.sunshower.model.core.auth.Role;
 import io.sunshower.model.core.auth.User;
-import io.sunshower.persist.core.DataSourceConfiguration;
-import io.sunshower.persist.hibernate.HibernateConfiguration;
-import io.sunshower.service.security.SecurityConfiguration;
+import io.sunshower.service.security.SecurityTest;
 import io.sunshower.service.security.TokenAuthenticationFilter;
 import io.sunshower.service.security.crypto.MessageAuthenticationCode;
-import io.sunshower.test.persist.AuthenticationTestExecutionListener;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -21,21 +16,12 @@ import javax.persistence.PersistenceContext;
 import javax.ws.rs.container.ContainerRequestContext;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 
 import org.mockito.Mockito;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.security.test.context.support.WithSecurityContextTestExecutionListener;
-import org.springframework.test.annotation.Rollback;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestExecutionListeners;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
 
@@ -45,28 +31,7 @@ import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
 import static org.mockito.BDDMockito.given;
 
-@ExtendWith(SpringExtension.class)
-@RunWith(JUnitPlatform.class)
-@ContextConfiguration(
-        classes = {
-                SecurityConfiguration.class,
-                HibernateConfiguration.class,
-                DataSourceConfiguration.class,
-                FlywayConfiguration.class,
-                PersistenceConfiguration.class,
-                TestSecurityConfiguration.class
-        })
-@Rollback
-@SpringBootTest
-@Transactional
-@TestExecutionListeners(
-        listeners = {
-                AuthenticationTestExecutionListener.class,
-                WithSecurityContextTestExecutionListener.class
-        },
-        mergeMode = TestExecutionListeners.MergeMode.MERGE_WITH_DEFAULTS
-)
-public class CredentialAuthenticationServiceTest {
+public class CredentialAuthenticationServiceTest extends SecurityTest {
 
     @Inject
     private CredentialService credentialService;

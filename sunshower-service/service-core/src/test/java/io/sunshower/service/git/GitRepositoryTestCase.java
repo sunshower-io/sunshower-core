@@ -1,6 +1,6 @@
 package io.sunshower.service.git;
 
-import io.sunshower.common.io.Files;
+import io.sunshower.io.Files;
 import io.sunshower.model.core.auth.User;
 import io.sunshower.service.model.io.FileResolutionStrategy;
 import io.sunshower.service.revision.model.Local;
@@ -19,9 +19,6 @@ import java.io.InputStream;
 import java.nio.file.Paths;
 import java.util.UUID;
 
-/**
- * Created by haswell on 5/24/17.
- */
 @RunWith(JUnitPlatform.class)
 public class GitRepositoryTestCase extends SerializationTestCase {
     protected File root;

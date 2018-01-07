@@ -7,6 +7,7 @@ import io.sunshower.service.model.io.FileResolutionStrategy;
 import io.sunshower.service.security.Session;
 import io.sunshower.service.serialization.DynamicJaxrsProviders;
 import io.sunshower.service.serialization.DynamicResolvingMoxyJsonProvider;
+import io.sunshower.test.common.TestConfigurations;
 import org.eclipse.persistence.jaxb.rs.MOXyJsonProvider;
 import org.springframework.context.annotation.*;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -17,9 +18,6 @@ import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ForkJoinPool;
 
-/**
- * Created by haswell on 2/17/17.
- */
 @EnableGlobalMethodSecurity(
         prePostEnabled = true,
         jsr250Enabled = true
@@ -28,7 +26,12 @@ import java.util.concurrent.ForkJoinPool;
 @CacheMode(CacheMode.Mode.Local)
 @EnableAspectJAutoProxy(proxyTargetClass = true)
 public class TestConfiguration {
-    
+
+    @Primary
+    @Bean(name = TestConfigurations.TEST_CONFIGURATION_REPOSITORY_PATH)
+    public String location() {
+        return "/sunshower-api/core-api/src/test/resources";
+    }
 
     @Bean
     @Primary

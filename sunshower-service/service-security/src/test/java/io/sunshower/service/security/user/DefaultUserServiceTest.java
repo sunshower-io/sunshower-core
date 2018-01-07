@@ -2,26 +2,13 @@ package io.sunshower.service.security.user;
 
 import io.sunshower.common.Identifier;
 import io.sunshower.core.security.UserService;
-import io.sunshower.jpa.flyway.FlywayConfiguration;
-import io.sunshower.model.core.PersistenceConfiguration;
 import io.sunshower.model.core.auth.Role;
 import io.sunshower.model.core.auth.User;
-import io.sunshower.persist.core.DataSourceConfiguration;
-import io.sunshower.persist.hibernate.HibernateConfiguration;
 import io.sunshower.persistence.Dialect;
-import io.sunshower.service.security.SecurityConfiguration;
-import io.io.sunshower.service.security.TestSecurityConfiguration;
-import io.sunshower.test.persist.AuthenticationTestExecutionListener;
+import io.sunshower.service.security.SecurityTest;
 import io.sunshower.test.persist.Principal;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.junit.jupiter.api.Test;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.annotation.Rollback;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestExecutionListeners;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
@@ -35,28 +22,7 @@ import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
-
-/**
- * Created by haswell on 10/18/16.
- */
-@Rollback
-@Transactional(isolation =  Isolation.REPEATABLE_READ)
-@ContextConfiguration(classes = {
-        HibernateConfiguration.class,
-        SecurityConfiguration.class,
-        FlywayConfiguration.class,
-        DataSourceConfiguration.class,
-        PersistenceConfiguration.class,
-        TestSecurityConfiguration.class
-})
-@TestExecutionListeners(
-        listeners =
-                AuthenticationTestExecutionListener.class,
-        mergeMode = TestExecutionListeners.MergeMode.MERGE_WITH_DEFAULTS
-)
-@SpringBootTest
-@RunWith(SpringRunner.class)
-public class DefaultUserServiceTest {
+class DefaultUserServiceTest extends SecurityTest {
     
     @Inject
     private Dialect dialect;

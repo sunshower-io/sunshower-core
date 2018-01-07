@@ -28,24 +28,7 @@ import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 
-/**
- * Created by haswell on 10/17/16.
- */
-@Transactional
-@ExtendWith(SpringExtension.class)
-@RunWith(JUnitPlatform.class)
-@ContextConfiguration(
-        classes = {
-                TestConfigurationConfiguration.class,
-                FlywayConfiguration.class,
-                HibernateConfiguration.class,
-                DataSourceConfiguration.class,
-                PersistenceConfiguration.class,
-                PersistenceTestConfiguration.class,
-                TestConfigurationConfiguration.class
-        }
-)
-class UserPersistenceTest {
+class UserPersistenceTest extends PersistenceTest {
 
     @PersistenceContext
     private EntityManager entityManager;

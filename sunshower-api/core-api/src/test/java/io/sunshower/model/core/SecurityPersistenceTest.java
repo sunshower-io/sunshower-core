@@ -1,34 +1,14 @@
 package io.sunshower.model.core;
 
-import io.sunshower.jpa.flyway.FlywayConfiguration;
 import io.sunshower.model.core.auth.Permission;
 import io.sunshower.model.core.auth.Role;
 import io.sunshower.model.core.auth.User;
-import io.sunshower.persist.core.DataSourceConfiguration;
-import io.sunshower.persist.hibernate.HibernateConfiguration;
-import io.sunshower.test.common.TestConfigurationConfiguration;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-@ExtendWith(SpringExtension.class)
-@RunWith(JUnitPlatform.class)
-@ContextConfiguration(classes = {
-        FlywayConfiguration.class,
-        DataSourceConfiguration.class,
-        HibernateConfiguration.class,
-        PersistenceConfiguration.class,
-        PersistenceTestConfiguration.class
-})
-@Transactional
-public class SecurityPersistenceTest {
+public class SecurityPersistenceTest extends PersistenceTest {
 
     @PersistenceContext
     private EntityManager entityManager;

@@ -1,11 +1,9 @@
 package io.sunshower.model.core;
 
 import io.sunshower.persistence.Dialect;
-import io.sunshower.test.common.TestConfigurationConfiguration;
 import io.sunshower.test.common.TestConfigurations;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Primary;
 
 @Configuration

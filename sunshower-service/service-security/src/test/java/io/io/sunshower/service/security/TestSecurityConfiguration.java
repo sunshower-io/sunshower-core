@@ -6,6 +6,7 @@ import io.sunshower.persistence.annotations.Persistence;
 import io.sunshower.service.application.DefaultApplicationService;
 import io.sunshower.service.security.ApplicationService;
 import io.sunshower.service.security.crypto.MessageAuthenticationCode;
+import io.sunshower.test.common.TestConfigurations;
 import org.jasypt.util.text.BasicTextEncryptor;
 import org.jasypt.util.text.TextEncryptor;
 import org.mockito.Mockito;
@@ -17,9 +18,6 @@ import org.springframework.context.annotation.Primary;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ForkJoinPool;
 
-/**
- * Created by haswell on 10/15/16.
- */
 @Configuration
 @Persistence(id = "audit",
         migrationLocations = "classpath:{dialect}",
@@ -37,6 +35,11 @@ import java.util.concurrent.ForkJoinPool;
         })
 public class TestSecurityConfiguration {
 
+    @Primary
+    @Bean(name = TestConfigurations.TEST_CONFIGURATION_REPOSITORY_PATH)
+    public String location() {
+        return "/sunshower-api/core-api/src/test/resources";
+    }
 
     @Bean
     public ApplicationService applicationService() {

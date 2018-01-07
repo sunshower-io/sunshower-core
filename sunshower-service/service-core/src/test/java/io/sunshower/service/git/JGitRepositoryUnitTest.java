@@ -1,6 +1,6 @@
 package io.sunshower.service.git;
 
-import io.sunshower.common.io.Files;
+import io.sunshower.io.Files;
 import io.sunshower.service.revision.model.Revision;
 import org.eclipse.jgit.lib.ObjectId;
 import org.junit.jupiter.api.Test;
@@ -14,9 +14,6 @@ import java.nio.file.Paths;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-/**
- * Created by haswell on 5/22/17.
- */
 public class JGitRepositoryUnitTest extends GitRepositoryTestCase {
 
 

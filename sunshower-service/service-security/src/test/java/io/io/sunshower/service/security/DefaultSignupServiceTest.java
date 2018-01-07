@@ -3,30 +3,14 @@ package io.io.sunshower.service.security;
 import io.sunshower.common.Identifier;
 import io.sunshower.common.crypto.Hashes;
 import io.sunshower.common.crypto.Multihash;
-import io.sunshower.jpa.flyway.FlywayConfiguration;
-import io.sunshower.model.core.PersistenceConfiguration;
 import io.sunshower.model.core.auth.User;
-import io.sunshower.persist.core.DataSourceConfiguration;
-import io.sunshower.persist.hibernate.HibernateConfiguration;
-import io.sunshower.security.api.SecurityPersistenceConfiguration;
-import io.sunshower.service.security.SecurityConfiguration;
+import io.sunshower.service.security.SecurityTest;
 import io.sunshower.service.signup.RegistrationRequest;
 import io.sunshower.service.signup.SignupService;
-import io.sunshower.test.persist.AuthenticationTestExecutionListener;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.security.test.context.support.WithSecurityContextTestExecutionListener;
-import org.springframework.test.annotation.Rollback;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestExecutionListeners;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.transaction.annotation.Transactional;
 
 
 import javax.inject.Inject;
@@ -41,29 +25,7 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@RunWith(JUnitPlatform.class)
-@ContextConfiguration(
-        classes = {
-                SecurityConfiguration.class,
-                HibernateConfiguration.class,
-                PersistenceConfiguration.class,
-                SecurityPersistenceConfiguration.class,
-                FlywayConfiguration.class,
-                DataSourceConfiguration.class,
-                TestSecurityConfiguration.class,
-        })
-@Rollback
-@ExtendWith(SpringExtension.class)
-@Transactional
-@SpringBootTest
-@TestExecutionListeners(
-        listeners = {
-                AuthenticationTestExecutionListener.class,
-                WithSecurityContextTestExecutionListener.class
-        },
-        mergeMode = TestExecutionListeners.MergeMode.MERGE_WITH_DEFAULTS
-)
-public class DefaultSignupServiceTest {
+public class DefaultSignupServiceTest extends SecurityTest {
 
     @PersistenceContext
     private EntityManager entityManager;

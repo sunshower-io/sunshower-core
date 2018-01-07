@@ -1,30 +1,14 @@
 package io.model.core;
 
 import io.sunshower.core.security.crypto.EncryptionService;
-import io.sunshower.jpa.flyway.FlywayConfiguration;
 import io.sunshower.model.core.Application;
-import io.sunshower.model.core.PersistenceConfiguration;
 import io.sunshower.model.core.auth.User;
-import io.sunshower.persist.core.DataSourceConfiguration;
-import io.sunshower.persist.hibernate.HibernateConfiguration;
 import io.sunshower.service.security.ApplicationService;
-import io.sunshower.service.security.SecurityConfiguration;
+import io.sunshower.service.security.SecurityTest;
 import io.sunshower.service.security.TokenAuthenticationFilter;
 import io.io.sunshower.service.security.TestSecureService;
-import io.io.sunshower.service.security.TestSecurityConfiguration;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.test.context.support.WithSecurityContextTestExecutionListener;
-import org.springframework.test.annotation.Rollback;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestExecutionListeners;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
-import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
-import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
-import org.springframework.test.context.web.ServletTestExecutionListener;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
@@ -41,31 +25,7 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.BDDMockito.given;
 
-/**
- * Created by haswell on 10/26/16.
- */
-
-@SpringBootTest
-@RunWith(SpringRunner.class)
-@ContextConfiguration(
-        classes = {
-                SecurityConfiguration.class,
-                HibernateConfiguration.class,
-                FlywayConfiguration.class,
-                DataSourceConfiguration.class,
-                PersistenceConfiguration.class,
-                TestSecurityConfiguration.class
-        })
-@TestExecutionListeners(listeners = {
-        ServletTestExecutionListener.class,
-        TransactionalTestExecutionListener.class,
-        DirtiesContextTestExecutionListener.class,
-        DependencyInjectionTestExecutionListener.class,
-        WithSecurityContextTestExecutionListener.class
-})
-@Rollback
-@Transactional
-public class DefaultApplicationServiceTest {
+class DefaultApplicationServiceTest extends SecurityTest {
 
     @PersistenceContext
     private EntityManager entityManager;

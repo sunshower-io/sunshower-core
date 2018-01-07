@@ -2,27 +2,13 @@ package io.io.sunshower.service.security.web;
 
 import io.sunshower.core.security.AuthenticationService;
 import io.sunshower.core.security.InvalidTokenException;
-import io.sunshower.jpa.flyway.FlywayConfiguration;
-import io.sunshower.model.core.PersistenceConfiguration;
 import io.sunshower.model.core.auth.Token;
 import io.sunshower.model.core.auth.User;
-import io.sunshower.persist.core.DataSourceConfiguration;
-import io.sunshower.persist.hibernate.HibernateConfiguration;
-import io.sunshower.security.api.SecurityPersistenceConfiguration;
-import io.sunshower.service.security.SecurityConfiguration;
+import io.sunshower.service.security.SecurityTest;
 import io.sunshower.service.signup.SignupService;
-import io.io.sunshower.service.security.TestSecurityConfiguration;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -30,22 +16,7 @@ import java.util.logging.Logger;
 
 import static org.junit.Assert.fail;
 
-@ExtendWith(SpringExtension.class)
-@RunWith(JUnitPlatform.class)
-@ContextConfiguration(
-        classes = {
-                FlywayConfiguration.class,
-                SecurityConfiguration.class,
-                HibernateConfiguration.class,
-                DataSourceConfiguration.class,
-                PersistenceConfiguration.class,
-                TestSecurityConfiguration.class,
-                SecurityPersistenceConfiguration.class
-        })
-@Transactional
-@SpringBootTest
-@WebAppConfiguration
-public class RESTSecurityTest {
+public class RESTSecurityTest extends SecurityTest {
 
 
     static Logger logger = Logger.getLogger(RESTSecurityTest.class.getName());

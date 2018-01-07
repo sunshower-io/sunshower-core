@@ -7,13 +7,13 @@ import io.sunshower.persist.hibernate.HibernateConfiguration;
 import io.sunshower.service.security.SecurityConfiguration;
 import io.sunshower.test.common.SerializationAware;
 import io.sunshower.test.common.SerializationTestCase;
+import io.sunshower.test.common.TestConfigurationConfiguration;
 import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.jpa.FullTextEntityManager;
 import org.junit.After;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -29,13 +29,11 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Supplier;
 
-/**
- * Created by haswell on 2/26/17.
- */
 @Transactional
 @ExtendWith(SpringExtension.class)
 @RunWith(JUnitPlatform.class)
 @ContextConfiguration(classes = {
+        TestConfigurationConfiguration.class,
         HibernateConfiguration.class,
         PersistenceConfiguration.class,
         CoreServiceConfiguration.class,
@@ -44,7 +42,6 @@ import java.util.function.Supplier;
         SecurityConfiguration.class,
         TestConfiguration.class,
 })
-@SpringBootTest
 @SuppressWarnings("all")
 public abstract class ServiceTestCase extends SerializationTestCase {
 
