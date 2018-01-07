@@ -30,7 +30,8 @@ allprojects {
             'https://mymavenrepo.com/repo/Bwb7CZ1J9Ud5KCkBvnhI',
             'http://repo.spring.io/snapshot',
             "http://repo.spring.io/libs-milestone",
-            "http://oss.sonatype.org/content/repositories/snapshots"
+            "http://oss.sonatype.org/content/repositories/snapshots",
+            "http://www.gridgainsystems.com/nexus/content/repositories/external"
     ]
 
 

@@ -2,11 +2,9 @@ package io.sunshower.service.revision.model;
 
 import io.sunshower.common.io.Files;
 import io.sunshower.model.core.auth.ProtectedDistributableEntity;
-import io.sunshower.model.core.io.File;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 

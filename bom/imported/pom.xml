@@ -58,11 +58,6 @@
             <version>${sunshower-base.version}</version>
           </dependency>
 
-          <dependency>
-            <groupId>io.sunshower.common</groupId>
-            <artifactId>core-api</artifactId>
-            <version>${sunshower-base.version}</version>
-          </dependency>
 
         </dependencies>
     </dependencyManagement>

@@ -1,11 +1,7 @@
 package io.sunshower.service;
 
-import io.reactivex.Scheduler;
-import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subjects.PublishSubject;
 import io.sunshower.persistence.annotations.Persistence;
 import io.sunshower.service.application.DefaultApplicationService;
-import io.sunshower.service.git.GitRepository;
 import io.sunshower.service.git.JGitRepositoryService;
 import io.sunshower.service.git.RepositoryService;
 import io.sunshower.service.graph.SpringGraphServiceResolver;
@@ -14,7 +10,6 @@ import io.sunshower.service.graph.service.TaskService;
 import io.sunshower.service.io.DefaultConfigurableFileResolutionStrategy;
 import io.sunshower.service.model.io.FileResolutionStrategy;
 import io.sunshower.service.orchestration.JpaOrchestrationTemplateService;
-import io.sunshower.service.orchestration.model.OrchestrationTemplate;
 import io.sunshower.service.orchestration.service.OrchestrationTemplateService;
 import io.sunshower.service.security.ApplicationService;
 import io.sunshower.service.security.CredentialService;
@@ -28,7 +23,6 @@ import io.sunshower.service.task.exec.*;
 import io.sunshower.service.tasks.EntityResolverTask;
 import io.sunshower.service.workspace.JpaWorkspaceService;
 import io.sunshower.service.workspace.service.WorkspaceService;
-import org.eclipse.persistence.jaxb.rs.MOXyJsonProvider;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.context.ApplicationContext;
@@ -36,11 +30,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-/**
- * Created by haswell on 11/27/16.
- */
 
 @Configuration
 @Persistence(id = "audit",
