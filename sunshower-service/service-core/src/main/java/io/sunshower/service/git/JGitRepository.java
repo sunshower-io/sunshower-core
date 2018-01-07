@@ -1,6 +1,6 @@
 package io.sunshower.service.git;
 
-import io.sunshower.common.io.ReaderInputStream;
+import io.sunshower.io.ReaderInputStream;
 import io.sunshower.model.core.auth.Details;
 import io.sunshower.model.core.auth.User;
 import io.sunshower.model.core.faults.SystemException;
@@ -151,7 +151,7 @@ public class JGitRepository implements GitRepository {
                 try (
                         FileOutputStream fileOutputStream = new FileOutputStream(file)
                 ) {
-                    io.sunshower.common.io.Files.copy(inputStream, fileOutputStream);
+                    io.sunshower.io.Files.copy(inputStream, fileOutputStream);
                     fileOutputStream.flush();
                 }
             }

@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,9 +17,6 @@ import javax.persistence.PersistenceContext;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
-/**
- * Created by haswell on 5/17/17.
- */
 @Transactional
 @ExtendWith(SpringExtension.class)
 @RunWith(JUnitPlatform.class)
@@ -34,7 +30,6 @@ import static org.junit.Assert.*;
 
         }
 )
-@SpringBootTest
 public class VersionTest {
 
     @PersistenceContext

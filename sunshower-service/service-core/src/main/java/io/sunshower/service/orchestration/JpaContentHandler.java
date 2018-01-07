@@ -289,7 +289,7 @@ public class JpaContentHandler implements ContentHandler {
         try {
             if (!path.toFile().delete()) {
             }
-            io.sunshower.common.io.Files.delete(parentDir.toFile());
+            io.sunshower.io.Files.delete(parentDir.toFile());
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }

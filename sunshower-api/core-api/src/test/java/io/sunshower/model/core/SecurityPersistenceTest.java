@@ -6,11 +6,11 @@ import io.sunshower.model.core.auth.Role;
 import io.sunshower.model.core.auth.User;
 import io.sunshower.persist.core.DataSourceConfiguration;
 import io.sunshower.persist.hibernate.HibernateConfiguration;
+import io.sunshower.test.common.TestConfigurationConfiguration;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,10 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-/**
- * Created by haswell on 10/20/16.
- * //
- */
 @ExtendWith(SpringExtension.class)
 @RunWith(JUnitPlatform.class)
 @ContextConfiguration(classes = {
@@ -32,7 +28,6 @@ import javax.persistence.PersistenceContext;
         PersistenceTestConfiguration.class
 })
 @Transactional
-@SpringBootTest
 public class SecurityPersistenceTest {
 
     @PersistenceContext

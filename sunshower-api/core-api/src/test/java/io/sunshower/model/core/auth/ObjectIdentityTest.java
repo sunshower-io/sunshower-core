@@ -6,11 +6,12 @@ import io.sunshower.model.core.PersistenceConfiguration;
 import io.sunshower.model.core.PersistenceTestConfiguration;
 import io.sunshower.persist.core.DataSourceConfiguration;
 import io.sunshower.persist.hibernate.HibernateConfiguration;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -21,11 +22,9 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.*;
 
-/**
- * Created by haswell on 5/11/17.
- */
 @Transactional
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
+@RunWith(JUnitPlatform.class)
 @ContextConfiguration(
         classes = {
                 FlywayConfiguration.class,
@@ -36,8 +35,7 @@ import static org.junit.Assert.*;
 
         }
 )
-@SpringBootTest
-public class ObjectIdentityTest {
+class ObjectIdentityTest {
 
 
     @PersistenceContext

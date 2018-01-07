@@ -1,6 +1,5 @@
 package io.sunshower.service.revision.model;
 
-import io.sunshower.common.io.Files;
 import io.sunshower.model.core.auth.ProtectedDistributableEntity;
 
 import javax.persistence.*;

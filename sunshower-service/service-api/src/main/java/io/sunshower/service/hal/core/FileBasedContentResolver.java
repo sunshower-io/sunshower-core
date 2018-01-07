@@ -2,9 +2,8 @@ package io.sunshower.service.hal.core;
 
 import io.reactivex.subjects.Subject;
 import io.sunshower.common.Identifier;
-import io.sunshower.common.io.ReaderInputStream;
+import io.sunshower.io.ReaderInputStream;
 import io.sunshower.model.core.io.File;
-import io.sunshower.persist.Persistable;
 import io.sunshower.service.graph.service.ContentResolver;
 import io.sunshower.service.model.PropertyAwareObject;
 import io.sunshower.service.orchestration.model.OrchestrationTemplate;

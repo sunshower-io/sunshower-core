@@ -1,6 +1,6 @@
 package io.sunshower.service.revision.model;
 
-import io.sunshower.common.io.Files;
+import io.sunshower.io.Files;
 import io.sunshower.model.core.io.File;
 
 import java.io.IOException;
