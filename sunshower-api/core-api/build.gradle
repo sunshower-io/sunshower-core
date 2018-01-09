@@ -7,7 +7,7 @@ dependencies {
     compile 'io.sunshower.persist:persist-api'
     compile 'org.springframework.security:spring-security-core'
     compile 'org.hibernate.validator:hibernate-validator'
-    compile group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
+    compile 'javax.validation:validation-api'
     
     
     testCompile 'io.sunshower.test:test-persist'
