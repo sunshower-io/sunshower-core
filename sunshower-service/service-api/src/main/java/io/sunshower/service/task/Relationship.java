@@ -2,27 +2,21 @@ package io.sunshower.service.task;
 
 import io.sunshower.persistence.core.DistributableEntity;
 
-import java.util.UUID;
-
-/**
- * Created by haswell on 3/27/17.
- */
+/** Created by haswell on 3/27/17. */
 public class Relationship extends DistributableEntity {
-    private String key;
+  private String key;
 
-    public Relationship() {
-    }
+  public Relationship() {}
 
+  public Relationship(String key) {
+    this.key = key;
+  }
 
-    public Relationship(String key) {
-        this.key = key;
-    }
+  public String getKey() {
+    return key;
+  }
 
-    public String getKey() {
-        return key;
-    }
-
-    public void setKey(String key) {
-        this.key = key;
-    }
+  public void setKey(String key) {
+    this.key = key;
+  }
 }

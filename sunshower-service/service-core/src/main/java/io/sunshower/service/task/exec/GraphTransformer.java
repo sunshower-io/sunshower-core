@@ -5,6 +5,6 @@ import io.sunshower.service.task.TaskGraph;
 
 @FunctionalInterface
 public interface GraphTransformer {
-    
-    TaskGraph transform(Graph graph);
+
+  TaskGraph transform(Graph graph);
 }

@@ -227,7 +227,7 @@ create table TEMPLATE_GRAPH_EDGE (
 
 
 
-create table ORCHESTRATION_TEMPLATE_LINK (
+create table TEMPLATE_LINK (
 
   id            bytea PRIMARY KEY,
   source_id     bytea not null,
@@ -240,7 +240,7 @@ create table ORCHESTRATION_TEMPLATE_LINK (
 );
 
 
-create table ORCHESTRATION_TEMPLATE  (
+create table TEMPLATE  (
     id            bytea PRIMARY KEY,
     version_id    bytea,
     workspace_id  bytea,

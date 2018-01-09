@@ -3,42 +3,26 @@ package io.sunshower.service.orchestration.model;
 import io.sunshower.service.model.AbstractEntityLink;
 import io.sunshower.service.model.LinkageMode;
 import io.sunshower.service.model.RelationshipType;
-
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import java.util.Objects;
 
 @Entity
-@Table(name = "ORCHESTRATION_TEMPLATE_LINK")
-public class TemplateLink extends AbstractEntityLink<OrchestrationTemplate, OrchestrationTemplate> {
+@Table(name = "TEMPLATE_LINK")
+public class TemplateLink extends AbstractEntityLink<Template, Template> {
 
-    protected TemplateLink() {
-        this(null, null, null, null);
+  protected TemplateLink() {
+    this(null, null, null, null);
+  }
+
+  public TemplateLink(Template source, Template target, LinkageMode mode, RelationshipType type) {
+    super(source, target, mode, type);
+    if (target != null) {
+      target.setLink(this);
     }
+  }
 
+  public TemplateLink(Template template, Template linked) {
 
-    public TemplateLink(
-            OrchestrationTemplate source,
-            OrchestrationTemplate target,
-            LinkageMode mode,
-            RelationshipType type
-    ) {
-        super(source, target, mode, type);
-        if(target != null) {
-            target.setLink(this);
-        }
-    }
-
-    public TemplateLink(
-            OrchestrationTemplate template,
-            OrchestrationTemplate linked
-    ) {
-
-        this(
-                template,
-                linked,
-                LinkageMode.Linked,
-                RelationshipType.Parent
-        );
-    }
+    this(template, linked, LinkageMode.Linked, RelationshipType.Parent);
+  }
 }

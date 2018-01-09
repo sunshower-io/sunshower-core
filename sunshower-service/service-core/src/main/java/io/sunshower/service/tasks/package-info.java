@@ -1,16 +1,7 @@
-/**
- * Created by haswell on 3/27/17.
- */
-
+/** Created by haswell on 3/27/17. */
 @XmlJavaTypeAdapters({
-        @XmlJavaTypeAdapter(
-                type = Class.class,
-                value = ClassAdapter.class
-        ),
-        @XmlJavaTypeAdapter(
-                type = Identifier.class,
-                value = IdentifierConverter.class
-        )
+  @XmlJavaTypeAdapter(type = Class.class, value = ClassAdapter.class),
+  @XmlJavaTypeAdapter(type = Identifier.class, value = IdentifierConverter.class)
 })
 @XmlAccessorType(XmlAccessType.FIELD)
 package io.sunshower.service.tasks;

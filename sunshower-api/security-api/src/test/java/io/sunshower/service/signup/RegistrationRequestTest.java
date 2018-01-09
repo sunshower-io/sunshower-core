@@ -1,5 +1,8 @@
 package io.sunshower.service.signup;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.*;
+
 import io.sunshower.jpa.flyway.FlywayConfiguration;
 import io.sunshower.model.core.PersistenceConfiguration;
 import io.sunshower.model.core.auth.User;
@@ -8,6 +11,8 @@ import io.sunshower.persist.hibernate.HibernateConfiguration;
 import io.sunshower.test.common.SerializationAware;
 import io.sunshower.test.common.SerializationTestCase;
 import io.sunshower.test.common.TestConfigurationConfiguration;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.platform.runner.JUnitPlatform;
@@ -16,67 +21,55 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
-
 @Transactional
 @ExtendWith(SpringExtension.class)
 @RunWith(JUnitPlatform.class)
 @ContextConfiguration(
-        classes = {
-                TestConfigurationConfiguration.class,
-                FlywayConfiguration.class,
-                HibernateConfiguration.class,
-                DataSourceConfiguration.class,
-                PersistenceConfiguration.class,
-                PersistenceTestConfiguration.class,
-        }
+  classes = {
+    TestConfigurationConfiguration.class,
+    FlywayConfiguration.class,
+    HibernateConfiguration.class,
+    DataSourceConfiguration.class,
+    PersistenceConfiguration.class,
+    PersistenceTestConfiguration.class,
+  }
 )
 public class RegistrationRequestTest extends SerializationTestCase {
 
-    @PersistenceContext
-    private EntityManager entityManager;
+  @PersistenceContext private EntityManager entityManager;
 
-    public RegistrationRequestTest() {
-        super(SerializationAware.Format.JSON, RegistrationRequest.class);
-    }
+  public RegistrationRequestTest() {
+    super(SerializationAware.Format.JSON, RegistrationRequest.class);
+  }
 
-    @Test
-    public void ensureSerializationRequestRequestIdIsSerialized() {
-        final String id = "whatever";
-        final RegistrationRequest request = new RegistrationRequest();
-        request.setRequestId(id);
-        final RegistrationRequest copy = copy(request);
-        assertThat(id, is(copy.getRequestId()));
+  @Test
+  public void ensureSerializationRequestRequestIdIsSerialized() {
+    final String id = "whatever";
+    final RegistrationRequest request = new RegistrationRequest();
+    request.setRequestId(id);
+    final RegistrationRequest copy = copy(request);
+    assertThat(id, is(copy.getRequestId()));
+  }
 
-    }
+  @Test
+  public void ensurePersistingRegistrationRequestWithUserWorks() {
 
+    final User user = new User();
+    user.getDetails().setEmailAddress("joe@whatever.com");
+    user.setUsername("frap");
+    user.setPassword("adapadfasdf");
 
-    @Test
-    public void ensurePersistingRegistrationRequestWithUserWorks() {
+    final RegistrationRequest request = new RegistrationRequest(user);
+    entityManager.persist(request);
 
-        final User user = new User();
-        user.getDetails().setEmailAddress("joe@whatever.com");
-        user.setUsername("frap");
-        user.setPassword("adapadfasdf");
+    assertThat(
+        entityManager.find(RegistrationRequest.class, request.getId()).getUser().getId(),
+        is(user.getId()));
+    entityManager.flush();
+  }
 
-        final RegistrationRequest request =
-                new RegistrationRequest(user);
-        entityManager.persist(request);
-
-        assertThat(entityManager.find(
-                RegistrationRequest.class,
-                request.getId()).getUser().getId(),
-                is(user.getId()));
-        entityManager.flush();
-    }
-
-    @Test
-    public void ensureSelectingOnRegistrationRequestProducesExpectedValues() {
-        entityManager.createQuery("select r from RegistrationRequest r").getResultList();
-    }
-
+  @Test
+  public void ensureSelectingOnRegistrationRequestProducesExpectedValues() {
+    entityManager.createQuery("select r from RegistrationRequest r").getResultList();
+  }
 }

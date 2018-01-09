@@ -1,5 +1,6 @@
 package io.sunshower.service.security;
 
+import io.sunshower.common.rs.ClassParameterProviderFactory;
 import io.sunshower.core.security.AuthenticationService;
 import io.sunshower.core.security.RoleService;
 import io.sunshower.core.security.UserService;
@@ -9,9 +10,12 @@ import io.sunshower.service.security.crypto.InstanceSecureKeyGenerator;
 import io.sunshower.service.security.crypto.MessageAuthenticationCode;
 import io.sunshower.service.security.crypto.StrongEncryptionService;
 import io.sunshower.service.security.jaxrs.AuthenticationContextProvider;
-import io.sunshower.common.rs.ClassParameterProviderFactory;
 import io.sunshower.service.security.user.DefaultUserService;
 import io.sunshower.service.signup.SignupService;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
+import javax.sql.DataSource;
 import org.apache.ignite.cache.spring.SpringCacheManager;
 import org.jasypt.util.text.StrongTextEncryptor;
 import org.jasypt.util.text.TextEncryptor;
@@ -39,201 +43,166 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Singleton;
-import javax.sql.DataSource;
-
-/**
- * Created by haswell on 10/15/16.
- */
+/** Created by haswell on 10/15/16. */
 @Configuration
-@EnableGlobalMethodSecurity(
-        prePostEnabled = true,
-        jsr250Enabled = true
-)
+@EnableGlobalMethodSecurity(prePostEnabled = true, jsr250Enabled = true)
 @EnableCaching
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    static final Logger logger = LoggerFactory.getLogger(SecurityConfiguration.class);
+  static final Logger logger = LoggerFactory.getLogger(SecurityConfiguration.class);
 
-    @Bean
-    public TokenManager tokenManager() {
-        return new GridTokenManager();
-    }
+  @Bean
+  public TokenManager tokenManager() {
+    return new GridTokenManager();
+  }
 
+  @Override
+  protected void configure(HttpSecurity http) throws Exception {
+    logger.info("disabling web security in favor of method security");
+    http.authorizeRequests().anyRequest().permitAll();
+  }
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        logger.info("disabling web security in favor of method security");
-        http.authorizeRequests()
-                .anyRequest().permitAll();
-    }
+  @Inject private UserService userService;
 
-    @Inject
-    private UserService userService;
+  @Bean
+  public Session userFacade() {
+    return new Session();
+  }
 
-    @Bean
-    public Session userFacade() {
-        return new Session();
-    }
+  @Bean
+  public ClassParameterProviderFactory classParameterProviderFactory() {
+    return new ClassParameterProviderFactory();
+  }
 
+  @Bean
+  public AuthenticationContextProvider authenticationProvider() {
+    return new AuthenticationContextProvider();
+  }
 
-    @Bean
-    public ClassParameterProviderFactory classParameterProviderFactory() {
-        return new ClassParameterProviderFactory();
-    }
+  @Override
+  protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+    auth.userDetailsService((UserDetailsService) userService);
+  }
 
-    @Bean
-    public AuthenticationContextProvider authenticationProvider() {
-        return new AuthenticationContextProvider();
-    }
+  @Bean(name = "caches:spring:acl")
+  public Cache springAclCache(CacheManager cacheManager) {
+    return cacheManager.getCache("caches:spring:acl");
+  }
 
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService((UserDetailsService) userService);
-    }
+  @Bean
+  public UserService userService() {
+    return new DefaultUserService();
+  }
 
-    @Bean(name = "caches:spring:acl")
-    public Cache springAclCache(CacheManager cacheManager) {
-        return cacheManager.getCache("caches:spring:acl");
-    }
+  @Bean
+  public TokenAuthenticationFilter tokenAuthenticationFilter() {
+    return new TokenAuthenticationFilter();
+  }
 
-    @Bean
-    public UserService userService() {
-        return new DefaultUserService();
-    }
+  @Bean
+  public RoleService roleService() {
+    return new DefaultRoleService();
+  }
 
-    @Bean
-    public TokenAuthenticationFilter tokenAuthenticationFilter() {
-        return new TokenAuthenticationFilter();
-    }
+  @Bean
+  public KeyProvider keyProvider() {
+    return new InstanceSecureKeyGenerator();
+  }
 
-    @Bean
-    public RoleService roleService() {
-        return new DefaultRoleService();
-    }
+  @Bean
+  @Singleton
+  public MessageAuthenticationCode messageAuthenticationCode(KeyProvider keyProvider) {
+    return new MessageAuthenticationCode(
+        MessageAuthenticationCode.Algorithm.SHA256, keyProvider.getKey());
+  }
 
-    @Bean
-    public KeyProvider keyProvider() {
-        return new InstanceSecureKeyGenerator();
-    }
+  @Bean
+  public SignupService signupService() {
+    return new DefaultSignupService();
+  }
 
-    @Bean
-    @Singleton
-    public MessageAuthenticationCode messageAuthenticationCode(KeyProvider keyProvider) {
-        return new MessageAuthenticationCode(
-                MessageAuthenticationCode.Algorithm.SHA256, keyProvider.getKey());
-    }
+  @Bean
+  public EncryptionService encryptionService() {
+    return new StrongEncryptionService();
+  }
 
-    @Bean
-    public SignupService signupService() {
-        return new DefaultSignupService();
-    }
+  @Bean
+  public PasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
+  }
 
-    @Bean
-    public EncryptionService encryptionService() {
-        return new StrongEncryptionService();
-    }
+  @Bean
+  public AuthenticationService authenticationService() {
+    return new DefaultAuthenticationService();
+  }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+  @Bean
+  public TextEncryptor textEncryptor(KeyProvider keyProvider) {
+    final StrongTextEncryptor result = new StrongTextEncryptor();
+    result.setPassword(keyProvider.getKey());
+    return result;
+  }
 
-    @Bean
-    public AuthenticationService authenticationService() {
-        return new DefaultAuthenticationService();
-    }
+  @Bean
+  public JdbcAclService jdbcAclService(
+      DataSource dataSource, LookupStrategy lookupStrategy, AclCache aclCache) {
 
-    @Bean
-    public TextEncryptor textEncryptor(KeyProvider keyProvider) {
-        final StrongTextEncryptor result = new StrongTextEncryptor();
-        result.setPassword(keyProvider.getKey());
-        return result;
-    }
+    return new IdentifierJdbcMutableAclService(dataSource, lookupStrategy, aclCache);
+  }
 
+  @Bean
+  public RoleHierarchy roleHierarchy() {
+    return new CachingRoleHierarchy();
+  }
 
+  @Bean
+  public PermissionEvaluator permissionEvaluator(AclService aclService) {
+    return new MultitenantedHierarchicalPermissionEvaluator(aclService);
+  }
 
-    @Bean
-    public JdbcAclService jdbcAclService(
-            DataSource dataSource,
-            LookupStrategy lookupStrategy,
-            AclCache aclCache
+  @Bean
+  public SpringCacheManager springCacheManager() {
+    final SpringCacheManager springCacheManager = new SpringCacheManager();
+    springCacheManager.setIgniteInstanceName("sunshower-data-fabric");
+    return springCacheManager;
+  }
 
-    ) {
-        return new IdentifierJdbcMutableAclService(
-                dataSource, 
-                lookupStrategy, 
-                aclCache
-        );
-    }
+  @Bean
+  public AclCache aclCache(
+      @Named("caches:spring:acl") Cache cache,
+      PermissionGrantingStrategy permissionGrantingStrategy,
+      AclAuthorizationStrategy aclAuthorizationStrategy) {
+    return new SpringCacheBasedAclCache(
+        cache, permissionGrantingStrategy, aclAuthorizationStrategy);
+  }
 
+  @Bean
+  public LookupStrategy aclLookupStrategy(
+      DataSource dataSource,
+      AclCache aclCache,
+      AclAuthorizationStrategy aclAuthorizationStrategy,
+      PermissionGrantingStrategy permissionGrantingStrategy) {
+    return new IdentifierEnabledLookupStrategy(
+        dataSource, aclCache, aclAuthorizationStrategy, permissionGrantingStrategy);
+  }
 
-    @Bean
-    public RoleHierarchy roleHierarchy() {
-        return new CachingRoleHierarchy();
-    }
+  @Bean
+  public static GrantedAuthority administratorRole() {
+    return DefaultRoles.SITE_ADMINISTRATOR.toRole();
+  }
 
-    @Bean
-    public PermissionEvaluator permissionEvaluator(AclService aclService) {
-        return new MultitenantedHierarchicalPermissionEvaluator(aclService);
-    }
+  @Bean
+  public AclAuthorizationStrategy aclAuthorizationStrategy(GrantedAuthority role) {
+    return new MultitenantedAclAuthorizationStrategy(role);
+  }
 
-    @Bean
-    public SpringCacheManager springCacheManager() {
-        final SpringCacheManager springCacheManager = new SpringCacheManager();
-        springCacheManager.setIgniteInstanceName("sunshower-data-fabric");
-        return springCacheManager;
-    }
+  @Bean
+  public PermissionGrantingStrategy permissionGrantingStrategy(AuditLogger logger) {
+    return new DefaultPermissionGrantingStrategy(logger);
+  }
 
-    @Bean
-    public AclCache aclCache(
-            @Named("caches:spring:acl") Cache cache,
-            PermissionGrantingStrategy permissionGrantingStrategy,
-            AclAuthorizationStrategy aclAuthorizationStrategy
-    ) {
-        return new SpringCacheBasedAclCache(
-                cache,
-                permissionGrantingStrategy,
-                aclAuthorizationStrategy
-        );
-    }
-
-    @Bean
-    public LookupStrategy aclLookupStrategy(
-            DataSource dataSource,
-            AclCache aclCache,
-            AclAuthorizationStrategy aclAuthorizationStrategy,
-            PermissionGrantingStrategy permissionGrantingStrategy
-    ) {
-        return new IdentifierEnabledLookupStrategy(
-                dataSource,
-                aclCache,
-                aclAuthorizationStrategy,
-                permissionGrantingStrategy
-        );
-    }
-
-
-    @Bean
-    public static GrantedAuthority administratorRole() {
-        return DefaultRoles.SITE_ADMINISTRATOR.toRole();
-    }
-
-    @Bean
-    public AclAuthorizationStrategy aclAuthorizationStrategy(GrantedAuthority role) {
-        return new MultitenantedAclAuthorizationStrategy(role);
-    }
-
-    @Bean
-    public PermissionGrantingStrategy permissionGrantingStrategy(AuditLogger logger) {
-        return new DefaultPermissionGrantingStrategy(logger);
-    }
-
-    @Bean
-    public AuditLogger securityAuditLogger() {
-        return new ConsoleAuditLogger();
-    }
-
+  @Bean
+  public AuditLogger securityAuditLogger() {
+    return new ConsoleAuditLogger();
+  }
 }

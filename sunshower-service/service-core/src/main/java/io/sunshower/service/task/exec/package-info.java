@@ -1,6 +1,4 @@
-/**
- * Created by haswell on 2/9/17.
- */
+/** Created by haswell on 2/9/17. */
 @XmlAccessorType(XmlAccessType.NONE)
 package io.sunshower.service.task.exec;
 

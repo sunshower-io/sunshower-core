@@ -1,106 +1,90 @@
 package io.sunshower.model.core.io;
 
-
-import javax.persistence.*;
-import javax.xml.bind.annotation.*;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-
 import io.sunshower.common.Identifier;
 import io.sunshower.persistence.core.DistributableEntity;
 import io.sunshower.persistence.core.Hierarchical;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+import javax.persistence.*;
+import javax.xml.bind.annotation.*;
 
-/**
- * Created by haswell on 5/22/17.
- */
+/** Created by haswell on 5/22/17. */
 @Entity
 @Table(name = "FILE")
 @XmlRootElement(name = "file")
 public class File extends DistributableEntity implements Hierarchical<Identifier, File> {
-    
-    
-    @Basic
-    @XmlElement
-    private String path;
 
-    @XmlIDREF
-    @ManyToOne
-    @JoinColumn(name = "parent_id")
-    private File parent;
+  @Basic @XmlElement private String path;
 
-    @Basic
-    @XmlAttribute
-    private String extension;
+  @XmlIDREF
+  @ManyToOne
+  @JoinColumn(name = "parent_id")
+  private File parent;
 
-    @OneToMany(
-            cascade = CascadeType.ALL,
-            orphanRemoval = true,
-            fetch = FetchType.LAZY
-    )
-    @XmlElement(name = "child")
-    @JoinColumn(name = "parent_id")
-    @XmlElementWrapper(name = "children")
-    private Set<File> children;
+  @Basic @XmlAttribute private String extension;
 
-    public String getExtension() {
-        return extension;
-    }
+  @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+  @XmlElement(name = "child")
+  @JoinColumn(name = "parent_id")
+  @XmlElementWrapper(name = "children")
+  private Set<File> children;
 
-    public void setExtension(String extension) {
-        this.extension = extension;
-    }
+  public String getExtension() {
+    return extension;
+  }
 
-    public File() {
+  public void setExtension(String extension) {
+    this.extension = extension;
+  }
 
-    }
+  public File() {}
 
-    public File(String name) {
-        setPath(name);
-    }
+  public File(String name) {
+    setPath(name);
+  }
 
+  public String getPath() {
+    return path;
+  }
 
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String name) {
-        this.path = name;
-        if(name != null) {
-            final int idx = name.lastIndexOf('.');
-            if(idx > 0) {
-                final String ext = name.substring(idx + 1, name.length());
-                if(ext.length() < 10) {
-                    setExtension(ext);
-                }
-            }
+  public void setPath(String name) {
+    this.path = name;
+    if (name != null) {
+      final int idx = name.lastIndexOf('.');
+      if (idx > 0) {
+        final String ext = name.substring(idx + 1, name.length());
+        if (ext.length() < 10) {
+          setExtension(ext);
         }
+      }
     }
+  }
 
-    public void setChildren(Set<File> children) {
-        this.children = children;
-    }
+  public void setChildren(Set<File> children) {
+    this.children = children;
+  }
 
-    @Override
-    public File getParent() {
-        return parent;
-    }
+  @Override
+  public File getParent() {
+    return parent;
+  }
 
-    @Override
-    public Collection<File> getChildren() {
-        if(children == null) {
-            return (children = new HashSet<>());
-        }
-        return children;
+  @Override
+  public Collection<File> getChildren() {
+    if (children == null) {
+      return (children = new HashSet<>());
     }
+    return children;
+  }
 
-    @Override
-    public boolean addChild(File file) {
-        return getChildren().add(file);
-    }
+  @Override
+  public boolean addChild(File file) {
+    return getChildren().add(file);
+  }
 
-    @Override
-    public void setParent(File file) {
-        parent = file;
-    }
+  @Override
+  public void setParent(File file) {
+    parent = file;
+  }
 }

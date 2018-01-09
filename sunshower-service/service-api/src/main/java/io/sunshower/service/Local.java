@@ -8,10 +8,9 @@ import java.lang.annotation.RetentionPolicy;
 /**
  * Created by haswell on 2/17/17.
  *
- * Indicates that a noun or a verb is not remotable and cannot be made to be
+ * <p>Indicates that a noun or a verb is not remotable and cannot be made to be
  */
 @Inherited
 @Documented
 @Retention(RetentionPolicy.SOURCE)
-public @interface Local {
-}
+public @interface Local {}

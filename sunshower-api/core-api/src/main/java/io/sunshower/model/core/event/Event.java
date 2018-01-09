@@ -1,23 +1,14 @@
 package io.sunshower.model.core.event;
 
 import io.sunshower.common.Identifier;
-
 import java.io.Serializable;
-;
 
-/**
- * Created by haswell on 2/19/17.
- */
-
-
+/** Created by haswell on 2/19/17. */
 public interface Event<T extends Serializable, U extends Serializable> {
 
+  Identifier getId();
 
-    Identifier getId();
+  T getType();
 
-    T getType();
-
-    U getCategory();
-
-
+  U getCategory();
 }

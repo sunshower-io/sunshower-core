@@ -1,6 +1,4 @@
-/**
- * Created by haswell on 2/20/17.
- */
+/** Created by haswell on 2/20/17. */
 @XmlAccessorType(XmlAccessType.NONE)
 package io.sunshower.model.core.auth;
 

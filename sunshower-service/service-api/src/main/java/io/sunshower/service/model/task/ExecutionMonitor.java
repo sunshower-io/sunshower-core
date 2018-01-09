@@ -1,35 +1,29 @@
 package io.sunshower.service.model.task;
 
-import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.sunshower.common.Identifier;
-
-import javax.xml.bind.annotation.XmlRootElement;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Future;
+import javax.xml.bind.annotation.XmlRootElement;
 
-/**
- * Created by haswell on 2/4/17.
- */
+/** Created by haswell on 2/4/17. */
 @XmlRootElement(name = "execution-monitor")
 public interface ExecutionMonitor extends ObservableSource<TaskEvent> {
 
-    void start();
-    
-    TaskLogger getLogger();
+  void start();
 
-    Identifier getId();
+  TaskLogger getLogger();
 
-    ExecutionPlan getExecutionPlan();
+  Identifier getId();
 
-    TaskDefinition resolve(String name);
+  ExecutionPlan getExecutionPlan();
 
-    TaskDefinition resolve(Identifier id);
+  TaskDefinition resolve(String name);
 
-    <T> T unwrap(Class<T> tinkerGraphClass);
+  TaskDefinition resolve(Identifier id);
 
-    Iterable<TaskEvent> join() throws InterruptedException;
-    
-    CompletableFuture<Void> toFuture();
-    
+  <T> T unwrap(Class<T> tinkerGraphClass);
+
+  Iterable<TaskEvent> join() throws InterruptedException;
+
+  CompletableFuture<Void> toFuture();
 }

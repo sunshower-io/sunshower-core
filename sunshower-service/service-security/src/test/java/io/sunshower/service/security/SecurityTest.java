@@ -20,23 +20,23 @@ import org.springframework.transaction.annotation.Transactional;
 @ExtendWith(SpringExtension.class)
 @RunWith(JUnitPlatform.class)
 @ContextConfiguration(
-        classes = {
-                TestConfigurationConfiguration.class,
-                SecurityConfiguration.class,
-                HibernateConfiguration.class,
-                DataSourceConfiguration.class,
-                FlywayConfiguration.class,
-                PersistenceConfiguration.class,
-                TestSecurityConfiguration.class
-        })
+  classes = {
+    TestConfigurationConfiguration.class,
+    SecurityConfiguration.class,
+    HibernateConfiguration.class,
+    DataSourceConfiguration.class,
+    FlywayConfiguration.class,
+    PersistenceConfiguration.class,
+    TestSecurityConfiguration.class
+  }
+)
 @Rollback
 @Transactional
 @TestExecutionListeners(
-        listeners = {
-                AuthenticationTestExecutionListener.class,
-                WithSecurityContextTestExecutionListener.class
-        },
-        mergeMode = TestExecutionListeners.MergeMode.MERGE_WITH_DEFAULTS
+  listeners = {
+    AuthenticationTestExecutionListener.class,
+    WithSecurityContextTestExecutionListener.class
+  },
+  mergeMode = TestExecutionListeners.MergeMode.MERGE_WITH_DEFAULTS
 )
-public class SecurityTest {
-}
+public class SecurityTest {}

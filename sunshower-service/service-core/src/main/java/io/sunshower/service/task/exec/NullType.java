@@ -1,4 +1,3 @@
 package io.sunshower.service.task.exec;
 
-public class NullType {
-}
+public class NullType {}

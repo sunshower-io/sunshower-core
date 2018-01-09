@@ -1,35 +1,32 @@
 package io.sunshower.service.task.exec;
 
 import io.sunshower.service.model.task.TaskEvent;
-
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class TaskLogEvent extends TaskEvent {
-    final Level level;
-    final String template;
-    final Object[] arguments;
-    
-    
-    public TaskLogEvent(Level level, String format, Object...args) {
-        this.level = level;
-        this.template = format;
-        this.arguments = args;
-    }
-    
-    public String toString() {
-        return String.format("%s: %s", level, String.format(template, arguments));
-    }
+  final Level level;
+  final String template;
+  final Object[] arguments;
 
-    public Level getLevel() {
-        return level;
-    }
+  public TaskLogEvent(Level level, String format, Object... args) {
+    this.level = level;
+    this.template = format;
+    this.arguments = args;
+  }
 
-    public String getTemplate() {
-        return template;
-    }
+  public String toString() {
+    return String.format("%s: %s", level, String.format(template, arguments));
+  }
 
-    public Object[] getArguments() {
-        return arguments;
-    }
+  public Level getLevel() {
+    return level;
+  }
+
+  public String getTemplate() {
+    return template;
+  }
+
+  public Object[] getArguments() {
+    return arguments;
+  }
 }

@@ -15,14 +15,13 @@ import org.springframework.transaction.annotation.Transactional;
 @ExtendWith(SpringExtension.class)
 @RunWith(JUnitPlatform.class)
 @ContextConfiguration(
-        classes = {
-                TestConfigurationConfiguration.class,
-                FlywayConfiguration.class,
-                HibernateConfiguration.class,
-                DataSourceConfiguration.class,
-                PersistenceConfiguration.class,
-                PersistenceTestConfiguration.class
-        }
+  classes = {
+    TestConfigurationConfiguration.class,
+    FlywayConfiguration.class,
+    HibernateConfiguration.class,
+    DataSourceConfiguration.class,
+    PersistenceConfiguration.class,
+    PersistenceTestConfiguration.class
+  }
 )
-public abstract class PersistenceTest {
-}
+public abstract class PersistenceTest {}

@@ -13,19 +13,18 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
-
 @Transactional
 @RunWith(JUnitPlatform.class)
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {
-        PersistenceConfiguration.class,
-        HibernateConfiguration.class,
-        DataSourceConfiguration.class,
-        FlywayConfiguration.class,
-        ServicePersistenceConfiguration.class,
-        TestConfigurationConfiguration.class,
-        PersistenceTestConfiguration.class
-})
-public abstract class PersistTestCase {
-
-}
+@ContextConfiguration(
+  classes = {
+    PersistenceConfiguration.class,
+    HibernateConfiguration.class,
+    DataSourceConfiguration.class,
+    FlywayConfiguration.class,
+    ServicePersistenceConfiguration.class,
+    TestConfigurationConfiguration.class,
+    PersistenceTestConfiguration.class
+  }
+)
+public abstract class PersistTestCase {}

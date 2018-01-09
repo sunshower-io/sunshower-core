@@ -6,50 +6,50 @@ import io.sunshower.service.hal.core.Element;
 import io.sunshower.service.model.PropertyAwareObject;
 
 public class ContentWrittenEvent extends TemplateEvent {
-    private final Content content;
-    private final String data;
-    private final Identifier targetId;
-    private final OrchestrationTemplate entity;
-    private final Class<? extends PropertyAwareObject> targetType;
-    private final Element target;
+  private final Content content;
+  private final String data;
+  private final Identifier targetId;
+  private final Template entity;
+  private final Class<? extends PropertyAwareObject> targetType;
+  private final Element target;
 
-    public ContentWrittenEvent(
-            OrchestrationTemplate entity,
-            String s,
-            Identifier targetId,
-            Class<? extends PropertyAwareObject> targetType,
-            Content content,
-            Element target) {
-        super(Type.ContentWritten);
-        this.data = s;
-        this.target = target;
-        this.entity = entity;
-        this.targetId = targetId;
-        this.content = content;
-        this.targetType = targetType;
-    }
+  public ContentWrittenEvent(
+      Template entity,
+      String s,
+      Identifier targetId,
+      Class<? extends PropertyAwareObject> targetType,
+      Content content,
+      Element target) {
+    super(Type.ContentWritten);
+    this.data = s;
+    this.target = target;
+    this.entity = entity;
+    this.targetId = targetId;
+    this.content = content;
+    this.targetType = targetType;
+  }
 
-    public Element getTarget() {
-        return target;
-    }
+  public Element getTarget() {
+    return target;
+  }
 
-    public Content getContent() {
-        return content;
-    }
+  public Content getContent() {
+    return content;
+  }
 
-    public String getData() {
-        return data;
-    }
+  public String getData() {
+    return data;
+  }
 
-    public OrchestrationTemplate getEntity() {
-        return entity;
-    }
+  public Template getEntity() {
+    return entity;
+  }
 
-    public Identifier getTargetId() {
-        return targetId;
-    }
+  public Identifier getTargetId() {
+    return targetId;
+  }
 
-    public Class<? extends PropertyAwareObject> getTargetType() {
-        return targetType;
-    }
+  public Class<? extends PropertyAwareObject> getTargetType() {
+    return targetType;
+  }
 }

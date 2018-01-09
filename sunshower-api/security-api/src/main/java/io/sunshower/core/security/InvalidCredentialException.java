@@ -1,26 +1,24 @@
 package io.sunshower.core.security;
 
-/**
- * Created by haswell on 10/22/16.
- */
+/** Created by haswell on 10/22/16. */
 public class InvalidCredentialException extends SecurityException {
 
-    public InvalidCredentialException() {
-    }
+  public InvalidCredentialException() {}
 
-    public InvalidCredentialException(String message) {
-        super(message);
-    }
+  public InvalidCredentialException(String message) {
+    super(message);
+  }
 
-    public InvalidCredentialException(String message, Throwable cause) {
-        super(message, cause);
-    }
+  public InvalidCredentialException(String message, Throwable cause) {
+    super(message, cause);
+  }
 
-    public InvalidCredentialException(Throwable cause) {
-        super(cause);
-    }
+  public InvalidCredentialException(Throwable cause) {
+    super(cause);
+  }
 
-    public InvalidCredentialException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
-    }
+  public InvalidCredentialException(
+      String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    super(message, cause, enableSuppression, writableStackTrace);
+  }
 }

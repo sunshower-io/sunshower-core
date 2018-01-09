@@ -1,47 +1,36 @@
 package io.sunshower.service.repository;
 
-
 import java.util.List;
 
-/**
- * Created by haswell on 5/16/17.
- */
+/** Created by haswell on 5/16/17. */
 public interface EntityRepository<ID, E> {
 
+  E save(E entity);
 
-    E save(E entity);
+  /**
+   * @param entity
+   * @return
+   */
+  E create(E entity);
 
-    /**
-     * @param entity
-     * @return
-     */
+  /**
+   * @param entity
+   * @return
+   */
+  E update(E entity);
 
-    E create(E entity);
+  /** @return */
+  List<E> list();
 
-    /**
-     * @param entity
-     * @return
-     */
-    E update(E entity);
+  /**
+   * @param id
+   * @return
+   */
+  E get(ID id);
 
-    /**
-     * @return
-     */
-    List<E> list();
-
-
-    /**
-     * @param id
-     * @return
-     */
-    E get(ID id);
-
-
-    /**
-     *
-     * @param id
-     * @return
-     */
-    E delete(ID id);
-
+  /**
+   * @param id
+   * @return
+   */
+  E delete(ID id);
 }

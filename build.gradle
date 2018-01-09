@@ -12,7 +12,16 @@ allprojects {
     apply plugin: 'maven-publish'
     apply plugin: 'project-report'
     apply plugin: 'com.bmuschko.clover'
+    apply plugin: "com.diffplug.gradle.spotless"
     apply plugin: 'io.spring.dependency-management'
+
+
+    spotless {
+        java {
+            googleJavaFormat('1.5')
+        }
+    }
+    
 
     clover {
         report {

@@ -1,5 +1,9 @@
 package io.sunshower.service.orchestration;
 
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import io.sunshower.service.AuthenticatedTestCase;
 import io.sunshower.service.graph.service.ContentResolver;
 import io.sunshower.service.hal.core.Content;
@@ -7,10 +11,18 @@ import io.sunshower.service.hal.core.Contents;
 import io.sunshower.service.hal.core.Graph;
 import io.sunshower.service.hal.core.Vertex;
 import io.sunshower.service.hal.core.contents.ContentHandler;
-import io.sunshower.service.orchestration.model.OrchestrationTemplate;
-import io.sunshower.service.orchestration.service.OrchestrationTemplateService;
+import io.sunshower.service.orchestration.model.Template;
+import io.sunshower.service.orchestration.service.TemplateService;
 import io.sunshower.service.workspace.model.Workspace;
 import io.sunshower.service.workspace.service.WorkspaceService;
+import java.io.File;
+import java.io.IOException;
+import java.util.Set;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.stream.Collectors;
+import javax.inject.Inject;
+import javax.ws.rs.core.MediaType;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,314 +30,271 @@ import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.inject.Inject;
-import javax.ws.rs.core.MediaType;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.Set;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-import java.util.stream.Collectors;
-
-import static org.junit.Assert.*;
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 @WithUserDetails("administrator")
 @Transactional(isolation = Isolation.REPEATABLE_READ)
 public class TemplateGraphTests extends AuthenticatedTestCase {
 
+  private Workspace workspace;
 
-    private Workspace workspace;
+  private Template template;
 
-    private OrchestrationTemplate template;
+  private Graph persistentGraph;
 
-    private Graph persistentGraph;
+  private Vertex clusterNode;
 
-    private Vertex clusterNode;
+  private Vertex testScript;
 
-    private Vertex testScript;
+  private Vertex otherNode;
 
-    private Vertex otherNode;
+  private Content clusterDefinition;
 
-    private Content clusterDefinition;
+  private Content setupRuby;
 
-    private Content setupRuby;
+  private Content execGroovy;
 
-    private Content execGroovy;
+  @Inject private WorkspaceService workspaceService;
 
-    @Inject
-    private WorkspaceService workspaceService;
+  @Inject private TemplateService templateService;
 
-    @Inject
-    private OrchestrationTemplateService templateService;
+  final Lock lock = new ReentrantLock();
 
-    final Lock lock = new ReentrantLock();
+  @BeforeEach
+  public void setUp() {
+    lock.lock();
+    createTemplateAndWorkspace();
+    createVertices();
+    createContents();
+    createGraphs();
+  }
 
-    @BeforeEach
-    public void setUp() {
-        lock.lock();
-        createTemplateAndWorkspace();
-        createVertices();
-        createContents();
-        createGraphs();
-    }
-    
-    @AfterEach
-    public void tearDown() {
-        lock.unlock();
-    }
+  @AfterEach
+  public void tearDown() {
+    lock.unlock();
+  }
 
+  @Test
+  public void ensureAddingContentOnOneNodeDoesNotModifyOtherNode() {
 
-    @Test
-    public void ensureAddingContentOnOneNodeDoesNotModifyOtherNode() {
+    persistentGraph.addVertex(clusterNode);
+    doSave();
+    Template template = entityManager.find(Template.class, this.template.getId());
+    ContentHandler clusterNodeHandler =
+        templateService
+            .contentManager(template.getId())
+            .contentFor(clusterNode)
+            .addContent(clusterDefinition);
+    ContentHandler testScript =
+        templateService.contentManager(template.getId()).contentFor(clusterNode);
 
-        persistentGraph.addVertex(clusterNode);
-        doSave();
-        OrchestrationTemplate template = entityManager.find(
-                OrchestrationTemplate.class,
-                this.template.getId()
-        );
-        ContentHandler clusterNodeHandler = templateService
-                .contentManager(template.getId())
-                .contentFor(clusterNode)
-                .addContent(clusterDefinition);
-        ContentHandler testScript = templateService
-                .contentManager(template.getId())
-                .contentFor(clusterNode);
+    assertThat(clusterNodeHandler.list().size(), is(1));
+    assertThat(testScript.list().size(), is(0));
+  }
 
-        assertThat(clusterNodeHandler.list().size(), is(1));
-        assertThat(testScript.list().size(), is(0));
-    }
-    
-    
-    @Test
-    public void ensureFindingContentByNameWorks() throws IOException {
-        persistentGraph.addVertex(clusterNode);
-        doSave();
-        OrchestrationTemplate template = entityManager.find(
-                OrchestrationTemplate.class,
-                this.template.getId()
-        );
-        ContentHandler clusterNodeHandler = templateService
-                .contentManager(template.getId())
-                .contentFor(clusterNode)
-                .addContent(clusterDefinition);
+  @Test
+  public void ensureFindingContentByNameWorks() throws IOException {
+    persistentGraph.addVertex(clusterNode);
+    doSave();
+    Template template = entityManager.find(Template.class, this.template.getId());
+    ContentHandler clusterNodeHandler =
+        templateService
+            .contentManager(template.getId())
+            .contentFor(clusterNode)
+            .addContent(clusterDefinition);
 
-        ContentResolver resolve = clusterNodeHandler
-                .resolve(clusterDefinition.getName());
-        resolve.write("Hello, world!");
-        clusterNodeHandler.close();
+    ContentResolver resolve = clusterNodeHandler.resolve(clusterDefinition.getName());
+    resolve.write("Hello, world!");
+    clusterNodeHandler.close();
 
+    resolve =
+        templateService
+            .contentManager(template.getId())
+            .contentFor(clusterNode)
+            .resolve(clusterDefinition.getName());
 
-        resolve = templateService
-                .contentManager(template.getId())
-                .contentFor(clusterNode).resolve(clusterDefinition.getName());
-        
-        assertThat(Contents.readString(resolve.read()), is("Hello, world!"));
-    }
-    
-    @Test
-    public void ensureWritingContentWorks() {
+    assertThat(Contents.readString(resolve.read()), is("Hello, world!"));
+  }
 
-        persistentGraph.addVertex(clusterNode);
-        doSave();
-        OrchestrationTemplate template = entityManager.find(
-                OrchestrationTemplate.class,
-                this.template.getId()
-        );
-        ContentHandler clusterNodeHandler = templateService
-                .contentManager(template.getId())
-                .contentFor(clusterNode)
-                .addContent(clusterDefinition);
+  @Test
+  public void ensureWritingContentWorks() {
 
-        clusterNodeHandler.resolve(clusterDefinition).write("Hello, world!");
-        clusterNodeHandler.close();
-        
-    }
+    persistentGraph.addVertex(clusterNode);
+    doSave();
+    Template template = entityManager.find(Template.class, this.template.getId());
+    ContentHandler clusterNodeHandler =
+        templateService
+            .contentManager(template.getId())
+            .contentFor(clusterNode)
+            .addContent(clusterDefinition);
 
-    @Test
-    public void ensureSavingContentReplacesContent() throws IOException {
+    clusterNodeHandler.resolve(clusterDefinition).write("Hello, world!");
+    clusterNodeHandler.close();
+  }
 
-        persistentGraph.addVertex(clusterNode);
-        doSave();
-        OrchestrationTemplate template = entityManager.find(
-                OrchestrationTemplate.class,
-                this.template.getId()
-        );
-        ContentHandler clusterNodeHandler = templateService
-                .contentManager(template.getId())
-                .contentFor(clusterNode)
-                .addContent(clusterDefinition);
+  @Test
+  public void ensureSavingContentReplacesContent() throws IOException {
 
-        clusterNodeHandler.resolve(clusterDefinition).write("Hello, world!");
-        clusterNodeHandler.close();
+    persistentGraph.addVertex(clusterNode);
+    doSave();
+    Template template = entityManager.find(Template.class, this.template.getId());
+    ContentHandler clusterNodeHandler =
+        templateService
+            .contentManager(template.getId())
+            .contentFor(clusterNode)
+            .addContent(clusterDefinition);
 
-        clusterNodeHandler = templateService
-                .contentManager(template.getId())
-                .contentFor(clusterNode);
+    clusterNodeHandler.resolve(clusterDefinition).write("Hello, world!");
+    clusterNodeHandler.close();
 
-        String result = Contents.readString(clusterNodeHandler.resolve(clusterDefinition).read());
-        assertThat(result, is("Hello, world!"));
-        clusterNodeHandler.close();
+    clusterNodeHandler = templateService.contentManager(template.getId()).contentFor(clusterNode);
 
-        clusterNodeHandler = templateService
-                .contentManager(template.getId())
-                .contentFor(clusterNode);
-        clusterNodeHandler.resolve(clusterDefinition).write("Frapper");
-        clusterNodeHandler.close();
+    String result = Contents.readString(clusterNodeHandler.resolve(clusterDefinition).read());
+    assertThat(result, is("Hello, world!"));
+    clusterNodeHandler.close();
 
-        clusterNodeHandler = templateService
-                .contentManager(template.getId())
-                .contentFor(clusterNode);
+    clusterNodeHandler = templateService.contentManager(template.getId()).contentFor(clusterNode);
+    clusterNodeHandler.resolve(clusterDefinition).write("Frapper");
+    clusterNodeHandler.close();
 
-        result = Contents.readString(clusterNodeHandler.resolve(clusterDefinition).read());
-        assertThat(result, is("Frapper"));
-        clusterNodeHandler.close();
-    }
+    clusterNodeHandler = templateService.contentManager(template.getId()).contentFor(clusterNode);
 
+    result = Contents.readString(clusterNodeHandler.resolve(clusterDefinition).read());
+    assertThat(result, is("Frapper"));
+    clusterNodeHandler.close();
+  }
 
-    @Test
-    public void ensureSavingThenRemovingThenResolvingContentProducesNonIllegalStateException() throws IOException {
-        assertThrows(IllegalStateException.class, () -> {
-            persistentGraph.addVertex(clusterNode);
-            doSave();
-            OrchestrationTemplate template = entityManager.find(
-                    OrchestrationTemplate.class,
-                    this.template.getId()
-            );
-            ContentHandler contentHandler = templateService
-                    .contentManager(template.getId())
-                    .contentFor(clusterNode)
-                    .addContent(clusterDefinition);
+  @Test
+  public void ensureSavingThenRemovingThenResolvingContentProducesNonIllegalStateException()
+      throws IOException {
+    assertThrows(
+        IllegalStateException.class,
+        () -> {
+          persistentGraph.addVertex(clusterNode);
+          doSave();
+          Template template = entityManager.find(Template.class, this.template.getId());
+          ContentHandler contentHandler =
+              templateService
+                  .contentManager(template.getId())
+                  .contentFor(clusterNode)
+                  .addContent(clusterDefinition);
 
-            contentHandler.resolve(clusterDefinition).write("Hello");
-            contentHandler.removeContent(clusterDefinition);
-            contentHandler.resolve(clusterDefinition);
+          contentHandler.resolve(clusterDefinition).write("Hello");
+          contentHandler.removeContent(clusterDefinition);
+          contentHandler.resolve(clusterDefinition);
         });
-    }
+  }
 
+  @Test
+  public void ensureClearingContentDeletesAllDirectories() {
 
-    @Test
-    public void ensureClearingContentDeletesAllDirectories() {
+    persistentGraph.addVertex(clusterNode);
+    doSave();
+    Template template = entityManager.find(Template.class, this.template.getId());
+    ContentHandler contentHandler =
+        templateService
+            .contentManager(template.getId())
+            .contentFor(clusterNode)
+            .addContent(clusterDefinition)
+            .addContent(execGroovy);
 
-        persistentGraph.addVertex(clusterNode);
-        doSave();
-        OrchestrationTemplate template = entityManager.find(
-                OrchestrationTemplate.class,
-                this.template.getId()
-        );
-        ContentHandler contentHandler = templateService
-                .contentManager(template.getId())
-                .contentFor(clusterNode)
-                .addContent(clusterDefinition)
-                .addContent(execGroovy);
+    Set<File> existing =
+        contentHandler
+            .list()
+            .stream()
+            .map(t -> new File(t.getFile().getPath()))
+            .collect(Collectors.toSet());
 
-        Set<File> existing = contentHandler
-                .list()
-                .stream()
-                .map(t -> new File(t.getFile().getPath()))
-                .collect(Collectors.toSet());
+    contentHandler.destroy();
 
-        contentHandler.destroy();
+    boolean anyThere = existing.stream().noneMatch(File::exists);
+    assertThat(anyThere, is(true));
+  }
 
-        boolean anyThere = existing.stream().noneMatch(File::exists);
-        assertThat(anyThere, is(true));
-    }
+  @Test
+  public void ensureRemovingContentOnExistingNodeByIdRemovesSpecifiedContentButNotOtherContent() {
+    persistentGraph.addVertex(clusterNode);
+    doSave();
+    Template template = entityManager.find(Template.class, this.template.getId());
+    ContentHandler contentHandler =
+        templateService
+            .contentManager(template.getId())
+            .contentFor(clusterNode.getId(), Vertex.class)
+            .addContent(clusterDefinition)
+            .addContent(execGroovy);
 
+    assertThat(contentHandler.list().size(), is(2));
 
+    contentHandler.close();
 
-    @Test
-    public void ensureRemovingContentOnExistingNodeByIdRemovesSpecifiedContentButNotOtherContent() {
-        persistentGraph.addVertex(clusterNode);
-        doSave();
-        OrchestrationTemplate template = entityManager.find(
-                OrchestrationTemplate.class,
-                this.template.getId()
-        );
-        ContentHandler contentHandler = templateService
-                .contentManager(template.getId())
-                .contentFor(clusterNode.getId(), Vertex.class)
-                .addContent(clusterDefinition)
-                .addContent(execGroovy);
+    contentHandler =
+        templateService
+            .contentManager(template.getId())
+            .contentFor(clusterNode)
+            .removeContent(clusterDefinition);
+    assertThat(contentHandler.list().contains(execGroovy), is(true));
+    assertThat(contentHandler.list().contains(clusterDefinition), is(false));
+  }
 
-        assertThat(contentHandler.list().size(), is(2));
+  @Test
+  public void ensureRemovingContentOnExistingNodeRemovesSpecifiedContentButNotOtherContent() {
+    persistentGraph.addVertex(clusterNode);
+    doSave();
+    Template template = entityManager.find(Template.class, this.template.getId());
+    ContentHandler contentHandler =
+        templateService
+            .contentManager(template.getId())
+            .contentFor(clusterNode)
+            .addContent(clusterDefinition)
+            .addContent(execGroovy);
 
-        contentHandler.close();
+    assertThat(contentHandler.list().size(), is(2));
 
-        contentHandler = templateService
-                .contentManager(template.getId())
-                .contentFor(clusterNode)
-                .removeContent(clusterDefinition);
-        assertThat(contentHandler.list().contains(execGroovy), is(true));
-        assertThat(contentHandler.list().contains(clusterDefinition), is(false));
-    }
+    contentHandler.close();
 
+    contentHandler =
+        templateService
+            .contentManager(template.getId())
+            .contentFor(clusterNode)
+            .removeContent(clusterDefinition);
+    assertThat(contentHandler.list().contains(execGroovy), is(true));
+    assertThat(contentHandler.list().contains(clusterDefinition), is(false));
+  }
 
+  private void doSave() {
+    workspaceService.save(workspace);
+    templateService.save(template);
+    templateService.saveGraph(template.getId(), persistentGraph);
+  }
 
-    @Test
-    public void ensureRemovingContentOnExistingNodeRemovesSpecifiedContentButNotOtherContent() {
-        persistentGraph.addVertex(clusterNode);
-        doSave();
-        OrchestrationTemplate template = entityManager.find(
-                OrchestrationTemplate.class,
-                this.template.getId()
-        );
-        ContentHandler contentHandler = templateService
-                .contentManager(template.getId())
-                .contentFor(clusterNode)
-                .addContent(clusterDefinition)
-                .addContent(execGroovy);
+  private void createContents() {
+    clusterDefinition = contents("test.txt", MediaType.TEXT_PLAIN);
+    setupRuby = contents("setup.ruby", MediaType.TEXT_PLAIN);
+    execGroovy = contents("setup.groovy", MediaType.TEXT_PLAIN);
+  }
 
-        assertThat(contentHandler.list().size(), is(2));
+  private Content contents(String s, String textPlain) {
+    final Content content = new Content();
+    content.setName(s);
+    content.setMediaType(textPlain);
+    return content;
+  }
 
-        contentHandler.close();
+  private void createVertices() {
+    clusterNode = new Vertex();
+    otherNode = new Vertex();
+    testScript = new Vertex();
+  }
 
-        contentHandler = templateService
-                .contentManager(template.getId())
-                .contentFor(clusterNode)
-                .removeContent(clusterDefinition);
-        assertThat(contentHandler.list().contains(execGroovy), is(true));
-        assertThat(contentHandler.list().contains(clusterDefinition), is(false));
-    }
+  private void createTemplateAndWorkspace() {
+    template = new Template();
+    workspace = new Workspace();
+    workspace.setName("coolbeans");
+    workspace.setKey("coolbeans");
+    workspace.addTemplate(template);
+    template.setKey("cool");
+    template.setName("frapper");
+  }
 
-    private void doSave() {
-        workspaceService.save(workspace);
-        templateService.save(template);
-        templateService.saveGraph(template.getId(), persistentGraph);
-    }
-
-    private void createContents() {
-        clusterDefinition = contents("test.txt", MediaType.TEXT_PLAIN);
-        setupRuby = contents("setup.ruby", MediaType.TEXT_PLAIN);
-        execGroovy = contents("setup.groovy", MediaType.TEXT_PLAIN);
-    }
-
-    private Content contents(String s, String textPlain) {
-        final Content content = new Content();
-        content.setName(s);
-        content.setMediaType(textPlain);
-        return content;
-    }
-
-    private void createVertices() {
-        clusterNode = new Vertex();
-        otherNode = new Vertex();
-        testScript = new Vertex();
-    }
-
-    private void createTemplateAndWorkspace() {
-        template = new OrchestrationTemplate();
-        workspace = new Workspace();
-        workspace.setName("coolbeans");
-        workspace.setKey("coolbeans");
-        workspace.addOrchestrationTemplate(template);
-        template.setKey("cool");
-        template.setName("frapper");
-    }
-
-    private void createGraphs() {
-        persistentGraph = new Graph();
-    }
+  private void createGraphs() {
+    persistentGraph = new Graph();
+  }
 }

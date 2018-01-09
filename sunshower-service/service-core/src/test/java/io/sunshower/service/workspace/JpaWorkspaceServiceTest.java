@@ -1,186 +1,168 @@
 package io.sunshower.service.workspace;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import io.sunshower.common.Identifier;
 import io.sunshower.service.BaseRepository;
 import io.sunshower.service.BaseRepositoryTest;
-import io.sunshower.service.orchestration.model.OrchestrationTemplate;
+import io.sunshower.service.orchestration.model.Template;
 import io.sunshower.service.workspace.model.Workspace;
 import io.sunshower.service.workspace.service.WorkspaceService;
+import java.io.File;
+import javax.inject.Inject;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.inject.Inject;
-
-
-import java.io.File;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
-
-/**
- * Created by haswell on 5/9/17.
- */
+/** Created by haswell on 5/9/17. */
 @Transactional(isolation = Isolation.REPEATABLE_READ)
 public class JpaWorkspaceServiceTest extends BaseRepositoryTest<Identifier, Workspace> {
 
+  @Inject private WorkspaceService workspaceService;
 
-    @Inject
-    private WorkspaceService workspaceService;
+  @Override
+  protected Identifier randomId() {
+    return Identifier.random();
+  }
 
+  @Override
+  protected Workspace randomEntity() {
+    Workspace workspace = new Workspace();
+    workspace.setName(Identifier.random().toString());
+    workspace.setKey(Identifier.random().toString());
+    return workspace;
+  }
 
-    @Override
-    protected Identifier randomId() {
-        return Identifier.random();
-    }
+  @Override
+  protected void alter(Workspace random) {
+    random.setName("justarandomworkspace");
+  }
 
+  protected Template randomTemplate() {
+    Template orchestrationTemplate = new Template();
+    orchestrationTemplate.setName(Identifier.random().toString());
+    orchestrationTemplate.setKey(Identifier.random().toString());
+    return orchestrationTemplate;
+  }
 
-    @Override
-    protected Workspace randomEntity() {
-        Workspace workspace = new Workspace();
-        workspace.setName(Identifier.random().toString());
-        workspace.setKey(Identifier.random().toString());
-        return workspace;
-    }
+  @Override
+  @SuppressWarnings("unchecked")
+  protected BaseRepository<Identifier, Workspace> service() {
+    return (BaseRepository<Identifier, Workspace>) workspaceService;
+  }
 
-    @Override
-    protected void alter(Workspace random) {
-        random.setName("justarandomworkspace");
-    }
+  @Override
+  protected void expectAlteration(Identifier uuid, Workspace random) {
+    assertThat(service().get(uuid).getName(), is("justarandomworkspace"));
+  }
 
-    protected OrchestrationTemplate randomTemplate() {
-        OrchestrationTemplate orchestrationTemplate = new OrchestrationTemplate();
-        orchestrationTemplate.setName(Identifier.random().toString());
-        orchestrationTemplate.setKey(Identifier.random().toString());
-        return orchestrationTemplate;
-    }
+  @Override
+  protected void expectSameProperties(Workspace random, Workspace save) {
+    assertThat(random.getKey(), is(save.getKey()));
+    assertThat(random.getName(), is(save.getName()));
+    assertThat(random.getCreated(), is(save.getCreated()));
+  }
 
-    @Override
-    @SuppressWarnings("unchecked")
-    protected BaseRepository<Identifier, Workspace> service() {
-        return (BaseRepository<Identifier, Workspace>) workspaceService;
-    }
+  @Test
+  @WithUserDetails("administrator")
+  public void ensureDeletingWorkspaceRemovesDirectory() {
+    Workspace workspace = randomEntity();
+    Workspace save = service().save(workspace);
 
+    final File file = new File(save.getRepository().getLocal().getFile().getPath());
 
-    @Override
-    protected void expectAlteration(Identifier uuid, Workspace random) {
-        assertThat(service().get(uuid).getName(), is("justarandomworkspace"));
-    }
+    assertThat(file.exists(), is(true));
+    assertThat(file.isDirectory(), is(true));
 
-    @Override
-    protected void expectSameProperties(Workspace random, Workspace save) {
-        assertThat(random.getKey(), is(save.getKey()));
-        assertThat(random.getName(), is(save.getName()));
-        assertThat(random.getCreated(), is(save.getCreated()));
-    }
+    workspaceService.delete(save.getId());
+    assertThat(file.exists(), is(false));
+  }
 
+  @Test
+  @WithUserDetails("administrator")
+  public void
+      ensureAddingTemplateToWorkspaceAsAdministratorResultsInTemplateAppearingInWorkspacesTemplateList() {
+    Template template = randomTemplate();
+    Workspace workspace = randomEntity();
+    workspaceService.save(workspace);
+    workspaceService.addTemplate(workspace.getId(), template);
+    assertThat(workspaceService.getTemplates(workspace.getId()).size(), is(1));
+  }
 
-    @Test
-    @WithUserDetails("administrator")
-    public void ensureDeletingWorkspaceRemovesDirectory() {
-        Workspace workspace = randomEntity();
-        Workspace save = service().save(workspace);
+  @Test
+  @WithUserDetails("non-admin")
+  public void
+      ensureAddingTemplateToWorkspaceAsTenantUserResultsInTemplateAppearingInWorkspacesTemplateList() {
+    Template template = randomTemplate();
+    Workspace workspace = randomEntity();
+    workspaceService.save(workspace);
+    workspaceService.addTemplate(workspace.getId(), template);
+    assertThat(workspaceService.getTemplates(workspace.getId()).size(), is(1));
+  }
 
-        final File file = new File(save
-                .getRepository()
-                .getLocal()
-                .getFile()
-                .getPath()
-        );
+  @Test
+  @WithUserDetails("non-admin")
+  public void ensureUsersCannotSeeOthersTemplates() {
+    Template template = randomTemplate();
+    Workspace workspace = randomEntity();
+    workspaceService.save(workspace);
+    workspaceService.addTemplate(workspace.getId(), template);
+    changeSession("administrator", "password");
+    assertThat(workspaceService.getTemplates(workspace.getId()).size(), is(0));
+  }
 
-        assertThat(file.exists(), is(true));
-        assertThat(file.isDirectory(), is(true));
+  @Test
+  @WithUserDetails("administrator")
+  public void ensureAdministratorsCanDeleteTemplates() {
+    Template template = randomTemplate();
+    Workspace workspace = randomEntity();
+    workspaceService.save(workspace);
+    workspaceService.addTemplate(workspace.getId(), template);
+    workspaceService.deleteTemplate(template.getId());
+    assertThat(workspaceService.getTemplates(workspace.getId()).size(), is(0));
+  }
 
-        workspaceService.delete(save.getId());
-        assertThat(file.exists(), is(false));
-    }
+  @Test
+  @WithUserDetails("non-admin")
+  public void ensureUsersWithoutAdminPrivilegesCanDeleteTemplates() {
+    Template template = randomTemplate();
+    Workspace workspace = randomEntity();
+    workspaceService.save(workspace);
+    workspaceService.addTemplate(workspace.getId(), template);
+    workspaceService.deleteTemplate(template.getId());
+    assertThat(workspaceService.getTemplates(workspace.getId()).size(), is(0));
+  }
 
-    @Test
-    @WithUserDetails("administrator")
-    public void ensureAddingTemplateToWorkspaceAsAdministratorResultsInTemplateAppearingInWorkspacesTemplateList() {
-        OrchestrationTemplate template = randomTemplate();
-        Workspace workspace = randomEntity();
-        workspaceService.save(workspace);
-        workspaceService.addTemplate(workspace.getId(), template);
-        assertThat(workspaceService.getTemplates(workspace.getId()).size(), is(1));
-    }
-    
+  @Test
+  @WithUserDetails("administrator")
+  public void ensureUsersCannotDeleteOtherUsersTemplates() {
 
-    @Test
-    @WithUserDetails("non-admin")
-    public void ensureAddingTemplateToWorkspaceAsTenantUserResultsInTemplateAppearingInWorkspacesTemplateList() {
-        OrchestrationTemplate template = randomTemplate();
-        Workspace workspace = randomEntity();
-        workspaceService.save(workspace);
-        workspaceService.addTemplate(workspace.getId(), template);
-        assertThat(workspaceService.getTemplates(workspace.getId()).size(), is(1));
-    }
-
-    @Test
-    @WithUserDetails("non-admin")
-    public void ensureUsersCannotSeeOthersTemplates() {
-        OrchestrationTemplate template = randomTemplate();
-        Workspace workspace = randomEntity();
-        workspaceService.save(workspace);
-        workspaceService.addTemplate(workspace.getId(), template);
-        changeSession("administrator", "password");
-        assertThat(workspaceService.getTemplates(workspace.getId()).size(), is(0));
-    }
-
-    @Test
-    @WithUserDetails("administrator")
-    public void ensureAdministratorsCanDeleteTemplates() {
-        OrchestrationTemplate template = randomTemplate();
-        Workspace workspace = randomEntity();
-        workspaceService.save(workspace);
-        workspaceService.addTemplate(workspace.getId(), template);
-        workspaceService.deleteTemplate(template.getId());
-        assertThat(workspaceService.getTemplates(workspace.getId()).size(), is(0));
-    }
-
-    @Test
-    @WithUserDetails("non-admin")
-    public void ensureUsersWithoutAdminPrivilegesCanDeleteTemplates() {
-        OrchestrationTemplate template = randomTemplate();
-        Workspace workspace = randomEntity();
-        workspaceService.save(workspace);
-        workspaceService.addTemplate(workspace.getId(), template);
-        workspaceService.deleteTemplate(template.getId());
-        assertThat(workspaceService.getTemplates(workspace.getId()).size(), is(0));
-    }
-
-    @Test
-    @WithUserDetails("administrator")
-    public void ensureUsersCannotDeleteOtherUsersTemplates() {
-        
-        OrchestrationTemplate template = randomTemplate();
-        Workspace workspace = randomEntity();
-        workspaceService.save(workspace);
-        workspaceService.addTemplate(workspace.getId(), template);
-        changeSession("non-admin", "frapafadsfa");
-        assertThrows(AccessDeniedException.class, () -> {
-            workspaceService.deleteTemplate(template.getId());
+    Template template = randomTemplate();
+    Workspace workspace = randomEntity();
+    workspaceService.save(workspace);
+    workspaceService.addTemplate(workspace.getId(), template);
+    changeSession("non-admin", "frapafadsfa");
+    assertThrows(
+        AccessDeniedException.class,
+        () -> {
+          workspaceService.deleteTemplate(template.getId());
         });
-    }
+  }
 
-    @Test
-    @WithUserDetails("administrator")
-    public void ensureGettingTemplatesOnlyRetrievesTemplatesFromThatWorkspace() {
-        Workspace workspace = randomEntity();
-        Workspace workspace2 = randomEntity();
-        workspaceService.save(workspace);
-        workspaceService.save(workspace2);
-        OrchestrationTemplate template = randomTemplate();
-        workspaceService.addTemplate(workspace.getId(), template);
+  @Test
+  @WithUserDetails("administrator")
+  public void ensureGettingTemplatesOnlyRetrievesTemplatesFromThatWorkspace() {
+    Workspace workspace = randomEntity();
+    Workspace workspace2 = randomEntity();
+    workspaceService.save(workspace);
+    workspaceService.save(workspace2);
+    Template template = randomTemplate();
+    workspaceService.addTemplate(workspace.getId(), template);
 
-        assertThat(workspaceService.getTemplates(workspace2.getId()).isEmpty(), is(true));
-
-    }
-
-
-
+    assertThat(workspaceService.getTemplates(workspace2.getId()).isEmpty(), is(true));
+  }
 }
