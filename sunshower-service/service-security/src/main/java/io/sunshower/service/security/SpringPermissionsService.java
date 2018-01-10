@@ -3,8 +3,6 @@ package io.sunshower.service.security;
 import io.sunshower.model.core.auth.*;
 import io.sunshower.persistence.core.Persistable;
 import java.util.Objects;
-import java.util.function.Function;
-import java.util.function.Supplier;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;

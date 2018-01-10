@@ -15,7 +15,6 @@ import io.sunshower.model.core.Application;
 import io.sunshower.model.core.auth.Role;
 import io.sunshower.model.core.auth.User;
 import io.sunshower.service.security.*;
-
 import java.io.IOException;
 import java.util.Set;
 import javax.inject.Inject;
@@ -25,9 +24,6 @@ import javax.persistence.PersistenceContext;
 import javax.ws.rs.container.ContainerRequestContext;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.springframework.security.authentication.TestingAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.transaction.annotation.Transactional;
 
 class DefaultApplicationServiceTest extends SecurityTest {
@@ -110,7 +106,11 @@ class DefaultApplicationServiceTest extends SecurityTest {
 
   @Test
   public void ensureNoActivationsAreInitiallyAvailable() {
-    assertThrows(NoResultException.class, () -> activationService.getActivation());
+    permissionsService.impersonate(
+        () -> {
+          assertThrows(NoResultException.class, () -> activationService.getActivation());
+        },
+        new Role("admin"));
   }
 
   @Test

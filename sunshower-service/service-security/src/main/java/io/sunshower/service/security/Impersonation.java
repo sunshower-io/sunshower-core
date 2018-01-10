@@ -1,12 +1,11 @@
 package io.sunshower.service.security;
 
 import io.sunshower.model.core.auth.User;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 
 public class Impersonation implements Authentication {
   final GrantedAuthority[] roles;
@@ -17,22 +16,22 @@ public class Impersonation implements Authentication {
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
-      return Collections.unmodifiableList(Arrays.asList(roles));
+    return Collections.unmodifiableList(Arrays.asList(roles));
   }
 
   @Override
   public Object getCredentials() {
-      return new User();
+    return new User();
   }
 
   @Override
   public Object getDetails() {
-      return new Object();
+    return new Object();
   }
 
   @Override
   public Object getPrincipal() {
-      return new Object();
+    return new Object();
   }
 
   @Override

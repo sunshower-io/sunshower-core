@@ -1,11 +1,9 @@
 package io.sunshower.model.core.auth;
 
 import io.sunshower.model.core.Application;
-import io.sunshower.model.core.auth.User;
 import io.sunshower.persistence.core.DistributableEntity;
-
-import javax.persistence.*;
 import java.util.Date;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "ACTIVATION", schema = "SUNSHOWER")

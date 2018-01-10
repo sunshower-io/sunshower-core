@@ -11,7 +11,6 @@ import io.sunshower.service.security.ActivationService;
 import io.sunshower.service.security.ApplicationService;
 import io.sunshower.service.security.DefaultRoles;
 import io.sunshower.service.signup.SignupService;
-
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
@@ -19,7 +18,6 @@ import java.util.Set;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
