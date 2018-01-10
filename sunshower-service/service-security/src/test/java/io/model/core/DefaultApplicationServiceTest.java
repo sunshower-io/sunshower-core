@@ -112,6 +112,12 @@ class DefaultApplicationServiceTest extends SecurityTest {
         },
         new Role("admin"));
   }
+  
+  @Test
+  public void ensureActivationServiceIsActiveRequiresNoAuthentication() {
+      activationService.isActive();
+      
+  }
 
   @Test
   public void ensureActivatingApplicationProducesRetrievableActivation() {
