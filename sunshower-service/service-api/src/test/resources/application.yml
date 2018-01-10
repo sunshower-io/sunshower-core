@@ -1,7 +1,7 @@
 
 jdbc:
   username: sa
-  url: jdbc:h2:mem:frapper;MODE=PostgreSQL;DB_CLOSE_DELAY=-1
+  url: jdbc:h2:mem:frapper;MODE=PostgreSQL;DB_CLOSE_DELAY=-1;SCHEMA=SUNSHOWER;
   driver-class: org.h2.Driver
 
 ignite:
