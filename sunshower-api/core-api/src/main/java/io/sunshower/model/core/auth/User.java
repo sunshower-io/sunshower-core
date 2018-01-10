@@ -8,9 +8,13 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.*;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+@Getter
+@Setter
 @Entity
 @XmlRootElement(name = "user")
 @XmlAccessorType(XmlAccessType.NONE)
@@ -44,6 +48,7 @@ public class User extends DistributableEntity implements UserDetails, TenantAwar
   )
   private Set<Role> roles;
 
+  @Getter
   @ManyToOne
   @JoinColumn(name = "tenant_id")
   private Tenant tenant;
@@ -66,27 +71,11 @@ public class User extends DistributableEntity implements UserDetails, TenantAwar
     super(uuid);
   }
 
-  public boolean isActive() {
-    return active;
-  }
-
-  public void setActive(boolean active) {
-    this.active = active;
-  }
-
   public Set<Role> getRoles() {
     if (roles == null) {
       return Collections.emptySet();
     }
     return roles;
-  }
-
-  public void setRoles(Set<Role> roles) {
-    this.roles = roles;
-  }
-
-  public String getUsername() {
-    return username;
   }
 
   @Override
@@ -109,38 +98,14 @@ public class User extends DistributableEntity implements UserDetails, TenantAwar
     return active;
   }
 
-  public void setEnabled(boolean enabled) {
-    this.active = enabled;
-  }
-
-  public void setUsername(String username) {
-    this.username = username;
-  }
-
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
     return roles;
   }
 
-  public String getPassword() {
-    return password;
-  }
-
-  public void setPassword(String password) {
-    this.password = password;
-  }
-
   @Override
   protected void setDefaults() {
     this.setDetails(new Details(this));
-  }
-
-  public Details getDetails() {
-    return details;
-  }
-
-  public void setDetails(Details details) {
-    this.details = details;
   }
 
   @Override
@@ -164,13 +129,5 @@ public class User extends DistributableEntity implements UserDetails, TenantAwar
     }
     this.roles.add(role);
     return this;
-  }
-
-  public Tenant getTenant() {
-    return tenant;
-  }
-
-  public void setTenant(Tenant tenant) {
-    this.tenant = tenant;
   }
 }
