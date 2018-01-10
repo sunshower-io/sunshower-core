@@ -15,6 +15,8 @@
  */
 package io.sunshower.service.security;
 
+import static java.lang.String.format;
+
 import io.sunshower.common.Identifier;
 import java.io.Serializable;
 import java.lang.reflect.Field;
@@ -36,28 +38,7 @@ import org.springframework.util.Assert;
  */
 public class IdentifierEnabledLookupStrategy implements LookupStrategy {
 
-  public static final String DEFAULT_SELECT_CLAUSE =
-      "select acl_object_identity.object_id_identity, "
-          + "acl_entry.ace_order,  "
-          + "acl_object_identity.id as acl_id, "
-          + "acl_object_identity.parent_object, "
-          + "acl_object_identity.entries_inheriting, "
-          + "acl_entry.id as ace_id, "
-          + "acl_entry.mask,  "
-          + "acl_entry.granting,  "
-          + "acl_entry.audit_success, "
-          + "acl_entry.audit_failure,  "
-          + "acl_sid.principal as ace_principal, "
-          + "acl_sid.sid as ace_sid,  "
-          + "acli_sid.principal as acl_principal, "
-          + "acli_sid.sid as acl_sid, "
-          + "acl_class.class "
-          + "from acl_object_identity "
-          + "left join acl_sid acli_sid on acli_sid.id = acl_object_identity.owner_sid "
-          + "left join acl_class on acl_class.id = acl_object_identity.object_id_class   "
-          + "left join acl_entry on acl_object_identity.id = acl_entry.acl_object_identity "
-          + "left join acl_sid on acl_entry.sid = acl_sid.id  "
-          + "where ( ";
+  public final String DEFAULT_SELECT_CLAUSE;
 
   private static final String DEFAULT_LOOKUP_KEYS_WHERE_CLAUSE = "(acl_object_identity.id = ?)";
 
@@ -71,6 +52,7 @@ public class IdentifierEnabledLookupStrategy implements LookupStrategy {
   // ================================================================================================
 
   private final AclAuthorizationStrategy aclAuthorizationStrategy;
+  private final String schemaPrefix;
   private PermissionFactory permissionFactory = new DefaultPermissionFactory();
   private final AclCache aclCache;
   private final PermissionGrantingStrategy grantingStrategy;
@@ -81,7 +63,7 @@ public class IdentifierEnabledLookupStrategy implements LookupStrategy {
   private final Field fieldAcl = FieldUtils.getField(AccessControlEntryImpl.class, "acl");
 
   // SQL Customization fields
-  private String selectClause = DEFAULT_SELECT_CLAUSE;
+  private String selectClause;
   private String lookupPrimaryKeysWhereClause = DEFAULT_LOOKUP_KEYS_WHERE_CLAUSE;
   private String lookupObjectIdentitiesWhereClause = DEFAULT_LOOKUP_IDENTITIES_WHERE_CLAUSE;
   private String orderByClause = DEFAULT_ORDER_BY_CLAUSE;
@@ -97,11 +79,13 @@ public class IdentifierEnabledLookupStrategy implements LookupStrategy {
    * @param aclAuthorizationStrategy authorization strategy (required)
    */
   public IdentifierEnabledLookupStrategy(
+      String schema,
       DataSource dataSource,
       AclCache aclCache,
       AclAuthorizationStrategy aclAuthorizationStrategy,
       AuditLogger auditLogger) {
     this(
+        schema,
         dataSource,
         aclCache,
         aclAuthorizationStrategy,
@@ -117,10 +101,12 @@ public class IdentifierEnabledLookupStrategy implements LookupStrategy {
    * @param grantingStrategy the PermissionGrantingStrategy
    */
   public IdentifierEnabledLookupStrategy(
+      String schema,
       DataSource dataSource,
       AclCache aclCache,
       AclAuthorizationStrategy aclAuthorizationStrategy,
       PermissionGrantingStrategy grantingStrategy) {
+    this.schemaPrefix = schema == null || schema.isEmpty() ? "" : schema + ".";
     Assert.notNull(dataSource, "DataSource required");
     Assert.notNull(aclCache, "AclCache required");
     Assert.notNull(aclAuthorizationStrategy, "AclAuthorizationStrategy required");
@@ -131,6 +117,8 @@ public class IdentifierEnabledLookupStrategy implements LookupStrategy {
     this.grantingStrategy = grantingStrategy;
     fieldAces.setAccessible(true);
     fieldAcl.setAccessible(true);
+    DEFAULT_SELECT_CLAUSE = createSelectQuery();
+    selectClause = DEFAULT_SELECT_CLAUSE;
   }
 
   // ~ Methods
@@ -631,5 +619,31 @@ public class IdentifierEnabledLookupStrategy implements LookupStrategy {
       return null;
     }
     return Identifier.valueOf(bytes);
+  }
+
+  private String createSelectQuery() {
+    return format(
+        "select acl_object_identity.object_id_identity, "
+            + "acl_entry.ace_order,  "
+            + "acl_object_identity.id as acl_id, "
+            + "acl_object_identity.parent_object, "
+            + "acl_object_identity.entries_inheriting, "
+            + "acl_entry.id as ace_id, "
+            + "acl_entry.mask,  "
+            + "acl_entry.granting,  "
+            + "acl_entry.audit_success, "
+            + "acl_entry.audit_failure,  "
+            + "acl_sid.principal as ace_principal, "
+            + "acl_sid.sid as ace_sid,  "
+            + "acli_sid.principal as acl_principal, "
+            + "acli_sid.sid as acl_sid, "
+            + "acl_class.class "
+            + "from %sacl_object_identity "
+            + "left join %sacl_sid acli_sid on acli_sid.id = acl_object_identity.owner_sid "
+            + "left join %sacl_class on acl_class.id = acl_object_identity.object_id_class   "
+            + "left join %sacl_entry on acl_object_identity.id = acl_entry.acl_object_identity "
+            + "left join %sacl_sid on acl_entry.sid = acl_sid.id  "
+            + "where ( ",
+        schemaPrefix, schemaPrefix, schemaPrefix, schemaPrefix, schemaPrefix);
   }
 }

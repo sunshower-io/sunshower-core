@@ -15,6 +15,8 @@
  */
 package io.sunshower.service.security;
 
+import static java.lang.String.format;
+
 import io.sunshower.common.Identifier;
 import io.sunshower.persist.Identifiers;
 import io.sunshower.persist.Sequence;
@@ -45,56 +47,50 @@ public class IdentifierJdbcMutableAclService extends JdbcAclService implements M
 
   static final Sequence<Identifier> sequence = Identifiers.newSequence(true);
 
+  private String schemaPrefix;
+  private String updateObjectIdentity;
+  private String findChildrenSql;
+  private AclCache aclCache;
+  private String deleteEntryByObjectIdentityForeignKey;
+  private String insertClass;
+  private String deleteObjectIdentityByPrimaryKey;
+  private String selectSidPrimaryKey;
+  private String selectObjectIdentityPrimaryKey;
+  private String selectClassPrimaryKey;
+  private String insertSid;
+  private String insertObjectIdentity;
+  private String insertEntry;
   private boolean foreignKeysInDatabase = true;
-
-  private static final String findChildrenSql =
-      "select obj.object_id_identity as obj_id, class.class as class "
-          + "from acl_object_identity obj, acl_object_identity parent, acl_class class "
-          + "where obj.parent_object = parent.id and obj.object_id_class = class.id "
-          + "and parent.object_id_identity = ? and parent.object_id_class = ("
-          + "select id FROM acl_class where acl_class.class = ?)";
-
-  private final AclCache aclCache;
-  private String deleteEntryByObjectIdentityForeignKey =
-      "DELETE FROM acl_entry WHERE acl_object_identity=?";
-  private String deleteObjectIdentityByPrimaryKey = "DELETE FROM acl_object_identity WHERE id=?";
-
-  private String insertClass = "INSERT INTO acl_class (id, class) VALUES (?, ?)";
-
-  private String insertEntry =
-      "INSERT INTO acl_entry "
-          + "(id, acl_object_identity, ace_order, sid, mask, granting, audit_success, audit_failure)"
-          + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-
-  private String insertObjectIdentity =
-      "INSERT INTO acl_object_identity "
-          + "(id, object_id_class, object_id_identity, owner_sid, entries_inheriting) "
-          + "VALUES (?, ?, ?, ?, ?)";
-
-  private String insertSid = "INSERT INTO acl_sid (id, principal, sid) VALUES (?, ?, ?)";
-
-  private String selectClassPrimaryKey = "SELECT id FROM acl_class WHERE class=?";
-
-  private String selectObjectIdentityPrimaryKey =
-      "SELECT acl_object_identity.id FROM acl_object_identity, acl_class "
-          + "WHERE acl_object_identity.object_id_class = acl_class.id AND acl_class.class=? "
-          + "AND acl_object_identity.object_id_identity = ?";
-
-  private String selectSidPrimaryKey = "SELECT id FROM acl_sid WHERE principal=? AND sid=?";
-
-  private String updateObjectIdentity =
-      "UPDATE acl_object_identity SET "
-          + "parent_object = ?, owner_sid = ?, entries_inheriting = ?"
-          + " WHERE id = ?";
 
   // ~ Constructors
   // ===================================================================================================
 
   public IdentifierJdbcMutableAclService(
-      DataSource dataSource, LookupStrategy lookupStrategy, AclCache aclCache) {
+      DataSource dataSource, LookupStrategy lookupStrategy, AclCache aclCache, String schema) {
     super(dataSource, lookupStrategy);
     Assert.notNull(aclCache, "AclCache required");
     this.aclCache = aclCache;
+    this.schemaPrefix = schema == null || schema.trim().isEmpty() ? "" : schema + ".";
+    updateObjectIdentity = createUpdateObjectIdentityQuery();
+
+    findChildrenSql = createFindChildrenSql();
+
+    deleteEntryByObjectIdentityForeignKey = createDeleteEntryByObjectIdentityForeignKey();
+
+    insertClass = createInsertClassQuery();
+    deleteObjectIdentityByPrimaryKey = createDeleteEntryByPrimaryKey();
+
+    insertEntry = createInsertEntryQuery();
+
+    insertObjectIdentity = createInsertObjectIdentityQuery();
+
+    insertSid = createInsertSidQuery();
+
+    selectClassPrimaryKey = createSelectClassbyPrimaryKey();
+
+    selectObjectIdentityPrimaryKey = createSelectObjectIdentityByPrimaryKeyQuery();
+
+    selectSidPrimaryKey = createSelectSidByPrimaryKey();
   }
 
   // ~ Methods
@@ -521,12 +517,74 @@ public class IdentifierJdbcMutableAclService extends JdbcAclService implements M
     this.updateObjectIdentity = updateObjectIdentity;
   }
 
-  /**
-   * @param foreignKeysInDatabase if false this class will perform additional FK constrain checking,
-   *     which may cause deadlocks (the default is true, so deadlocks are avoided but the database
-   *     is expected to enforce FKs)
-   */
   public void setForeignKeysInDatabase(boolean foreignKeysInDatabase) {
     this.foreignKeysInDatabase = foreignKeysInDatabase;
+  }
+
+  private String createFindChildrenSql() {
+    return format(
+        "select obj.object_id_identity as obj_id, class.class as class "
+            + "from %sacl_object_identity obj, %sacl_object_identity parent, %sacl_class class "
+            + "where obj.parent_object = parent.id and obj.object_id_class = class.id "
+            + "and parent.object_id_identity = ? and parent.object_id_class = ("
+            + "select id FROM %sacl_class where acl_class.class = ?)",
+        schemaPrefix, schemaPrefix, schemaPrefix, schemaPrefix);
+  }
+
+  private String createDeleteEntryByObjectIdentityForeignKey() {
+    return format("DELETE FROM %sacl_entry WHERE acl_object_identity=?", schemaPrefix);
+  }
+
+  private String createDeleteEntryByPrimaryKey() {
+    return format("DELETE FROM %sacl_object_identity WHERE id=?", schemaPrefix);
+  }
+
+  private String createInsertClassQuery() {
+    return format("INSERT INTO %sacl_class (id, class) VALUES (?, ?)", schemaPrefix);
+  }
+
+  private String createInsertEntryQuery() {
+    return format(
+        "INSERT INTO %sacl_entry "
+            + "(id, acl_object_identity, ace_order, sid, mask, granting, audit_success, audit_failure)"
+            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+        schemaPrefix);
+  }
+
+  private String createInsertObjectIdentityQuery() {
+    return format(
+        "INSERT INTO %sacl_object_identity "
+            + "(id, object_id_class, object_id_identity, owner_sid, entries_inheriting) "
+            + "VALUES (?, ?, ?, ?, ?)",
+        schemaPrefix);
+  }
+
+  private String createInsertSidQuery() {
+    return format("INSERT INTO %sacl_sid (id, principal, sid) VALUES (?, ?, ?)", schemaPrefix);
+  }
+
+  private String createSelectObjectIdentityByPrimaryKeyQuery() {
+
+    return format(
+        "SELECT acl_object_identity.id FROM %sacl_object_identity, %sacl_class "
+            + "WHERE acl_object_identity.object_id_class = acl_class.id AND acl_class.class=? "
+            + "AND acl_object_identity.object_id_identity = ?",
+        schemaPrefix, schemaPrefix);
+  }
+
+  private String createSelectClassbyPrimaryKey() {
+    return format("SELECT id FROM %sacl_class WHERE class=?", schemaPrefix);
+  }
+
+  private String createSelectSidByPrimaryKey() {
+    return format("SELECT id FROM %sacl_sid WHERE principal=? AND sid=?", schemaPrefix);
+  }
+
+  private String createUpdateObjectIdentityQuery() {
+    return format(
+        "UPDATE %sacl_object_identity SET "
+            + "parent_object = ?, owner_sid = ?, entries_inheriting = ?"
+            + " WHERE id = ?",
+        schemaPrefix);
   }
 }

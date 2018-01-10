@@ -79,7 +79,7 @@ public class JpaWorkspaceService extends BaseRepository<Identifier, Workspace>
         getEntityManager()
             .createQuery(
                 "select a from Workspace w "
-                    + "join w.orchestrationTemplates a "
+                    + "join w.templates a "
                     + "join w.identity woid "
                     + "join a.identity aoid "
                     + "where woid.owner.username = :id "

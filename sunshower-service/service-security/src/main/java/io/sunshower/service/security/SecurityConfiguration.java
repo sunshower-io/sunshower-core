@@ -147,7 +147,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
   public JdbcAclService jdbcAclService(
       DataSource dataSource, LookupStrategy lookupStrategy, AclCache aclCache) {
 
-    return new IdentifierJdbcMutableAclService(dataSource, lookupStrategy, aclCache);
+    return new IdentifierJdbcMutableAclService(dataSource, lookupStrategy, aclCache, "SUNSHOWER");
   }
 
   @Bean
@@ -183,7 +183,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
       AclAuthorizationStrategy aclAuthorizationStrategy,
       PermissionGrantingStrategy permissionGrantingStrategy) {
     return new IdentifierEnabledLookupStrategy(
-        dataSource, aclCache, aclAuthorizationStrategy, permissionGrantingStrategy);
+        "SUNSHOWER", dataSource, aclCache, aclAuthorizationStrategy, permissionGrantingStrategy);
   }
 
   @Bean
