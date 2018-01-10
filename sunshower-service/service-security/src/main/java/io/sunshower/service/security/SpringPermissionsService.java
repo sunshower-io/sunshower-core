@@ -3,6 +3,8 @@ package io.sunshower.service.security;
 import io.sunshower.model.core.auth.*;
 import io.sunshower.persistence.core.Persistable;
 import java.util.Objects;
+import java.util.function.Function;
+import java.util.function.Supplier;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -13,10 +15,11 @@ import org.springframework.security.acls.domain.PrincipalSid;
 import org.springframework.security.acls.model.*;
 import org.springframework.security.acls.model.ObjectIdentity;
 import org.springframework.security.acls.model.Permission;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 
-/** Created by haswell on 5/9/17. */
 @Transactional
 public class SpringPermissionsService implements PermissionsService<Permission> {
 
@@ -27,6 +30,16 @@ public class SpringPermissionsService implements PermissionsService<Permission> 
   @PersistenceContext private EntityManager entityManager;
 
   @Inject private PermissionEvaluator permissionEvaluator;
+
+  public void impersonate(Action action, GrantedAuthority... roles) {
+    final Authentication impersonatedAuthentication = new Impersonation(roles);
+    try {
+      SecurityContextHolder.getContext().setAuthentication(impersonatedAuthentication);
+      action.apply();
+    } finally {
+      SecurityContextHolder.getContext().setAuthentication(session);
+    }
+  }
 
   @Override
   public <T extends Persistable> void grantWithCurrentSession(

@@ -7,7 +7,6 @@ import org.springframework.security.acls.model.AclService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 
-/** Created by haswell on 5/9/17. */
 public class MultitenantedHierarchicalPermissionEvaluator extends AclPermissionEvaluator {
 
   public MultitenantedHierarchicalPermissionEvaluator(AclService aclService) {

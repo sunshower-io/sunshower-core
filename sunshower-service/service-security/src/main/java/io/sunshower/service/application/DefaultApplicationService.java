@@ -4,24 +4,29 @@ import io.sunshower.core.security.RoleService;
 import io.sunshower.core.security.crypto.EncryptionService;
 import io.sunshower.model.core.Application;
 import io.sunshower.model.core.ApplicationInitializationException;
+import io.sunshower.model.core.auth.Activation;
 import io.sunshower.model.core.auth.Role;
 import io.sunshower.model.core.auth.User;
+import io.sunshower.service.security.ActivationService;
 import io.sunshower.service.security.ApplicationService;
 import io.sunshower.service.security.DefaultRoles;
 import io.sunshower.service.signup.SignupService;
+
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/** Created by haswell on 10/26/16. */
 @Service
 @Transactional
-public class DefaultApplicationService implements ApplicationService {
+public class DefaultApplicationService implements ApplicationService, ActivationService {
 
   @Inject private RoleService roleService;
 
@@ -94,5 +99,46 @@ public class DefaultApplicationService implements ApplicationService {
   @Override
   public Boolean removeAdministrator(User user) {
     return null;
+  }
+
+  @Override
+  @PreAuthorize("hasAuthority('ADMIN')")
+  public Activation getActivation() {
+    return entityManager
+        .createQuery("select a from Activation a where a.active = true", Activation.class)
+        .getSingleResult();
+  }
+
+  @Override
+  public boolean isActive() {
+    return entityManager
+            .createQuery("select count(a) from Activation a where a.active = true", Long.class)
+            .getSingleResult()
+        > 0;
+  }
+
+  public Activation activate(User activator) {
+    checkActive();
+    final Activation activation = new Activation();
+    activation.setActive(true);
+    final Application application = new Application();
+    application.setName("Sunshower");
+    application.setAdministrators(Arrays.asList(activator));
+    activation.setActivator(activator);
+    activation.setApplication(application);
+    entityManager.persist(activation);
+    return activation;
+  }
+
+  @PreAuthorize("!activationService.isActive()")
+  public Activation deactivate() {
+    return null;
+  }
+
+  private void checkActive() {
+    if (isActive()) {
+      throw new IllegalStateException(
+          String.format("%s is already active!", getActivation().getApplication().getName()));
+    }
   }
 }

@@ -5,6 +5,8 @@ import io.sunshower.persistence.Dialect;
 import io.sunshower.persistence.annotations.Persistence;
 import io.sunshower.service.application.DefaultApplicationService;
 import io.sunshower.service.security.ApplicationService;
+import io.sunshower.service.security.PermissionsService;
+import io.sunshower.service.security.SpringPermissionsService;
 import io.sunshower.service.security.crypto.MessageAuthenticationCode;
 import io.sunshower.test.common.TestConfigurations;
 import java.util.concurrent.ExecutorService;
@@ -35,6 +37,11 @@ import org.springframework.context.annotation.Primary;
   }
 )
 public class TestSecurityConfiguration {
+
+  @Bean
+  public PermissionsService<?> permissionsService() {
+    return new SpringPermissionsService();
+  }
 
   @Primary
   @Bean(name = TestConfigurations.TEST_CONFIGURATION_REPOSITORY_PATH)

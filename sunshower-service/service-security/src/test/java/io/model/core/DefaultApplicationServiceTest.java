@@ -1,31 +1,42 @@
 package io.model.core;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 
 import io.io.sunshower.service.security.TestSecureService;
 import io.sunshower.core.security.crypto.EncryptionService;
 import io.sunshower.model.core.Application;
+import io.sunshower.model.core.auth.Role;
 import io.sunshower.model.core.auth.User;
-import io.sunshower.service.security.ApplicationService;
-import io.sunshower.service.security.SecurityTest;
-import io.sunshower.service.security.TokenAuthenticationFilter;
+import io.sunshower.service.security.*;
+
 import java.io.IOException;
 import java.util.Set;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.ws.rs.container.ContainerRequestContext;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.security.authentication.TestingAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.transaction.annotation.Transactional;
 
 class DefaultApplicationServiceTest extends SecurityTest {
 
   @PersistenceContext private EntityManager entityManager;
+
+  @Inject private PermissionsService<?> permissionsService;
+
+  @Inject private ActivationService activationService;
 
   @Inject private TestSecureService testSecureService;
 
@@ -90,5 +101,38 @@ class DefaultApplicationServiceTest extends SecurityTest {
     Set<User> admins = applicationService.getAdministrators();
     User admin = admins.iterator().next();
     assertThat(admin.getAuthorities().size(), is(1));
+  }
+
+  @Test
+  public void ensureActivationServiceIsInjectable() {
+    assertThat(activationService, is(not(nullValue())));
+  }
+
+  @Test
+  public void ensureNoActivationsAreInitiallyAvailable() {
+    assertThrows(NoResultException.class, () -> activationService.getActivation());
+  }
+
+  @Test
+  public void ensureActivatingApplicationProducesRetrievableActivation() {
+    final User u = new User();
+    u.setUsername("Josiah");
+    u.setPassword("Haswell");
+    u.getDetails().setEmailAddress("josiah@sunshower.io");
+    activationService.activate(u);
+    permissionsService.impersonate(
+        () -> assertThat(activationService.getActivation().isActive(), is(true)),
+        new Role("ADMIN"));
+  }
+
+  @Test
+  public void ensureReactivatingApplicationFailsWithException() {
+    final User u = new User();
+    u.setUsername("Josiah");
+    u.setPassword("Haswell");
+    u.getDetails().setEmailAddress("josiah@sunshower.io");
+    activationService.activate(u);
+
+    assertThrows(IllegalStateException.class, () -> activationService.activate(u));
   }
 }

@@ -36,6 +36,7 @@ import org.springframework.security.acls.model.AclService;
 import org.springframework.security.acls.model.PermissionGrantingStrategy;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.method.configuration.GlobalMethodSecurityConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.GrantedAuthority;
@@ -43,11 +44,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-/** Created by haswell on 10/15/16. */
 @Configuration
-@EnableGlobalMethodSecurity(prePostEnabled = true, jsr250Enabled = true)
 @EnableCaching
-public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+@EnableGlobalMethodSecurity(prePostEnabled = true, jsr250Enabled = true, securedEnabled = true)
+public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 
   static final Logger logger = LoggerFactory.getLogger(SecurityConfiguration.class);
 
@@ -59,6 +59,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
   @Override
   protected void configure(HttpSecurity http) throws Exception {
     logger.info("disabling web security in favor of method security");
+    http.anonymous().configure(http);
     http.authorizeRequests().anyRequest().permitAll();
   }
 
