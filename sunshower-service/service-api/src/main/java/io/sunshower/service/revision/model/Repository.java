@@ -1,14 +1,14 @@
 package io.sunshower.service.revision.model;
 
+import io.sunshower.model.core.Schemata;
 import io.sunshower.model.core.auth.ProtectedDistributableEntity;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
-/** Created by haswell on 5/22/17. */
 @Entity
-@Table(name = "GIT_REPOSITORY")
+@Table(name = "GIT_REPOSITORY", schema = Schemata.SUNSHOWER)
 public class Repository extends ProtectedDistributableEntity {
 
   @NotNull

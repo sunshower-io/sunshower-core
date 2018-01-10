@@ -1,14 +1,15 @@
 package io.sunshower.model.core.auth;
 
+import io.sunshower.model.core.Schemata;
 import io.sunshower.persistence.core.DistributableEntity;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
 
-/** Created by haswell on 10/20/16. */
 @Entity
 @XmlRootElement
+@Table(name = "PERMISSION", schema = Schemata.SUNSHOWER)
 public class Permission extends DistributableEntity {
 
   @Basic @Column private String name;

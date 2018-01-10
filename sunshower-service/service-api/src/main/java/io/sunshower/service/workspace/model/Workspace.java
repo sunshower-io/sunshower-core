@@ -1,5 +1,6 @@
 package io.sunshower.service.workspace.model;
 
+import io.sunshower.model.core.Schemata;
 import io.sunshower.service.model.BaseModelObject;
 import io.sunshower.service.orchestration.model.Template;
 import io.sunshower.service.revision.model.Repository;
@@ -9,10 +10,9 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-/** Created by haswell on 5/9/17. */
 @Entity
 @Cacheable
-@Table(name = "WORKSPACE")
+@Table(name = "WORKSPACE", schema = Schemata.SUNSHOWER)
 public class Workspace extends BaseModelObject {
 
   @Basic
@@ -28,18 +28,18 @@ public class Workspace extends BaseModelObject {
   @Enumerated private WorkspaceClassification classification;
 
   @OneToMany(mappedBy = "workspace", cascade = CascadeType.ALL, orphanRemoval = true)
-  private Set<Template> orchestrationTemplates;
+  private Set<Template> templates;
 
   {
     classification = WorkspaceClassification.Project;
   }
 
   public void addTemplate(Template template) {
-    if (orchestrationTemplates == null) {
-      orchestrationTemplates = new HashSet<>();
+    if (templates == null) {
+      templates = new HashSet<>();
     }
     template.setWorkspace(this);
-    orchestrationTemplates.add(template);
+    templates.add(template);
   }
 
   public Repository getRepository() {
@@ -51,11 +51,11 @@ public class Workspace extends BaseModelObject {
   }
 
   public Set<Template> getTemplates() {
-    return orchestrationTemplates;
+    return templates;
   }
 
-  public void setTemplates(Set<Template> orchestrationTemplates) {
-    this.orchestrationTemplates = orchestrationTemplates;
+  public void setTemplates(Set<Template> templates) {
+    this.templates = templates;
   }
 
   public String getKey() {

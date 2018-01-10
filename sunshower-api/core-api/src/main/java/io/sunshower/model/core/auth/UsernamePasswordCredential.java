@@ -1,13 +1,14 @@
 package io.sunshower.model.core.auth;
 
+import io.sunshower.model.core.Schemata;
+
 import javax.persistence.Basic;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-/** Created by haswell on 5/22/17. */
 @Entity
-@Table(name = "USERNAME_PASSWORD_CREDENTIAL")
+@Table(name = "USERNAME_PASSWORD_CREDENTIAL", schema = Schemata.SUNSHOWER)
 public class UsernamePasswordCredential extends Credential {
 
   @Basic @NotNull private String username;

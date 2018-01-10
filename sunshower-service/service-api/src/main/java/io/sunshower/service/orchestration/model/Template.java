@@ -1,5 +1,6 @@
 package io.sunshower.service.orchestration.model;
 
+import io.sunshower.model.core.Schemata;
 import io.sunshower.model.core.Version;
 import io.sunshower.service.model.Link;
 import io.sunshower.service.model.Linked;
@@ -10,7 +11,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Entity
-@Table(name = "TEMPLATE")
+@Table(name = "TEMPLATE", schema = Schemata.SUNSHOWER)
 public class Template extends PropertyAwareObject<Template> implements Linked<Template, Template> {
 
   @Basic

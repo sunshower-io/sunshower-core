@@ -1,5 +1,6 @@
 package io.sunshower.model.core.auth;
 
+import io.sunshower.model.core.Schemata;
 import io.sunshower.persistence.core.DistributableEntity;
 import java.util.*;
 import javax.persistence.*;
@@ -7,10 +8,9 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import org.springframework.security.core.GrantedAuthority;
 
-/** Created by haswell on 10/20/16. */
 @Entity
 @XmlRootElement
-@Table(name = "ROLE")
+@Table(name = "ROLE", schema = Schemata.SUNSHOWER)
 public class Role extends DistributableEntity implements GrantedAuthority, Comparable<Role> {
 
   @Basic @XmlElement private String authority;
@@ -35,6 +35,7 @@ public class Role extends DistributableEntity implements GrantedAuthority, Compa
   @ManyToMany(cascade = CascadeType.ALL)
   @JoinTable(
     name = "roles_to_permissions",
+    schema = Schemata.SUNSHOWER,
     joinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"),
     inverseJoinColumns = @JoinColumn(name = "permission_id", referencedColumnName = "id")
   )

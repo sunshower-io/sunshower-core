@@ -1,14 +1,14 @@
 package io.sunshower.model.core.auth;
 
 import io.sunshower.common.Identifier;
+import io.sunshower.model.core.Schemata;
 import io.sunshower.persistence.core.DistributableEntity;
 import io.sunshower.persistence.core.converters.IdentifierConverter;
 import java.util.Set;
 import javax.persistence.*;
 
-/** Created by haswell on 5/9/17. */
 @Entity
-@Table(name = "acl_object_identity")
+@Table(name = "acl_object_identity", schema = Schemata.SUNSHOWER)
 public class ObjectIdentity extends DistributableEntity {
 
   @Basic

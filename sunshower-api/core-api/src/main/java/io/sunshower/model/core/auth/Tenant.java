@@ -1,14 +1,17 @@
 package io.sunshower.model.core.auth;
 
 import io.sunshower.common.Identifier;
+import io.sunshower.model.core.Schemata;
 import io.sunshower.persistence.core.Hierarchical;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.*;
 
-/** Created by haswell on 5/22/17. */
 @Entity
-@Table(name = "TENANT")
+@Table(
+        name = "TENANT", 
+        schema = Schemata.SUNSHOWER
+)
 public class Tenant extends ProtectedDistributableEntity
     implements Hierarchical<Identifier, Tenant> {
 

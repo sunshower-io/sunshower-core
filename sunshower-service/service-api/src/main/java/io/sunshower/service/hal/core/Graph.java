@@ -10,7 +10,6 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-/** Created by haswell on 5/22/17. */
 @XmlRootElement(name = "graph")
 public class Graph extends PropertyAwareObject<Graph> {
 

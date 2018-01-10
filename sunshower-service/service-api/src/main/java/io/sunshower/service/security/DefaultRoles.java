@@ -2,7 +2,13 @@ package io.sunshower.service.security;
 
 import io.sunshower.model.core.auth.Role;
 
-/** Created by haswell on 5/8/17. */
+/**
+ * DefaultRoles
+ * 
+ * 
+ * @author haswell 
+ */
+
 public enum DefaultRoles {
   TENANT_USER("tenant:user", "Tenant user"),
   SITE_ADMINISTRATOR("admin", "Global administrator") {

@@ -25,7 +25,6 @@ import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.jetbrains.annotations.NotNull;
 
-/** Created by haswell on 5/22/17. */
 public class JGitRepository implements GitRepository {
 
   private Git git;

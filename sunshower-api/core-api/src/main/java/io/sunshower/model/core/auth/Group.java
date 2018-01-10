@@ -1,13 +1,13 @@
 package io.sunshower.model.core.auth;
 
+import io.sunshower.model.core.Schemata;
 import io.sunshower.persistence.core.DistributableEntity;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.*;
 
-/** Created by haswell on 5/9/17. */
 @Entity
-@Table(name = "GROUPS")
+@Table(name = "GROUPS", schema = Schemata.SUNSHOWER)
 public class Group extends DistributableEntity {
 
   @Column(name = "group_name")
@@ -15,6 +15,7 @@ public class Group extends DistributableEntity {
 
   @ManyToMany(targetEntity = User.class)
   @JoinTable(
+    schema = Schemata.SUNSHOWER,
     name = "group_members",
     joinColumns = {@JoinColumn(name = "group_id", referencedColumnName = "id")},
     inverseJoinColumns = @JoinColumn(name = "username", referencedColumnName = "username")

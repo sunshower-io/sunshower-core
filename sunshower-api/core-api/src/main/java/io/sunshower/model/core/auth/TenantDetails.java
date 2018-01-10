@@ -1,12 +1,12 @@
 package io.sunshower.model.core.auth;
 
+import io.sunshower.model.core.Schemata;
 import io.sunshower.model.core.io.File;
 import io.sunshower.persistence.core.DistributableEntity;
 import javax.persistence.*;
 
-/** Created by haswell on 5/22/17. */
 @Entity
-@Table(name = "TENANT_DETAILS")
+@Table(name = "TENANT_DETAILS", schema = Schemata.SUNSHOWER)
 public class TenantDetails extends DistributableEntity {
 
   @OneToOne

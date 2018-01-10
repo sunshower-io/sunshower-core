@@ -1,6 +1,7 @@
 package io.sunshower.model.core.io;
 
 import io.sunshower.common.Identifier;
+import io.sunshower.model.core.Schemata;
 import io.sunshower.persistence.core.DistributableEntity;
 import io.sunshower.persistence.core.Hierarchical;
 import java.util.Collection;
@@ -8,11 +9,12 @@ import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.*;
 import javax.xml.bind.annotation.*;
+import javax.xml.validation.Schema;
 
-/** Created by haswell on 5/22/17. */
+/** @author haswell */
 @Entity
-@Table(name = "FILE")
 @XmlRootElement(name = "file")
+@Table(name = "FILE", schema = Schemata.SUNSHOWER)
 public class File extends DistributableEntity implements Hierarchical<Identifier, File> {
 
   @Basic @XmlElement private String path;

@@ -1,11 +1,11 @@
 package io.sunshower.model.core.auth;
 
+import io.sunshower.model.core.Schemata;
 import io.sunshower.persistence.core.DistributableEntity;
 import javax.persistence.*;
 
-/** Created by haswell on 5/9/17. */
 @Entity
-@Table(name = "acl_sid")
+@Table(name = "acl_sid", schema = Schemata.SUNSHOWER)
 public class SecurityIdentity extends DistributableEntity {
 
   @OneToOne(fetch = FetchType.LAZY)

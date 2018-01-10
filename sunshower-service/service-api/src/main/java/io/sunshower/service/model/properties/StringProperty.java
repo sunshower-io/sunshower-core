@@ -1,7 +1,6 @@
 package io.sunshower.service.model.properties;
 
 import io.sunshower.service.model.Property;
-import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name = "property")

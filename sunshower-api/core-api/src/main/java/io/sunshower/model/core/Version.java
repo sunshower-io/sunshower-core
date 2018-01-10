@@ -4,9 +4,9 @@ import io.sunshower.common.Identifier;
 import io.sunshower.persistence.core.DistributableEntity;
 import javax.persistence.*;
 
-/** Created by haswell on 10/26/16. */
 @Entity
 @IdClass(Identifier.class)
+@Table(name = "VERSION", schema = Schemata.SUNSHOWER)
 public class Version {
 
   @Id private byte[] id;

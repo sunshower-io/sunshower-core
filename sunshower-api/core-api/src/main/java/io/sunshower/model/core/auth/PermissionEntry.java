@@ -1,11 +1,11 @@
 package io.sunshower.model.core.auth;
 
+import io.sunshower.model.core.Schemata;
 import io.sunshower.persistence.core.DistributableEntity;
 import javax.persistence.*;
 
-/** Created by haswell on 5/9/17. */
 @Entity
-@Table(name = "acl_entry")
+@Table(name = "acl_entry", schema = Schemata.SUNSHOWER)
 public class PermissionEntry extends DistributableEntity {
 
   @Basic

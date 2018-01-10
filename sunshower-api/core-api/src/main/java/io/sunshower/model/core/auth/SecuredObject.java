@@ -1,5 +1,6 @@
 package io.sunshower.model.core.auth;
 
+import io.sunshower.model.core.Schemata;
 import io.sunshower.persistence.core.DistributableEntity;
 import io.sunshower.persistence.core.converters.ClassConverter;
 import javax.persistence.Column;
@@ -7,9 +8,8 @@ import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-/** Created by haswell on 5/9/17. */
 @Entity
-@Table(name = "acl_class")
+@Table(name = "acl_class", schema = Schemata.SUNSHOWER)
 public class SecuredObject extends DistributableEntity {
 
   @Column(name = "class")

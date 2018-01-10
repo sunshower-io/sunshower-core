@@ -1,14 +1,14 @@
 package io.sunshower.model.core.auth;
 
+import io.sunshower.model.core.Schemata;
 import io.sunshower.model.core.io.File;
 import io.sunshower.persistence.core.DistributableEntity;
 import java.util.Date;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 
-/** Created by haswell on 10/12/16. */
 @Entity
-@Table(name = "USER_DETAILS")
+@Table(name = "USER_DETAILS", schema = Schemata.SUNSHOWER)
 public class Details extends DistributableEntity {
 
   @Basic

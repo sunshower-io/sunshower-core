@@ -2,6 +2,7 @@ package io.sunshower.service.signup;
 
 import io.sunshower.common.crypto.Hashes;
 import io.sunshower.common.crypto.Multihash;
+import io.sunshower.model.core.Schemata;
 import io.sunshower.model.core.auth.User;
 import io.sunshower.persistence.core.DistributableEntity;
 import java.util.Calendar;
@@ -11,10 +12,9 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-/** Created by haswell on 11/17/16. */
 @Entity
-@Table(name = "REGISTRATION_REQUEST")
 @XmlRootElement(name = "request")
+@Table(name = "REGISTRATION_REQUEST", schema = Schemata.SUNSHOWER)
 public class RegistrationRequest extends DistributableEntity {
 
   @XmlElement

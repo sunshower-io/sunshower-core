@@ -1,6 +1,7 @@
 package io.sunshower.model.core.auth;
 
 import io.sunshower.common.Identifier;
+import io.sunshower.model.core.Schemata;
 import io.sunshower.persistence.core.DistributableEntity;
 import java.util.*;
 import javax.persistence.*;
@@ -11,9 +12,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
-@Table(name = "PRINCIPAL")
 @XmlRootElement(name = "user")
 @XmlAccessorType(XmlAccessType.NONE)
+@Table(name = "PRINCIPAL", schema = Schemata.SUNSHOWER)
 public class User extends DistributableEntity implements UserDetails, TenantAware {
 
   @NotNull
@@ -37,6 +38,7 @@ public class User extends DistributableEntity implements UserDetails, TenantAwar
   @ManyToMany(cascade = CascadeType.ALL)
   @JoinTable(
     name = "users_to_roles",
+    schema = Schemata.SUNSHOWER,
     joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
     inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id")
   )

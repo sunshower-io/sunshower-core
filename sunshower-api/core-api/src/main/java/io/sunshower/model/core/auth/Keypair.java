@@ -1,12 +1,13 @@
 package io.sunshower.model.core.auth;
 
+import io.sunshower.model.core.Schemata;
+
 import javax.persistence.Basic;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-/** Created by haswell on 5/22/17. */
 @Entity
-@Table(name = "KEYPAIR_CREDENTIAL")
+@Table(name = "KEYPAIR_CREDENTIAL", schema = Schemata.SUNSHOWER)
 public class Keypair extends Credential {
 
   @Basic private String key;
