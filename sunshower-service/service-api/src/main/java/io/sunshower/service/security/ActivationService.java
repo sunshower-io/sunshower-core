@@ -1,5 +1,7 @@
 package io.sunshower.service.security;
 
+import io.sunshower.model.core.auth.Activation;
+
 /** */
 public interface ActivationService {
 

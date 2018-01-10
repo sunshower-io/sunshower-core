@@ -102,6 +102,25 @@ CREATE TABLE SUNSHOWER.PRINCIPAL (
 
 
 /**
+  references io.sunshower.service.security.Activation
+  @author haswell
+ */
+
+create table SUNSHOWER.ACTIVATION(
+  id              bytea primary key,
+  active          boolean default false,
+  activation_date timestamp default now(),
+  activator_id    bytea,
+  application_id  bytea,
+  
+  
+  FOREIGN KEY (activator_id) REFERENCES SUNSHOWER.PRINCIPAL(id),
+  FOREIGN KEY (application_id) REFERENCES SUNSHOWER.APPLICATION(id)
+  
+);
+
+
+/**
   
   references: io.sunshower.model.core.auth
   @author haswell
