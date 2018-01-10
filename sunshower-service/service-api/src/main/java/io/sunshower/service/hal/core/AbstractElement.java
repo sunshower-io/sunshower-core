@@ -11,7 +11,6 @@ import javax.xml.bind.annotation.*;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import org.eclipse.persistence.oxm.annotations.XmlClassExtractor;
 
-/** Created by haswell on 5/22/17. */
 @XmlClassExtractor(TypeAttributeClassExtractor.class)
 public class AbstractElement<T extends AbstractElement<T>> extends PropertyAwareObject<T>
     implements Element, Styleable, Iterable<Map.Entry<String, Object>> {
