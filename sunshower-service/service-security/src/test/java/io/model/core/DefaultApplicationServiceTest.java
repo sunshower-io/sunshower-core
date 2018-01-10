@@ -122,7 +122,7 @@ class DefaultApplicationServiceTest extends SecurityTest {
     activationService.activate(u);
     permissionsService.impersonate(
         () -> assertThat(activationService.getActivation().isActive(), is(true)),
-        new Role("ADMIN"));
+        new Role("admin"));
   }
 
   @Test

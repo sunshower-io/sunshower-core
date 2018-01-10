@@ -102,7 +102,7 @@ public class DefaultApplicationService implements ApplicationService, Activation
   }
 
   @Override
-  @PreAuthorize("hasAuthority('ADMIN')")
+  @PreAuthorize("hasAuthority('admin')")
   public Activation getActivation() {
     return entityManager
         .createQuery("select a from Activation a where a.active = true", Activation.class)
