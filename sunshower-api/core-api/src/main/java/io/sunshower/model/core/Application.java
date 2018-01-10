@@ -3,15 +3,15 @@ package io.sunshower.model.core;
 import io.sunshower.common.Identifier;
 import io.sunshower.model.core.auth.User;
 import io.sunshower.persistence.core.DistributableEntity;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.*;
 import javax.persistence.*;
 import javax.xml.bind.annotation.*;
 
-/**
- * Application
- *
- * @author haswell
- */
+@Getter
+@Setter
 @Entity
 @Table(name = "APPLICATION", schema = Schemata.SUNSHOWER)
 @XmlRootElement(name = "application")
@@ -65,67 +65,4 @@ public class Application {
     }
   }
 
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public Boolean getEnabled() {
-    return enabled;
-  }
-
-  public void setEnabled(Boolean enabled) {
-    this.enabled = enabled;
-  }
-
-  public String getInstanceId() {
-    return instanceId;
-  }
-
-  public void setInstanceId(String instanceId) {
-    this.instanceId = instanceId;
-  }
-
-  public String getLocation() {
-    return location;
-  }
-
-  public void setLocation(String location) {
-    this.location = location;
-  }
-
-  public Date getInstanceStarted() {
-    return instanceStarted;
-  }
-
-  public void setInstanceStarted(Date instanceStarted) {
-    this.instanceStarted = instanceStarted;
-  }
-
-  public Date getLastShutdown() {
-    return lastShutdown;
-  }
-
-  public void setLastShutdown(Date lastShutdown) {
-    this.lastShutdown = lastShutdown;
-  }
-
-  public Version getVersion() {
-    return version;
-  }
-
-  public void setVersion(Version version) {
-    this.version = version;
-  }
-
-  public List<User> getAdministrators() {
-    return administrators;
-  }
-
-  public void setAdministrators(List<User> administrators) {
-    this.administrators = administrators;
-  }
 }
