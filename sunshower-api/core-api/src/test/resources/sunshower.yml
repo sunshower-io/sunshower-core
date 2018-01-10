@@ -7,7 +7,6 @@ jdbc:
   jndiPath: ""
   password: ""
   version: -1
-  schema: "sunshower"
 
 ignite:
   fabricName: sunshower-data-fabric
