@@ -7,16 +7,13 @@ import java.util.*;
 import javax.persistence.*;
 import javax.xml.bind.annotation.*;
 
-
 /**
  * Application
+ *
  * @author haswell
  */
 @Entity
-@Table(
-        name = "APPLICATION", 
-        schema = Schemata.SUNSHOWER
-)
+@Table(name = "APPLICATION", schema = Schemata.SUNSHOWER)
 @XmlRootElement(name = "application")
 @IdClass(Identifier.class)
 @XmlAccessorType(XmlAccessType.NONE)

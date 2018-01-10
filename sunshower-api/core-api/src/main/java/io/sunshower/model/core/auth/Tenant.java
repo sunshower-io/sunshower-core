@@ -8,10 +8,7 @@ import java.util.Set;
 import javax.persistence.*;
 
 @Entity
-@Table(
-        name = "TENANT", 
-        schema = Schemata.SUNSHOWER
-)
+@Table(name = "TENANT", schema = Schemata.SUNSHOWER)
 public class Tenant extends ProtectedDistributableEntity
     implements Hierarchical<Identifier, Tenant> {
 

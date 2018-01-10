@@ -9,7 +9,6 @@ import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.*;
 import javax.xml.bind.annotation.*;
-import javax.xml.validation.Schema;
 
 /** @author haswell */
 @Entity

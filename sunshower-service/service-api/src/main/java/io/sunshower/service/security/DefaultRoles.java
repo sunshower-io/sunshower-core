@@ -4,11 +4,9 @@ import io.sunshower.model.core.auth.Role;
 
 /**
  * DefaultRoles
- * 
- * 
- * @author haswell 
+ *
+ * @author haswell
  */
-
 public enum DefaultRoles {
   TENANT_USER("tenant:user", "Tenant user"),
   SITE_ADMINISTRATOR("admin", "Global administrator") {

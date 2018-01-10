@@ -1,7 +1,6 @@
 package io.sunshower.model.core.auth;
 
 import io.sunshower.model.core.Schemata;
-
 import javax.persistence.Basic;
 import javax.persistence.Entity;
 import javax.persistence.Table;

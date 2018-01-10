@@ -5,5 +5,4 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "SUNSHOWER_ACTIVATIONS")
-public class Activation {
-}
+public class Activation {}
