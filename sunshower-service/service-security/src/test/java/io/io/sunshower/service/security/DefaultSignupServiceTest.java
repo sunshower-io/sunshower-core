@@ -71,6 +71,9 @@ public class DefaultSignupServiceTest extends SecurityTest {
   }
 
   @Test
+  public void ensureApprovalWorksWithUserDetailsWithJustEmail() {}
+
+  @Test
   @WithMockUser(username = "frap", password = "cool", authorities = "admin")
   public void ensureSavingThenRevokingUserRegeneratesRegistrationRequest() {
 
@@ -82,6 +85,13 @@ public class DefaultSignupServiceTest extends SecurityTest {
     assertThat(localService.pendingRegistrations().size(), is(1));
     localService.approve(signup.getRequestId());
     assertThat(localService.pendingRegistrations().size(), is(0));
+
+    boolean b =
+        localService
+            .pendingRegistrations()
+            .stream()
+            .allMatch(t -> t.getUser().getDetails().getEmailAddress() != null);
+    assertTrue("All users must have an e-mail address", b);
     User revoke = localService.revoke(user.getId());
     assertThat(localService.pendingRegistrations().size(), is(1));
   }

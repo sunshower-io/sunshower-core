@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ReflectionUtils;
 
-/** Created by haswell on 10/17/16. */
 @Service
 @Transactional
 public class DefaultSignupService implements SignupService {
@@ -109,6 +108,7 @@ public class DefaultSignupService implements SignupService {
                     + "RegistrationRequest r "
                     + "inner join r.user u "
                     + "inner join u.roles "
+                    + "inner join u.details "
                     + "where r.requestId = :id",
                 RegistrationRequest.class)
             .setParameter("id", s)
@@ -117,7 +117,6 @@ public class DefaultSignupService implements SignupService {
       final RegistrationRequest request = u.get(0);
       final User user = request.getUser();
       user.setActive(true);
-      user.getDetails().setLastActive(new Date());
       entityManager.remove(request);
       entityManager.flush();
       executePostSignup(user);

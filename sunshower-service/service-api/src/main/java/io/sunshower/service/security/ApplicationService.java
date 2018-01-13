@@ -5,7 +5,7 @@ import io.sunshower.model.core.auth.User;
 import java.util.Set;
 import javax.ws.rs.*;
 
-public interface ApplicationService {
+public interface ApplicationService extends ActivationService {
   Application instance();
 
   Boolean isInitialized();

@@ -3,8 +3,6 @@ package io.io.sunshower.service.security;
 import io.sunshower.core.security.CredentialService;
 import io.sunshower.persistence.Dialect;
 import io.sunshower.persistence.annotations.Persistence;
-import io.sunshower.service.application.DefaultApplicationService;
-import io.sunshower.service.security.ApplicationService;
 import io.sunshower.service.security.PermissionsService;
 import io.sunshower.service.security.SpringPermissionsService;
 import io.sunshower.service.security.crypto.MessageAuthenticationCode;
@@ -47,11 +45,6 @@ public class TestSecurityConfiguration {
   @Bean(name = TestConfigurations.TEST_CONFIGURATION_REPOSITORY_PATH)
   public String location() {
     return "/sunshower-api/core-api/src/test/resources";
-  }
-
-  @Bean
-  public ApplicationService applicationService() {
-    return new DefaultApplicationService();
   }
 
   @Bean

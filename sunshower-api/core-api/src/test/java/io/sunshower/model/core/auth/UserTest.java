@@ -1,6 +1,9 @@
 package io.sunshower.model.core.auth;
 
 import static java.lang.System.out;
+import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.*;
 
 import java.util.Collections;
 import javax.xml.bind.JAXBException;
@@ -8,8 +11,12 @@ import javax.xml.bind.Marshaller;
 import org.eclipse.persistence.jaxb.JAXBContextFactory;
 import org.junit.Test;
 
-/** Created by haswell on 10/23/16. */
 public class UserTest {
+
+  @Test
+  public void ensureDetailsAreNotNullByDefault() {
+    assertThat(new User().getDetails().getEmailAddress(), is(nullValue()));
+  }
 
   @Test
   public void ensureUserIsSerializedProperly() throws JAXBException {

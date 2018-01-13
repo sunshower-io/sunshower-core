@@ -6,6 +6,7 @@ import io.sunshower.core.security.RoleService;
 import io.sunshower.core.security.UserService;
 import io.sunshower.core.security.crypto.EncryptionService;
 import io.sunshower.model.core.vault.KeyProvider;
+import io.sunshower.service.application.DefaultApplicationService;
 import io.sunshower.service.security.crypto.InstanceSecureKeyGenerator;
 import io.sunshower.service.security.crypto.MessageAuthenticationCode;
 import io.sunshower.service.security.crypto.StrongEncryptionService;
@@ -49,6 +50,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
   static final Logger logger = LoggerFactory.getLogger(SecurityConfiguration.class);
+
+  @Bean
+  public ApplicationService applicationService() {
+    return new DefaultApplicationService();
+  }
 
   @Bean
   public TokenManager tokenManager() {

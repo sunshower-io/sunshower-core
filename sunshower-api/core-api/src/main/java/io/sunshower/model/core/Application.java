@@ -3,12 +3,11 @@ package io.sunshower.model.core;
 import io.sunshower.common.Identifier;
 import io.sunshower.model.core.auth.User;
 import io.sunshower.persistence.core.DistributableEntity;
-import lombok.Getter;
-import lombok.Setter;
-
 import java.util.*;
 import javax.persistence.*;
 import javax.xml.bind.annotation.*;
+import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 @Setter
@@ -64,5 +63,4 @@ public class Application {
       this.id = id.value();
     }
   }
-
 }
