@@ -64,6 +64,18 @@ class UserPersistenceTest extends PersistenceTest {
   }
 
   @Test
+  public void ensureRoleCanBeRemoved() {
+    final User user = new User();
+    final Role role = new Role("coolbeans");
+    user.addRole(role);
+    assertThat(user.getRoles().size(), is(1));
+    assertThat(user.getRoles().stream().allMatch(t -> t.getUsers().size() == 1), is(true));
+    user.removeRole(role);
+    assertThat(user.getRoles().size(), is(0));
+    assertThat(role.getUsers().size(), is(0));
+  }
+
+  @Test
   public void ensureSavingUserDetailsFileWorks() {
     final User user = new User();
     user.getDetails().setEmailAddress("joe@whatever.com2");

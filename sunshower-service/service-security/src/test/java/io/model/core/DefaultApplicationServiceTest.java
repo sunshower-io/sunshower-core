@@ -24,6 +24,7 @@ import javax.persistence.PersistenceContext;
 import javax.ws.rs.container.ContainerRequestContext;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.transaction.annotation.Transactional;
 
 class DefaultApplicationServiceTest extends SecurityTest {
@@ -128,6 +129,36 @@ class DefaultApplicationServiceTest extends SecurityTest {
     permissionsService.impersonate(
         () -> assertThat(activationService.getActivation().isActive(), is(true)),
         new Role("admin"));
+  }
+
+  @Test
+  public void ensureDeactivationCannotBeCalledByANonAdmin() {
+    final User u = new User();
+    u.setUsername("Josiah");
+    u.setPassword("Haswell");
+    u.getDetails().setEmailAddress("josiah@sunshower.io");
+    activationService.activate(u);
+    assertThat(activationService.isActive(), is(true));
+    assertThrows(
+        AccessDeniedException.class,
+        () ->
+            permissionsService.impersonate(
+                () -> activationService.deactivate(), new Role("frapper")));
+  }
+
+  public void ensureDeactivationWorks() {
+    final User u = new User();
+    u.setUsername("Josiah");
+    u.setPassword("Haswell");
+    u.getDetails().setEmailAddress("josiah@sunshower.io");
+    activationService.activate(u);
+    assertThat(activationService.isActive(), is(true));
+    permissionsService.impersonate(
+        () -> {
+          activationService.deactivate();
+        },
+        new Role("admin"));
+    assertThat(activationService.isActive(), is(false));
   }
 
   @Test

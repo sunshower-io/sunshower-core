@@ -4,7 +4,11 @@ import io.sunshower.model.core.Application;
 import io.sunshower.persistence.core.DistributableEntity;
 import java.util.Date;
 import javax.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "ACTIVATION", schema = "SUNSHOWER")
 public class Activation extends DistributableEntity {
@@ -24,40 +28,4 @@ public class Activation extends DistributableEntity {
   @JoinColumn(name = "application_id")
   @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
   private Application application;
-
-  public Activation() {
-    super();
-  }
-
-  public boolean isActive() {
-    return active;
-  }
-
-  public void setActive(boolean active) {
-    this.active = active;
-  }
-
-  public User getActivator() {
-    return activator;
-  }
-
-  public void setActivator(User activator) {
-    this.activator = activator;
-  }
-
-  public Date getActivationDate() {
-    return activationDate;
-  }
-
-  public void setActivationDate(Date activationDate) {
-    this.activationDate = activationDate;
-  }
-
-  public Application getApplication() {
-    return application;
-  }
-
-  public void setApplication(Application application) {
-    this.application = application;
-  }
 }

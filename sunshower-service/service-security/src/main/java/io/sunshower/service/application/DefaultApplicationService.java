@@ -115,6 +115,15 @@ public class DefaultApplicationService implements ApplicationService, Activation
         > 0;
   }
 
+  @PreAuthorize("@applicationService.isActive() && hasAuthority('admin')")
+  public Activation deactivate() {
+    final Activation activation = getActivation();
+    activation.getActivator().removeRole(getAdminRole());
+    entityManager.remove(activation);
+    entityManager.flush();
+    return activation;
+  }
+
   public Activation activate(User activator) {
     checkActive();
     final Activation activation = new Activation();
@@ -124,13 +133,13 @@ public class DefaultApplicationService implements ApplicationService, Activation
     application.setAdministrators(Arrays.asList(activator));
     activation.setActivator(activator);
     activation.setApplication(application);
+    activation.getActivator().addRole(getAdminRole());
     entityManager.persist(activation);
     return activation;
   }
 
-  @PreAuthorize("!activationService.isActive()")
-  public Activation deactivate() {
-    return null;
+  private Role getAdminRole() {
+    return roleService.findOrCreate(DefaultRoles.SITE_ADMINISTRATOR.toRole());
   }
 
   private void checkActive() {

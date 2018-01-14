@@ -22,7 +22,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 public class User extends DistributableEntity implements UserDetails, TenantAware {
 
   @NotNull
-  @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+  @OneToOne(
+    mappedBy = "user",
+    cascade = CascadeType.ALL,
+    fetch = FetchType.EAGER,
+    orphanRemoval = true
+  )
   private Details details;
 
   @Basic
@@ -129,5 +134,12 @@ public class User extends DistributableEntity implements UserDetails, TenantAwar
     }
     this.roles.add(role);
     return this;
+  }
+
+  public void removeRole(Role role) {
+    if (this.roles != null) {
+      role.removeUser(this);
+      this.roles.remove(role);
+    }
   }
 }

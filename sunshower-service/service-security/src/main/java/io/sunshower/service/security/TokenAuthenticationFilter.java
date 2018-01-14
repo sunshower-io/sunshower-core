@@ -10,7 +10,6 @@ import javax.ws.rs.container.ContainerResponseFilter;
 import javax.ws.rs.ext.Provider;
 import org.springframework.stereotype.Service;
 
-/** Created by haswell on 10/20/16. */
 @Service
 @Provider
 public class TokenAuthenticationFilter implements ContainerResponseFilter, ContainerRequestFilter {

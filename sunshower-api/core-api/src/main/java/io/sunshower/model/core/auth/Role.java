@@ -141,4 +141,17 @@ public class Role extends DistributableEntity implements GrantedAuthority, Compa
         + '\''
         + '}';
   }
+
+  public void removeUser(User user) {
+    if (users != null) {
+      users.remove(user);
+    }
+  }
+
+  public Set<User> getUsers() {
+    if (users == null) {
+      return Collections.emptySet();
+    }
+    return users;
+  }
 }
