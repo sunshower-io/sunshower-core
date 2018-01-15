@@ -37,7 +37,7 @@ public class Details extends DistributableEntity {
   @Temporal(TemporalType.TIMESTAMP)
   private Date lastActive;
 
-  @OneToOne
+  @OneToOne(mappedBy = "details")
   @JoinColumn(name = "user_id")
   private User user;
 

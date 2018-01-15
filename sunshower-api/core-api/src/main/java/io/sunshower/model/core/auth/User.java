@@ -22,12 +22,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 public class User extends DistributableEntity implements UserDetails, TenantAware {
 
   @NotNull
-  @OneToOne(
-    mappedBy = "user",
-    cascade = CascadeType.ALL,
-    fetch = FetchType.EAGER,
-    orphanRemoval = true
-  )
+  @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
   private Details details;
 
   @Basic

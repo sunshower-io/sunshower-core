@@ -120,6 +120,8 @@ public class DefaultApplicationService implements ApplicationService, Activation
     final Activation activation = getActivation();
     activation.getActivator().removeRole(getAdminRole());
     entityManager.remove(activation);
+    entityManager.remove(activation.getActivator());
+    entityManager.remove(activation.getApplication());
     entityManager.flush();
     return activation;
   }
