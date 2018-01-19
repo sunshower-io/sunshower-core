@@ -1,47 +1,84 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+  <modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>io.sunshower.core</groupId>
-        <artifactId>bom</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
-        <relativePath>../</relativePath>
-    </parent>
+  <parent>
     <groupId>io.sunshower.core</groupId>
-    <artifactId>bom-exported</artifactId>
+    <artifactId>bom</artifactId>
     <version>1.0.0-SNAPSHOT</version>
-    <packaging>pom</packaging>
+    <relativePath>../</relativePath>
+  </parent>
+  <groupId>io.sunshower.core</groupId>
+  <artifactId>bom-exported</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
 
-    <name>Sunshower.io Exported Bill-Of-Materials</name>
-    <url>http://www.sunshower.io</url>
+  <name>Sunshower.io Exported Bill-Of-Materials</name>
+  <url>http://www.sunshower.io</url>
+  <properties>
+    <sunshower-core.version>1.0.0-SNAPSHOT</sunshower-core.version>
+  </properties>
 
-
-    <dependencyManagement>
-        <dependencies>
-
-
-            <dependency>
-                <groupId>io.sunshower.api</groupId>
-                <artifactId>common-api</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>io.sunshower.api</groupId>
-                <artifactId>core-api</artifactId>
-                <version>${project.version}</version>
-            </dependency>
+  <dependencyManagement>
+    <dependencies>
 
 
+      <dependency>
+        <groupId>io.sunshower.core</groupId>
+        <artifactId>common-api</artifactId>
+        <version>${sunshower-core.version}</version>
+      </dependency>
 
-            <dependency>
-                <groupId>io.sunshower.api</groupId>
-                <artifactId>security-api</artifactId>
-                <version>${project.version}</version>
-            </dependency>
+      <dependency>
+        <groupId>io.sunshower.core</groupId>
+        <artifactId>core-api</artifactId>
+        <version>${sunshower-core.version}</version>
+      </dependency>
 
 
-        </dependencies>
-    </dependencyManagement>
+      <dependency>
+        <groupId>io.sunshower.core</groupId>
+        <artifactId>security-api</artifactId>
+        <version>${sunshower-core.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.sunshower.core</groupId>
+        <artifactId>schemata</artifactId>
+        <version>${sunshower-core.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.sunshower.core</groupId>
+        <artifactId>service-service</artifactId>
+        <version>${sunshower-core.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.sunshower.service</groupId>
+        <artifactId>service-common</artifactId>
+        <version>${sunshower-core.version}</version>
+      </dependency>
+
+
+      <dependency>
+        <groupId>io.sunshower.service</groupId>
+        <artifactId>service-core</artifactId>
+        <version>${sunshower-core.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.sunshower.service</groupId>
+        <artifactId>service-api</artifactId>
+        <version>${sunshower-core.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.sunshower.service</groupId>
+        <artifactId>service-security</artifactId>
+        <version>${sunshower-core.version}</version>
+      </dependency>
+      
+    </dependencies>
+  </dependencyManagement>
 </project>

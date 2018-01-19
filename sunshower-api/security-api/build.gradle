@@ -1,6 +1,5 @@
 dependencies {
-
-    compile group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
+    compile 'javax.validation:validation-api'
     compile 'javax.ws.rs:javax.ws.rs-api'
     compile project(":sunshower-api:core-api")
     compile project(":sunshower-api:common-api")
