@@ -80,11 +80,7 @@ allprojects {
 
     dependencyManagement {
         imports {
-            mavenBom("io.sunshower.core:bom-imported:${version}") {
-                bomProperties([
-                        'env.version': '1.0.0-SNAPSHOT'
-                ])
-            }
+            mavenBom("io.sunshower.core:bom-imported:${version}")
         }
     }
 

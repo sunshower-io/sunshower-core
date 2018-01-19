@@ -22,43 +22,13 @@
 
     <dependencyManagement>
         <dependencies>
-
           <dependency>
-            <groupId>io.sunshower.test</groupId>
-            <artifactId>test-persist</artifactId>
+            <groupId>io.sunshower.base</groupId>
+            <artifactId>bom-exported</artifactId>
             <version>${sunshower-base.version}</version>
+            <type>pom</type>
+            <scope>import</scope>
           </dependency>
-
-          <dependency>
-            <groupId>io.sunshower.persist</groupId>
-            <artifactId>persist-ignite</artifactId>
-            <version>${sunshower-base.version}</version>
-          </dependency>
-          <dependency>
-            <groupId>io.sunshower.persist</groupId>
-            <artifactId>persist-hibernate</artifactId>
-            <version>${sunshower-base.version}</version>
-          </dependency>
-          <dependency>
-            <groupId>io.sunshower.common</groupId>
-            <artifactId>annotations</artifactId>
-            <version>${sunshower-base.version}</version>
-          </dependency>
-
-          <dependency>
-            <groupId>io.sunshower.persist</groupId>
-            <artifactId>persist-api</artifactId>
-            <version>${sunshower-base.version}</version>
-          </dependency>
-
-
-          <dependency>
-            <groupId>io.sunshower.common</groupId>
-            <artifactId>core</artifactId>
-            <version>${sunshower-base.version}</version>
-          </dependency>
-
-
         </dependencies>
     </dependencyManagement>
 </project>
