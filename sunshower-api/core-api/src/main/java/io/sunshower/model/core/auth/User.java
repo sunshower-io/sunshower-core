@@ -10,12 +10,14 @@ import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @Getter
 @Setter
 @Entity
+@ToString
 @XmlRootElement(name = "user")
 @XmlAccessorType(XmlAccessType.NONE)
 @Table(name = "PRINCIPAL", schema = Schemata.SUNSHOWER)
@@ -106,20 +108,6 @@ public class User extends DistributableEntity implements UserDetails, TenantAwar
   @Override
   protected void setDefaults() {
     this.setDetails(new Details(this));
-  }
-
-  @Override
-  public String toString() {
-    return "User{"
-        + ", details="
-        + details
-        + ", username='"
-        + username
-        + '\''
-        + ", password='"
-        + password
-        + '\''
-        + '}';
   }
 
   public User addRole(Role role) {
