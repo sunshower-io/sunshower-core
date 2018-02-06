@@ -19,7 +19,6 @@ import org.springframework.cache.Cache;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-/** Created by haswell on 10/22/16. */
 @Service
 public class StrongEncryptionService implements EncryptionService {
 

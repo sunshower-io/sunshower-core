@@ -16,6 +16,7 @@ import javax.persistence.PersistenceContext;
 import org.junit.FixMethodOrder;
 import org.junit.runners.MethodSorters;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithSecurityContextTestExecutionListener;
 import org.springframework.test.context.ContextConfiguration;
@@ -52,6 +53,12 @@ public abstract class AuthenticatedTestCase extends ServiceTestCase {
   protected static void changeSession(String userId, String unencryptedPassword) {
     SecurityContextHolder.getContext()
         .setAuthentication(new UsernamePasswordAuthenticationToken(userId, unencryptedPassword));
+  }
+
+  protected static Authentication clearSession() {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    SecurityContextHolder.getContext().setAuthentication(null);
+    return authentication;
   }
 
   @Authority("admin")

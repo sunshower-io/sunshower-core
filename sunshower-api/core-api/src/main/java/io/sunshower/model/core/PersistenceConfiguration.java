@@ -3,7 +3,6 @@ package io.sunshower.model.core;
 import io.sunshower.persistence.annotations.Persistence;
 import org.springframework.context.annotation.Configuration;
 
-/** Created by haswell on 11/16/16. */
 @Configuration
 @Persistence(
   id = "audit",
