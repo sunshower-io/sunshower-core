@@ -74,6 +74,12 @@ public abstract class AuthenticatedTestCase extends ServiceTestCase {
     return authentication;
   }
 
+  protected static Authentication setSession(Authentication a) {
+    Authentication authentication = AuthenticatedTestCase.authentication.get();
+    SecurityContextHolder.getContext().setAuthentication(a);
+    return authentication;
+  }
+
   @Authority("admin")
   public Role adminRole() {
     return new Role("admin");
