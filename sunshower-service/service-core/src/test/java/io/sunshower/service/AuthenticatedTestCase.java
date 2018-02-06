@@ -42,6 +42,8 @@ public abstract class AuthenticatedTestCase extends ServiceTestCase {
 
   @Inject private EncryptionService encryptionService;
 
+  private static final ThreadLocal<Authentication> authentication = new ThreadLocal<>();
+
   public AuthenticatedTestCase() {
     this(SerializationAware.Format.JSON, new Class[0]);
   }
@@ -58,6 +60,17 @@ public abstract class AuthenticatedTestCase extends ServiceTestCase {
   protected static Authentication clearSession() {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     SecurityContextHolder.getContext().setAuthentication(null);
+    return authentication;
+  }
+
+  protected static void pushSession() {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    AuthenticatedTestCase.authentication.set(authentication);
+  }
+
+  protected static Authentication popSession() {
+    Authentication authentication = AuthenticatedTestCase.authentication.get();
+    SecurityContextHolder.getContext().setAuthentication(authentication);
     return authentication;
   }
 
