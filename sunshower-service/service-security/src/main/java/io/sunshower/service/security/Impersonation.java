@@ -8,7 +8,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-public class Impersonation implements Authentication, UserDetails {
+public class Impersonation extends User implements Authentication, UserDetails {
   final GrantedAuthority[] roles;
 
   public Impersonation(GrantedAuthority... roles) {
@@ -53,11 +53,6 @@ public class Impersonation implements Authentication, UserDetails {
   @Override
   public Object getCredentials() {
     return new User();
-  }
-
-  @Override
-  public Object getDetails() {
-    return new Object();
   }
 
   @Override
