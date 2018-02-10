@@ -4,6 +4,7 @@ import io.sunshower.persistence.Dialect;
 import io.sunshower.persistence.annotations.CacheMode;
 import io.sunshower.service.git.MockRepositoryResolutionStrategy;
 import io.sunshower.service.model.io.FileResolutionStrategy;
+import io.sunshower.service.security.AuthenticationSession;
 import io.sunshower.service.security.Session;
 import io.sunshower.service.serialization.DynamicJaxrsProviders;
 import io.sunshower.service.serialization.DynamicResolvingMoxyJsonProvider;
@@ -48,6 +49,6 @@ public class TestConfiguration {
 
   @Bean
   public Session userFacade() {
-    return new Session();
+    return new AuthenticationSession();
   }
 }

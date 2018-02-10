@@ -23,7 +23,7 @@ import io.sunshower.service.model.Property;
 import io.sunshower.service.orchestration.model.*;
 import io.sunshower.service.orchestration.service.TemplateService;
 import io.sunshower.service.revision.model.Revision;
-import io.sunshower.service.security.Session;
+import io.sunshower.service.security.AuthenticationSession;
 import io.sunshower.service.workspace.model.Workspace;
 import io.sunshower.service.workspace.service.WorkspaceService;
 import java.io.IOException;
@@ -54,7 +54,7 @@ public class JpaTemplateService extends BaseRepository<Identifier, Template>
 
   @Inject private GraphSerializationContext graphContext;
 
-  @Inject private Session session;
+  @Inject private AuthenticationSession session;
 
   @Inject private PlatformTransactionManager transactionManager;
 

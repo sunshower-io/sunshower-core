@@ -18,7 +18,6 @@ import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
-/** Created by haswell on 5/9/17. */
 @Transactional(isolation = Isolation.REPEATABLE_READ)
 public class JpaWorkspaceServiceTest extends BaseRepositoryTest<Identifier, Workspace> {
 

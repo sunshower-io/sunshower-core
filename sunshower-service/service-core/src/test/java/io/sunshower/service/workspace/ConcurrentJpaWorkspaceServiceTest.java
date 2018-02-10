@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.transaction.annotation.Transactional;
 
-/** Created by haswell on 5/9/17. */
 @Transactional
 public class ConcurrentJpaWorkspaceServiceTest extends JpaWorkspaceServiceTest {
   @Inject private WorkspaceService workspaceService;

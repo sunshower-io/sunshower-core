@@ -21,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class SpringPermissionsService implements PermissionsService<Permission> {
 
-  @Inject private Session session;
+  @Inject private AuthenticationSession session;
 
   @Inject private AclService aclService;
 

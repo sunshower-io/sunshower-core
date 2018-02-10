@@ -15,7 +15,9 @@ import java.util.Date;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import org.junit.jupiter.api.Test;
+import org.springframework.test.annotation.Rollback;
 
+@Rollback
 class UserPersistenceTest extends PersistenceTest {
 
   @PersistenceContext private EntityManager entityManager;
@@ -28,8 +30,8 @@ class UserPersistenceTest extends PersistenceTest {
   @Test
   public void ensureSavingPersonWorks() {
     final User user = new User();
-    user.getDetails().setEmailAddress("joe@whatever.com");
-    user.setUsername("frap");
+    user.getDetails().setEmailAddress("joe@134whatever.com");
+    user.setUsername("frapasdfasdf");
     user.setPassword("asdfasdfasdfasfasdfasf");
     entityManager.persist(user);
     entityManager.flush();
@@ -88,8 +90,8 @@ class UserPersistenceTest extends PersistenceTest {
   public void ensureRegisteredIsPersisted() {
 
     final User user = new User();
-    user.getDetails().setEmailAddress("joe@whatever.com");
-    user.setUsername("frap");
+    user.getDetails().setEmailAddress("joe2@whatever.com");
+    user.setUsername("frap1212");
     user.setPassword("asdfasdfasdfasf");
     final Date date = new Date();
     user.getDetails().setRegistered(date);
@@ -108,7 +110,7 @@ class UserPersistenceTest extends PersistenceTest {
     tenant.setDetails(new TenantDetails());
     final User user = new User();
     user.getDetails().setEmailAddress("joe@3whatever.com");
-    user.setUsername("frapadfasdf");
+    user.setUsername("frapadfasdf13213");
     user.setPassword("asdfasdfasdfasfadfa");
     tenant.addUser(user);
 
