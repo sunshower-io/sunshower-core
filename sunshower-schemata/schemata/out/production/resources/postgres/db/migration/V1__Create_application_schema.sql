@@ -422,7 +422,8 @@ CREATE TABLE SUNSHOWER.group_members (
 
 CREATE TABLE SUNSHOWER.ENTITY_TO_PROPERTIES (
   entity_id   BYTEA NOT NULL,
-  property_id BYTEA NOT NULL
+  property_id BYTEA NOT NULL,
+  property_key VARCHAR(255)
 );
 
 

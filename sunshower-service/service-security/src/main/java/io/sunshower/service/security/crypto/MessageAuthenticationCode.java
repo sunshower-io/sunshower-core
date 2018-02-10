@@ -8,8 +8,7 @@ import java.util.Base64;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
-/** Created by haswell on 10/18/16. */
-public class MessageAuthenticationCode {
+public class MessageAuthenticationCode implements Signature {
 
   public enum Algorithm {
     MD5("HmacMD5"),
@@ -42,6 +41,7 @@ public class MessageAuthenticationCode {
     return this.messageCode.doFinal(content);
   }
 
+  @Override
   public String id(String token) {
     if (token != null) {
       final Base64.Decoder decoder = Base64.getDecoder();
@@ -62,6 +62,7 @@ public class MessageAuthenticationCode {
     throw new InvalidTokenException("Token must not be null");
   }
 
+  @Override
   public String token(String input) {
     final Base64.Encoder encoder = Base64.getEncoder();
     final byte[] agenthash = encoder.encode(createKey(input.getBytes()));

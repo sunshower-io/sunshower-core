@@ -2,9 +2,7 @@ package io.sunshower.service.model;
 
 import io.sunshower.common.rs.ClassAdapter;
 import io.sunshower.common.rs.TypeAttributeClassExtractor;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
@@ -33,9 +31,10 @@ public class PropertyAwareObject<T extends PropertyAwareObject<T>> extends BaseM
     joinColumns = {@JoinColumn(name = "entity_id", referencedColumnName = "id")},
     inverseJoinColumns = @JoinColumn(name = "property_id", referencedColumnName = "id")
   )
+  @MapKeyJoinColumn(name = "property_key")
   @XmlElement(name = "property")
   @XmlElementWrapper(name = "properties")
-  private List<Property<?, ?>> properties;
+  private Map<String, Property<?, ?>> properties;
 
   protected PropertyAwareObject() {}
 
@@ -48,9 +47,9 @@ public class PropertyAwareObject<T extends PropertyAwareObject<T>> extends BaseM
       return;
     }
     if (properties == null) {
-      properties = new ArrayList<>();
+      properties = new LinkedHashMap<>();
     }
-    properties.add(property);
+    properties.put(property.getKey(), property);
   }
 
   public void removeProperty(Property<?, ?> property) {
@@ -60,11 +59,20 @@ public class PropertyAwareObject<T extends PropertyAwareObject<T>> extends BaseM
     if (properties == null) {
       return;
     }
-    properties.remove(property);
+    properties.remove(property.getKey());
+  }
+
+  public Property<?, ?> getProperty(String name) {
+    if (properties != null) {
+      return properties.get(name);
+    }
+    return null;
   }
 
   public List<Property<?, ?>> getProperties() {
-    return properties == null ? Collections.emptyList() : Collections.unmodifiableList(properties);
+    return properties == null
+        ? Collections.emptyList()
+        : Collections.unmodifiableList(new ArrayList<>(properties.values()));
   }
 
   public Class<T> getType() {
@@ -76,6 +84,6 @@ public class PropertyAwareObject<T extends PropertyAwareObject<T>> extends BaseM
   }
 
   public void clearProperties() {
-    properties = new ArrayList<>();
+    properties = new LinkedHashMap<>();
   }
 }

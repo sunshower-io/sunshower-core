@@ -30,7 +30,7 @@ public class TemplateTest extends PersistTestCase {
     template.setKey("key");
     workspace.addTemplate(template);
     template.addProperty(new StringProperty("prop", "prop", "cool"));
-    template.addProperty(new IntegerProperty("prop", "prop", 100L));
+    template.addProperty(new IntegerProperty("prop2", "prop", 100L));
     entityManager.persist(workspace);
     entityManager.flush();
 

@@ -19,6 +19,6 @@ public class StringProperty extends Property<String, StringProperty> {
   }
 
   public StringProperty(String key, String name, String value) {
-    super(StringProperty.class, name, key, value);
+    super(StringProperty.class, key, name, value);
   }
 }

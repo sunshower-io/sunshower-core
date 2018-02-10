@@ -57,7 +57,7 @@ public class Impersonation extends User implements Authentication, UserDetails {
 
   @Override
   public Object getPrincipal() {
-    return new Object();
+    return this;
   }
 
   @Override
