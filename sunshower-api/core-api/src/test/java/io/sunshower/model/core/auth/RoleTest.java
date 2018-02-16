@@ -24,7 +24,7 @@ public class RoleTest extends PersistenceTest {
 
     List<Role> roles =
         entityManager.createQuery("select r from Role as r", Role.class).getResultList();
-    assertThat(roles.size(), is(4));
+    assertThat(roles.size(), is(3));
     Role g1 = roles.stream().filter(r -> r.getAuthority().equals("parent")).findFirst().get();
 
     assertThat(g1.getParent(), is(nullValue()));
