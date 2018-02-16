@@ -5,7 +5,6 @@ import io.sunshower.model.core.auth.Role;
 import io.sunshower.model.core.auth.User;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.test.annotation.Rollback;
 
