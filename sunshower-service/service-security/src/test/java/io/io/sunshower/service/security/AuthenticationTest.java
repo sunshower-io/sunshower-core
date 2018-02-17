@@ -16,10 +16,12 @@ import io.sunshower.service.signup.SignupService;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.Rollback;
 
+@Transactional
 class AuthenticationTest extends SecurityTest {
 
   @Inject private SignupService service;

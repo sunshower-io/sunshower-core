@@ -13,7 +13,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/** Created by haswell on 10/22/16. */
 @Service
 @Transactional
 public class DefaultAuthenticationService implements AuthenticationService {
@@ -23,6 +22,7 @@ public class DefaultAuthenticationService implements AuthenticationService {
   @Inject private EncryptionService encryptionService;
 
   @Override
+  @Transactional(noRollbackFor = InvalidCredentialException.class)
   public Authentication authenticate(User user) {
     final String username = user.getUsername();
     final String password = user.getPassword();
@@ -39,8 +39,10 @@ public class DefaultAuthenticationService implements AuthenticationService {
         return new Authentication(u, new Token(token, new Date()));
       }
     } catch (UsernameNotFoundException ex) {
-
+      //      throw new UsernameNotFoundException(user.getUsername());
+      throw new InvalidCredentialException(ex);
     }
+    //    throw new UsernameNotFoundException(user.getUsername());
     throw new InvalidCredentialException("Username or password combination is invalid");
   }
 
