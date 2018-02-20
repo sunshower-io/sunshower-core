@@ -7,9 +7,12 @@ import io.sunshower.model.core.auth.Role;
 import io.sunshower.model.core.auth.User;
 import io.sunshower.service.signup.RegistrationRequest;
 import io.sunshower.service.signup.SignupService;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 import javax.inject.Inject;
-import javax.persistence.*;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityNotFoundException;
+import javax.persistence.PersistenceContext;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -114,6 +117,7 @@ public class DefaultSignupService implements SignupService {
             .setParameter("id", s)
             .getResultList();
     if (u.size() == 1) {
+
       final RegistrationRequest request = u.get(0);
       final User user = request.getUser();
       user.setActive(true);

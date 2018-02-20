@@ -11,10 +11,8 @@ import io.sunshower.service.security.ActivationService;
 import io.sunshower.service.security.ApplicationService;
 import io.sunshower.service.security.DefaultRoles;
 import io.sunshower.service.signup.SignupService;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -115,10 +113,29 @@ public class DefaultApplicationService implements ApplicationService, Activation
         > 0;
   }
 
+  @Override
+  @PreAuthorize("hasAuthority('admin')")
+  public List<Activation> list() {
+    return entityManager
+        .createQuery("select a from Activation a", Activation.class)
+        .getResultList();
+  }
+
+  @Override
+  public User delete(Activation activation) {
+    final Activation persisted = entityManager.find(Activation.class, activation.getId());
+    if (persisted == null) {
+      throw new NoSuchElementException("No no valid activation for that found");
+    }
+    entityManager.remove(persisted);
+    entityManager.flush();
+    return persisted.getActivator();
+  }
+
   @PreAuthorize("@applicationService.isActive() && hasAuthority('admin')")
   public Activation deactivate() {
     final Activation activation = getActivation();
-    activation.getActivator().removeRole(getAdminRole());
+    activation.getActivator().clearRoles();
     entityManager.remove(activation);
     entityManager.remove(activation.getActivator());
     entityManager.remove(activation.getApplication());
@@ -132,16 +149,25 @@ public class DefaultApplicationService implements ApplicationService, Activation
     activation.setActive(true);
     final Application application = new Application();
     application.setName("Sunshower");
-    application.setAdministrators(Arrays.asList(activator));
+    application.setAdministrators(Collections.singletonList(activator));
     activation.setActivator(activator);
     activation.setApplication(application);
-    activation.getActivator().addRole(getAdminRole());
+    activation
+        .getActivator()
+        .setAuthorities(
+            getRoles(
+                DefaultRoles.SITE_ADMINISTRATOR,
+                DefaultRoles.TENANT_USER,
+                DefaultRoles.TENANT_ADMINISTRATOR));
+    //    activation.getActivator().addRole(getAdminRole());
     entityManager.persist(activation);
     return activation;
   }
 
-  private Role getAdminRole() {
-    return roleService.findOrCreate(DefaultRoles.SITE_ADMINISTRATOR.toRole());
+  private Set<Role> getRoles(DefaultRoles... roles) {
+    return Arrays.stream(roles)
+        .map(r -> roleService.findOrCreate(r.toRole()))
+        .collect(Collectors.toSet());
   }
 
   private void checkActive() {

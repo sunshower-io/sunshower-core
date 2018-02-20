@@ -1,17 +1,14 @@
 package io.model.core;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 
 import io.io.sunshower.service.security.TestSecureService;
 import io.sunshower.core.security.crypto.EncryptionService;
 import io.sunshower.model.core.Application;
+import io.sunshower.model.core.auth.Activation;
 import io.sunshower.model.core.auth.Role;
 import io.sunshower.model.core.auth.User;
 import io.sunshower.service.security.*;
@@ -22,6 +19,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.ws.rs.container.ContainerRequestContext;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.security.access.AccessDeniedException;
@@ -51,6 +49,33 @@ class DefaultApplicationServiceTest extends SecurityTest {
   }
 
   @Test
+  public void ensureDeletingActivatorRemovesActivator() {
+
+    final User u = createTestUser();
+    activationService.activate(u);
+    permissionsService.impersonate(
+        () -> {
+          assertThat(activationService.getActivation().isActive(), is(true));
+          Integer count = activationService.list().size();
+          assertThat(count, is(1));
+          Activation activation = activationService.list().get(0);
+          activationService.delete(activation);
+          count = activationService.list().size();
+          assertThat(count, is(0));
+        },
+        new Role("admin"));
+  }
+
+  @NotNull
+  private User createTestUser() {
+    final User u = new User();
+    u.setUsername("Josiah");
+    u.setPassword("Haswell");
+    u.getDetails().setEmailAddress("josiah@sunshower.io");
+    return u;
+  }
+
+  @Test
   @Transactional
   public void ensureSayHelloAdminWorks() throws IOException {
     final User user = new User();
@@ -70,10 +95,7 @@ class DefaultApplicationServiceTest extends SecurityTest {
   @Test
   public void ensureApplicationCanBeInitializedCorrectly() {
     Application app = new Application();
-    final User u = new User();
-    u.setUsername("Josiah");
-    u.setPassword("Haswell");
-    u.getDetails().setEmailAddress("josiah@sunshower.io");
+    final User u = createTestUser();
 
     assertFalse(applicationService.isInitialized());
 
@@ -86,10 +108,7 @@ class DefaultApplicationServiceTest extends SecurityTest {
   public void ensureInitializedApplicationHasCorrectUsers() {
 
     Application app = new Application();
-    final User u = new User();
-    u.setUsername("Josiah");
-    u.setPassword("Haswell");
-    u.getDetails().setEmailAddress("josiah@sunshower.io");
+    final User u = createTestUser();
 
     app.addAdministrator(u);
     applicationService.initialize(app);
@@ -121,10 +140,7 @@ class DefaultApplicationServiceTest extends SecurityTest {
 
   @Test
   public void ensureActivatingApplicationProducesRetrievableActivation() {
-    final User u = new User();
-    u.setUsername("Josiah");
-    u.setPassword("Haswell");
-    u.getDetails().setEmailAddress("josiah@sunshower.io");
+    final User u = createTestUser();
     activationService.activate(u);
     permissionsService.impersonate(
         () -> assertThat(activationService.getActivation().isActive(), is(true)),
@@ -133,10 +149,7 @@ class DefaultApplicationServiceTest extends SecurityTest {
 
   @Test
   public void ensureDeactivationCannotBeCalledByANonAdmin() {
-    final User u = new User();
-    u.setUsername("Josiah");
-    u.setPassword("Haswell");
-    u.getDetails().setEmailAddress("josiah@sunshower.io");
+    final User u = createTestUser();
     activationService.activate(u);
     assertThat(activationService.isActive(), is(true));
     assertThrows(
@@ -147,10 +160,7 @@ class DefaultApplicationServiceTest extends SecurityTest {
   }
 
   public void ensureDeactivationWorks() {
-    final User u = new User();
-    u.setUsername("Josiah");
-    u.setPassword("Haswell");
-    u.getDetails().setEmailAddress("josiah@sunshower.io");
+    final User u = createTestUser();
     activationService.activate(u);
     assertThat(activationService.isActive(), is(true));
     permissionsService.impersonate(
@@ -163,10 +173,7 @@ class DefaultApplicationServiceTest extends SecurityTest {
 
   @Test
   public void ensureReactivatingApplicationFailsWithException() {
-    final User u = new User();
-    u.setUsername("Josiah");
-    u.setPassword("Haswell");
-    u.getDetails().setEmailAddress("josiah@sunshower.io");
+    final User u = createTestUser();
     activationService.activate(u);
 
     assertThrows(IllegalStateException.class, () -> activationService.activate(u));

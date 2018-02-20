@@ -119,6 +119,34 @@ public class User extends DistributableEntity implements UserDetails, TenantAwar
     return this;
   }
 
+  public void setAuthorities(Collection<Role> roles) {
+    clearRoles();
+    if (roles != null) {
+      for (Role r : roles) {
+        addRole(r);
+      }
+    }
+  }
+
+  public void setRoles(Set<Role> roles) {
+    setAuthorities(roles);
+  }
+
+  public void removeRoles(Collection<Role> roles) {
+    for (Role role : roles) {
+      removeRole(role);
+    }
+  }
+
+  public void clearRoles() {
+    if (roles != null) {
+      Collection<Role> copy = new HashSet<>(roles);
+      for (Role r : copy) {
+        removeRole(r);
+      }
+    }
+  }
+
   public void removeRole(Role role) {
     if (this.roles != null) {
       role.removeUser(this);

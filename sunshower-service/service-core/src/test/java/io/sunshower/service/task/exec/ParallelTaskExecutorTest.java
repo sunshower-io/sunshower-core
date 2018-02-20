@@ -24,7 +24,6 @@ import javax.inject.Inject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-/** Created by haswell on 2/3/17. */
 public class ParallelTaskExecutorTest extends ServiceTestCase {
 
   @Inject private ElementContext context;
