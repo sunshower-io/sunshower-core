@@ -76,7 +76,6 @@ class DefaultApplicationServiceTest extends SecurityTest {
   }
 
   @Test
-  @Transactional
   public void ensureSayHelloAdminWorks() throws IOException {
     final User user = new User();
     user.setPassword("frapasdfasdf");
