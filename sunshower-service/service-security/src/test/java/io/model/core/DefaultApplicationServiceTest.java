@@ -24,7 +24,6 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.transaction.annotation.Transactional;
 
 class DefaultApplicationServiceTest extends SecurityTest {
 
