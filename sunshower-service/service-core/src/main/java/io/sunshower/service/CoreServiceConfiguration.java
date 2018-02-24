@@ -30,6 +30,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @Persistence(
   id = "audit",
+  schema = "SUNSHOWER",
   migrationLocations = "classpath:{dialect}",
   scannedPackages = {
     "io.sunshower.model.core",

@@ -24,7 +24,6 @@ public class PropertyAwareObject<T extends PropertyAwareObject<T>> extends BaseM
    * having them in the property graph, such as automatically getting revision control. On the other
    * hand, JAXB inheritance sucks :(
    */
-  @Transient
   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   @JoinTable(
     name = "ENTITY_TO_PROPERTIES",
