@@ -29,6 +29,10 @@
       <id>sunshower-oss-repo</id>
       <url>https://oss.sonatype.org/content/repositories/snapshots</url>
     </repository>
+    <snapshotRepository>
+      <id>sunshower-oss-repo</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+    </snapshotRepository>
   </distributionManagement>
   
   
