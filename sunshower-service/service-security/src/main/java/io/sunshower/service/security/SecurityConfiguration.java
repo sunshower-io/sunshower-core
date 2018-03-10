@@ -34,6 +34,7 @@ import org.springframework.security.acls.jdbc.JdbcAclService;
 import org.springframework.security.acls.jdbc.LookupStrategy;
 import org.springframework.security.acls.model.AclCache;
 import org.springframework.security.acls.model.AclService;
+import org.springframework.security.acls.model.MutableAclService;
 import org.springframework.security.acls.model.PermissionGrantingStrategy;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -150,7 +151,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
   }
 
   @Bean
-  public JdbcAclService jdbcAclService(
+  public MutableAclService jdbcAclService(
       DataSource dataSource, LookupStrategy lookupStrategy, AclCache aclCache) {
 
     return new IdentifierJdbcMutableAclService(dataSource, lookupStrategy, aclCache, "SUNSHOWER");

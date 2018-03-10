@@ -18,8 +18,10 @@ import javax.persistence.TypedQuery;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.security.acls.model.Permission;
+import org.springframework.transaction.annotation.Transactional;
 
 /** Created by haswell on 5/16/17. */
+@Transactional
 public abstract class BaseRepository<ID extends Serializable, E extends Persistable<ID>>
     implements EntityRepository<ID, E> {
 
@@ -90,11 +92,12 @@ public abstract class BaseRepository<ID extends Serializable, E extends Persista
   @PreAuthorize("hasAuthority('tenant:user')")
   public E save(E entity) {
     long w = count(entity);
-    if (w == 0) {
+//    if (w == 0) {
       return create(entity);
-    } else {
-      return update(entity);
-    }
+//    } else {
+//      return update(entity);
+//    }
+//      return entity;
   }
 
   protected long count(E entity) {

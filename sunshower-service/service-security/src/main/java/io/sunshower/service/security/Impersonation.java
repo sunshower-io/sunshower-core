@@ -1,15 +1,18 @@
 package io.sunshower.service.security;
 
+import io.sunshower.model.core.auth.Tenant;
 import io.sunshower.model.core.auth.User;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+
 public class Impersonation extends User implements Authentication, UserDetails {
   final GrantedAuthority[] roles;
+  final Tenant tenant = new Tenant();
 
   public Impersonation(GrantedAuthority... roles) {
     this.roles = roles;
@@ -18,6 +21,11 @@ public class Impersonation extends User implements Authentication, UserDetails {
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
     return Collections.unmodifiableList(Arrays.asList(roles));
+  }
+
+  @Override
+  public Tenant getTenant() {
+      return tenant;
   }
 
   @Override

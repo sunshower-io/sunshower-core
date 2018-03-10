@@ -15,25 +15,21 @@
  */
 package io.sunshower.service.security;
 
-import static java.lang.String.format;
-
 import io.sunshower.common.Identifier;
 import io.sunshower.persist.Identifiers;
 import io.sunshower.persist.Sequence;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.List;
-import java.util.stream.Collectors;
-import javax.sql.DataSource;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.security.acls.domain.AccessControlEntryImpl;
 import org.springframework.security.acls.domain.GrantedAuthoritySid;
 import org.springframework.security.acls.domain.ObjectIdentityImpl;
 import org.springframework.security.acls.domain.PrincipalSid;
-import org.springframework.security.acls.jdbc.JdbcAclService;
 import org.springframework.security.acls.jdbc.LookupStrategy;
 import org.springframework.security.acls.model.*;
 import org.springframework.security.core.Authentication;
@@ -42,8 +38,19 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.util.Assert;
 
-@Transactional
-public class IdentifierJdbcMutableAclService extends JdbcAclService implements MutableAclService {
+import javax.sql.DataSource;
+import java.io.Serializable;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import static java.lang.String.format;
+
+public class IdentifierJdbcMutableAclService implements MutableAclService {
 
   static final Sequence<Identifier> sequence = Identifiers.newSequence(true);
 
@@ -60,14 +67,25 @@ public class IdentifierJdbcMutableAclService extends JdbcAclService implements M
   private String insertSid;
   private String insertObjectIdentity;
   private String insertEntry;
+  private LookupStrategy lookupStrategy;
+  private JdbcTemplate jdbcTemplate;
+
   private boolean foreignKeysInDatabase = true;
 
+  private AclClassIdUtils aclClassIdUtils;
   // ~ Constructors
   // ===================================================================================================
 
   public IdentifierJdbcMutableAclService(
       DataSource dataSource, LookupStrategy lookupStrategy, AclCache aclCache, String schema) {
-    super(dataSource, lookupStrategy);
+    //    super(dataSource, lookupStrategy);
+
+    this.jdbcTemplate = new JdbcTemplate(dataSource);
+//        (dataSource instanceof DriverManagerDataSource)
+//            ? new ConnectionDetectingJDBCTemplate(dataSource)
+//            : new JdbcTemplate(dataSource);
+    this.lookupStrategy = lookupStrategy;
+    this.aclClassIdUtils = new AclClassIdUtils();
     Assert.notNull(aclCache, "AclCache required");
     this.aclCache = aclCache;
     this.schemaPrefix = schema == null || schema.trim().isEmpty() ? "" : schema + ".";
@@ -93,6 +111,39 @@ public class IdentifierJdbcMutableAclService extends JdbcAclService implements M
     selectSidPrimaryKey = createSelectSidByPrimaryKey();
   }
 
+  public Acl readAclById(ObjectIdentity object, List<Sid> sids) throws NotFoundException {
+    Map<ObjectIdentity, Acl> map = readAclsById(Arrays.asList(object), sids);
+    Assert.isTrue(
+        map.containsKey(object),
+        "There should have been an Acl entry for ObjectIdentity " + object);
+
+    return (Acl) map.get(object);
+  }
+
+  public Acl readAclById(ObjectIdentity object) throws NotFoundException {
+    return readAclById(object, null);
+  }
+
+  public Map<ObjectIdentity, Acl> readAclsById(List<ObjectIdentity> objects)
+      throws NotFoundException {
+    return readAclsById(objects, null);
+  }
+
+  public Map<ObjectIdentity, Acl> readAclsById(List<ObjectIdentity> objects, List<Sid> sids)
+      throws NotFoundException {
+    Map<ObjectIdentity, Acl> result = lookupStrategy.readAclsById(objects, sids);
+
+    // Check every requested object identity was found (throw NotFoundException if
+    // needed)
+    for (ObjectIdentity oid : objects) {
+      if (!result.containsKey(oid)) {
+        throw new NotFoundException(
+            "Unable to find ACL information for object identity '" + oid + "'");
+      }
+    }
+
+    return result;
+  }
   // ~ Methods
   // ========================================================================================================
 
@@ -377,7 +428,7 @@ public class IdentifierJdbcMutableAclService extends JdbcAclService implements M
 
     // Retrieve the ACL via superclass (ensures cache registration, proper retrieval
     // etc)
-    return (MutableAcl) super.readAclById(acl.getObjectIdentity());
+    return (MutableAcl) readAclById(acl.getObjectIdentity());
   }
 
   private void clearCacheIncludingChildren(ObjectIdentity objectIdentity) {
@@ -586,5 +637,103 @@ public class IdentifierJdbcMutableAclService extends JdbcAclService implements M
             + "parent_object = ?, owner_sid = ?, entries_inheriting = ?"
             + " WHERE id = ?",
         schemaPrefix);
+  }
+}
+
+class AclClassIdUtils {
+  private static final String DEFAULT_CLASS_ID_TYPE_COLUMN_NAME = "class_id_type";
+  private static final Log log = LogFactory.getLog(AclClassIdUtils.class);
+
+  private ConversionService conversionService;
+
+  public AclClassIdUtils() {}
+
+  /**
+   * Converts the raw type from the database into the right Java type. For most applications the
+   * 'raw type' will be Long, for some applications it could be String.
+   *
+   * @param identifier The identifier from the database
+   * @param resultSet Result set of the query
+   * @return The identifier in the appropriate target Java type. Typically Long or UUID.
+   * @throws SQLException
+   */
+  Serializable identifierFrom(Serializable identifier, ResultSet resultSet) throws SQLException {
+    if (isString(identifier)
+        && hasValidClassIdType(resultSet)
+        && canConvertFromStringTo(classIdTypeFrom(resultSet))) {
+
+      identifier = convertFromStringTo((String) identifier, classIdTypeFrom(resultSet));
+    } else {
+      // Assume it should be a Long type
+      identifier = convertToLong(identifier);
+    }
+
+    return identifier;
+  }
+
+  private boolean hasValidClassIdType(ResultSet resultSet) throws SQLException {
+    boolean hasClassIdType = false;
+    try {
+      hasClassIdType = classIdTypeFrom(resultSet) != null;
+    } catch (SQLException e) {
+      log.debug("Unable to obtain the class id type", e);
+    }
+    return hasClassIdType;
+  }
+
+  private <T extends Serializable> Class<T> classIdTypeFrom(ResultSet resultSet)
+      throws SQLException {
+    return classIdTypeFrom(resultSet.getString(DEFAULT_CLASS_ID_TYPE_COLUMN_NAME));
+  }
+
+  private <T extends Serializable> Class<T> classIdTypeFrom(String className) {
+    Class targetType = null;
+    if (className != null) {
+      try {
+        targetType = Class.forName(className);
+      } catch (ClassNotFoundException e) {
+        log.debug("Unable to find class id type on classpath", e);
+      }
+    }
+    return targetType;
+  }
+
+  private <T> boolean canConvertFromStringTo(Class<T> targetType) {
+    return hasConversionService() && conversionService.canConvert(String.class, targetType);
+  }
+
+  private <T extends Serializable> T convertFromStringTo(String identifier, Class<T> targetType) {
+    return conversionService.convert(identifier, targetType);
+  }
+
+  private boolean hasConversionService() {
+    return conversionService != null;
+  }
+
+  /**
+   * Converts to a {@link Long}, attempting to use the {@link ConversionService} if available.
+   *
+   * @param identifier The identifier
+   * @return Long version of the identifier
+   * @throws NumberFormatException if the string cannot be parsed to a long.
+   * @throws org.springframework.core.convert.ConversionException if a conversion exception occurred
+   * @throws IllegalArgumentException if targetType is null
+   */
+  private Long convertToLong(Serializable identifier) {
+    Long idAsLong;
+    if (hasConversionService()) {
+      idAsLong = conversionService.convert(identifier, Long.class);
+    } else {
+      idAsLong = Long.valueOf(identifier.toString());
+    }
+    return idAsLong;
+  }
+
+  private boolean isString(Serializable object) {
+    return object.getClass().isAssignableFrom(String.class);
+  }
+
+  public void setConversionService(ConversionService conversionService) {
+    this.conversionService = conversionService;
   }
 }
