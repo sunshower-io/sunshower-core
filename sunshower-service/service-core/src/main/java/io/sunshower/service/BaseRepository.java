@@ -92,12 +92,12 @@ public abstract class BaseRepository<ID extends Serializable, E extends Persista
   @PreAuthorize("hasAuthority('tenant:user')")
   public E save(E entity) {
     long w = count(entity);
-//    if (w == 0) {
-      return create(entity);
-//    } else {
-//      return update(entity);
-//    }
-//      return entity;
+    //    if (w == 0) {
+    return create(entity);
+    //    } else {
+    //      return update(entity);
+    //    }
+    //      return entity;
   }
 
   protected long count(E entity) {

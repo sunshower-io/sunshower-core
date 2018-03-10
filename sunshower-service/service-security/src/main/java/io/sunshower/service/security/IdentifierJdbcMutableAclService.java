@@ -15,9 +15,20 @@
  */
 package io.sunshower.service.security;
 
+import static java.lang.String.format;
+
 import io.sunshower.common.Identifier;
 import io.sunshower.persist.Identifiers;
 import io.sunshower.persist.Sequence;
+import java.io.Serializable;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import javax.sql.DataSource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.core.convert.ConversionService;
@@ -37,18 +48,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.util.Assert;
-
-import javax.sql.DataSource;
-import java.io.Serializable;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import static java.lang.String.format;
 
 public class IdentifierJdbcMutableAclService implements MutableAclService {
 
@@ -80,10 +79,10 @@ public class IdentifierJdbcMutableAclService implements MutableAclService {
       DataSource dataSource, LookupStrategy lookupStrategy, AclCache aclCache, String schema) {
     //    super(dataSource, lookupStrategy);
 
-    this.jdbcTemplate = new JdbcTemplate(dataSource);
-//        (dataSource instanceof DriverManagerDataSource)
-//            ? new ConnectionDetectingJDBCTemplate(dataSource)
-//            : new JdbcTemplate(dataSource);
+    this.jdbcTemplate = // new JdbcTemplate(dataSource);
+        (dataSource instanceof DriverManagerDataSource)
+            ? new ConnectionDetectingJDBCTemplate(dataSource)
+            : new JdbcTemplate(dataSource);
     this.lookupStrategy = lookupStrategy;
     this.aclClassIdUtils = new AclClassIdUtils();
     Assert.notNull(aclCache, "AclCache required");

@@ -9,16 +9,13 @@ import io.sunshower.service.security.Session;
 import io.sunshower.service.serialization.DynamicJaxrsProviders;
 import io.sunshower.service.serialization.DynamicResolvingMoxyJsonProvider;
 import io.sunshower.test.common.TestConfigurations;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ForkJoinPool;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.Primary;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
-
-import javax.sql.DataSource;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.ForkJoinPool;
 
 @EnableGlobalMethodSecurity(prePostEnabled = true, jsr250Enabled = true)
 @Configuration
