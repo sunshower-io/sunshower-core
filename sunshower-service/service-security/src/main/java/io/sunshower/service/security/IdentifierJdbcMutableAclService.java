@@ -77,7 +77,6 @@ public class IdentifierJdbcMutableAclService implements MutableAclService {
 
   public IdentifierJdbcMutableAclService(
       DataSource dataSource, LookupStrategy lookupStrategy, AclCache aclCache, String schema) {
-    //    super(dataSource, lookupStrategy);
 
     this.jdbcTemplate = // new JdbcTemplate(dataSource);
         (dataSource instanceof DriverManagerDataSource)
