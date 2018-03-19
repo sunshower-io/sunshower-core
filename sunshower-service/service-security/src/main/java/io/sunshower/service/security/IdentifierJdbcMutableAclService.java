@@ -28,7 +28,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import javax.sql.DataSource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.core.convert.ConversionService;
@@ -36,7 +35,6 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.security.acls.domain.AccessControlEntryImpl;
 import org.springframework.security.acls.domain.GrantedAuthoritySid;
 import org.springframework.security.acls.domain.ObjectIdentityImpl;
@@ -76,12 +74,8 @@ public class IdentifierJdbcMutableAclService implements MutableAclService {
   // ===================================================================================================
 
   public IdentifierJdbcMutableAclService(
-      DataSource dataSource, LookupStrategy lookupStrategy, AclCache aclCache, String schema) {
-
-    this.jdbcTemplate = // new JdbcTemplate(dataSource);
-        (dataSource instanceof DriverManagerDataSource)
-            ? new ConnectionDetectingJDBCTemplate(dataSource)
-            : new JdbcTemplate(dataSource);
+      JdbcTemplate jdbcTemplate, LookupStrategy lookupStrategy, AclCache aclCache, String schema) {
+    this.jdbcTemplate = jdbcTemplate;
     this.lookupStrategy = lookupStrategy;
     this.aclClassIdUtils = new AclClassIdUtils();
     Assert.notNull(aclCache, "AclCache required");

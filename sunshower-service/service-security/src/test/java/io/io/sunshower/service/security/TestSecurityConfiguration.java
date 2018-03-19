@@ -7,8 +7,10 @@ import io.sunshower.service.security.PermissionsService;
 import io.sunshower.service.security.SpringPermissionsService;
 import io.sunshower.service.security.crypto.MessageAuthenticationCode;
 import io.sunshower.test.common.TestConfigurations;
+import io.sunshower.test.persist.ConnectionDetectingJDBCTemplate;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ForkJoinPool;
+import javax.sql.DataSource;
 import org.jasypt.util.text.BasicTextEncryptor;
 import org.jasypt.util.text.TextEncryptor;
 import org.mockito.Mockito;
@@ -16,6 +18,7 @@ import org.springframework.cache.Cache;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 @Configuration
 @Persistence(
@@ -35,6 +38,12 @@ import org.springframework.context.annotation.Primary;
   }
 )
 public class TestSecurityConfiguration {
+
+  @Bean
+  @Primary
+  public JdbcTemplate jdbcTemplate(final DataSource dataSource) {
+    return new ConnectionDetectingJDBCTemplate(dataSource);
+  }
 
   @Bean
   public PermissionsService<?> permissionsService() {
