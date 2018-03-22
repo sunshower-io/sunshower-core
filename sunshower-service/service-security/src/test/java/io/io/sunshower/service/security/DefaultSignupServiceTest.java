@@ -74,12 +74,12 @@ public class DefaultSignupServiceTest extends SecurityTest {
   public void ensureApprovalWorksWithUserDetailsWithJustEmail() {}
 
   @Test
-  @WithMockUser(username = "frap", password = "cool", authorities = "admin")
+  @WithMockUser(username = "frapadap", password = "coolio", authorities = "admin")
   public void ensureSavingThenRevokingUserRegeneratesRegistrationRequest() {
 
     final User user = new User();
     user.setUsername("Josiah1312341234adsfasdfasdf");
-    user.setPassword("frap");
+    user.setPassword("frapadap");
     user.getDetails().setEmailAddress("frapadapasdfasdfasdfasdf@gmail.com");
     RegistrationRequest signup = localService.signup(user);
     assertThat(localService.pendingRegistrations().size(), is(1));
@@ -101,7 +101,7 @@ public class DefaultSignupServiceTest extends SecurityTest {
   public void ensureSignupServiceCreatesRequestAndInactiveUser() {
     final User user = new User();
     user.setUsername("Josiah1312341234");
-    user.setPassword("frap");
+    user.setPassword("frapadap");
     user.getDetails().setEmailAddress("frapadap@gmail.com");
     RegistrationRequest request = localService.signup(user);
     User u = request.getUser();
@@ -149,7 +149,7 @@ public class DefaultSignupServiceTest extends SecurityTest {
 
     final User user = new User();
     user.setUsername("Josiah131234123423235");
-    user.setPassword("frap");
+    user.setPassword("frapadap");
     user.getDetails().setEmailAddress("fraadfafpadap@gmail.com");
     RegistrationRequest request = localService.signup(user);
     User u = request.getUser();

@@ -2,13 +2,14 @@ package io.sunshower.service.security;
 
 import io.sunshower.core.security.RoleService;
 import io.sunshower.model.core.auth.Role;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/** Created by haswell on 10/26/16. */
 @Service
 @Transactional
 public class DefaultRoleService implements RoleService {
@@ -27,7 +28,20 @@ public class DefaultRoleService implements RoleService {
       return authorities.get(0);
     } else {
       entityManager.persist(role);
+      entityManager.flush();
       return role;
     }
+  }
+
+  @Override
+  public List<Role> findOrCreate(Collection<Role> roles) {
+    List<Role> authorities =
+        entityManager
+            .createQuery("select r from Role r " + "where r.authority in :authorities", Role.class)
+            .setParameter(
+                "authorities", roles.stream().map(Role::getAuthority).collect(Collectors.toSet()))
+            .getResultList();
+
+    return authorities;
   }
 }
