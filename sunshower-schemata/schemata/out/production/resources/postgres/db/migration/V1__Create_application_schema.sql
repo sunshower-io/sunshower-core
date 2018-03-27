@@ -25,14 +25,11 @@ CREATE TABLE SUNSHOWER.PROPERTY(
     id    BYTEA PRIMARY KEY,
     property_key text,
     name         text,
+    type         SMALLINT,
+    value        TEXT
 );
 
 
-CREATE TABLE SUNSHOWER.ENTITY_TO_PROPERTIES(
-    entity_id       bytea,
-    property_id     bytea,
-    properties_key  text not null
-);
 
 /**
   references: io.sunshower.model.core.Application
@@ -353,6 +350,7 @@ CREATE TABLE SUNSHOWER.TEMPLATE (
   workspace_id BYTEA,
   link_id      BYTEA,
   graph_id     BYTEA,
+  type         TEXT,
 
   key          VARCHAR(255),
   name         VARCHAR(255),
@@ -435,9 +433,9 @@ CREATE TABLE SUNSHOWER.group_members (
 
 
 CREATE TABLE SUNSHOWER.ENTITY_TO_PROPERTIES (
-  entity_id   BYTEA NOT NULL,
-  property_id BYTEA NOT NULL,
-  property_key VARCHAR(255)
+  entity_id       BYTEA NOT NULL,
+  property_id     BYTEA NOT NULL,
+  properties_key  VARCHAR(255)
 );
 
 
@@ -453,17 +451,4 @@ CREATE TABLE SUNSHOWER.ENTITY_PROPERTIES (
 
 );
 
-CREATE TABLE SUNSHOWER.STRING_PROPERTIES (
-  id    BYTEA PRIMARY KEY,
-  value VARCHAR(4096)
-);
-
-
-CREATE TABLE SUNSHOWER.INTEGER_PROPERTIES (
-  id    BYTEA PRIMARY KEY,
-  value BIGINT
-);
-
-
-  
 

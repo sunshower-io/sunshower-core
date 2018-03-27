@@ -35,7 +35,7 @@ public class PropertyAwareObject<T extends PropertyAwareObject<T>> extends BaseM
   @XmlElement(name = "property")
   @XmlElementWrapper(name = "properties")
   @MapKeyJoinColumn(name = "properties_key")
-  private Map<String, Property<?, ?>> properties;
+  private Map<String, Property> properties;
 
   protected PropertyAwareObject() {}
 
@@ -43,7 +43,7 @@ public class PropertyAwareObject<T extends PropertyAwareObject<T>> extends BaseM
     this.type = type;
   }
 
-  public void addProperty(Property<?, ?> property) {
+  public void addProperty(Property property) {
     if (property == null) {
       return;
     }
@@ -53,7 +53,7 @@ public class PropertyAwareObject<T extends PropertyAwareObject<T>> extends BaseM
     properties.put(property.getKey(), property);
   }
 
-  public void removeProperty(Property<?, ?> property) {
+  public void removeProperty(Property property) {
     if (property == null) {
       return;
     }
@@ -63,14 +63,14 @@ public class PropertyAwareObject<T extends PropertyAwareObject<T>> extends BaseM
     properties.remove(property.getKey());
   }
 
-  public Property<?, ?> getProperty(String name) {
+  public Property getProperty(String name) {
     if (properties != null) {
       return properties.get(name);
     }
     return null;
   }
 
-  public List<Property<?, ?>> getProperties() {
+  public List<Property> getProperties() {
     return properties == null
         ? Collections.emptyList()
         : Collections.unmodifiableList(new ArrayList<>(properties.values()));

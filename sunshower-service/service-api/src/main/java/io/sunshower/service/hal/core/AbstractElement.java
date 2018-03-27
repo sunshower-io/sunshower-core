@@ -62,8 +62,8 @@ public class AbstractElement<T extends AbstractElement<T>> extends PropertyAware
     super.setId(id);
   }
 
-  public void setProperties(Collection<? extends Property<?, ?>> properties) {
-    for (Property<?, ?> p : properties) {
+  public void setProperties(Collection<? extends Property> properties) {
+    for (Property p : properties) {
       addProperty(p);
     }
   }

@@ -24,7 +24,7 @@ public interface TemplateService
   void subscribe(Observer<? super TemplateEvent> observer);
 
   @PreAuthorize("hasPermission(#id, 'io.sunshower.service.orchestration.model.Template', 'READ')")
-  List<Property<?, ?>> getProperties(Identifier id);
+  List<Property> getProperties(Identifier id);
 
   @PreAuthorize("hasPermission(#id, 'io.sunshower.service.orchestration.model.Template', 'READ')")
   Graph getGraph(Identifier id, Revision revision);

@@ -13,7 +13,6 @@ import io.sunshower.service.graph.service.GraphServiceResolver;
 import io.sunshower.service.hal.core.*;
 import io.sunshower.service.hal.core.contents.ContentHandler;
 import io.sunshower.service.model.Property;
-import io.sunshower.service.model.properties.StringProperty;
 import io.sunshower.service.orchestration.model.Template;
 import io.sunshower.service.orchestration.service.TemplateService;
 import io.sunshower.service.serialization.DynamicResolvingMoxyJsonProvider;
@@ -51,7 +50,7 @@ public class JpaTemplateServiceTest extends BaseRepositoryTest<Identifier, Templ
   }
 
   public JpaTemplateServiceTest() {
-    super(SerializationAware.Format.JSON, new Class<?>[] {StringProperty.class});
+    super(SerializationAware.Format.JSON, new Class<?>[] {Property.class});
   }
 
   @Override
@@ -217,7 +216,7 @@ public class JpaTemplateServiceTest extends BaseRepositoryTest<Identifier, Templ
   @Test
   @WithUserDetails("administrator")
   public void ensureContentForGraphAllowsPropertiesToBeSet() {
-    provider.register(Graph.class, StringProperty.class);
+    provider.register(Graph.class, Property.class);
 
     Template template = newTemplate();
     workspaceService.save(template.getWorkspace());
@@ -231,10 +230,10 @@ public class JpaTemplateServiceTest extends BaseRepositoryTest<Identifier, Templ
         templateService
             .contentManager(template.getId())
             .graphContent()
-            .setProperties(Collections.singleton(new StringProperty("hello")));
+            .setProperties(Collections.singleton(Property.string("hello", "hello", "hello")));
     contentHandler.close();
 
-    Set<Property<?, ?>> properties =
+    Set<Property> properties =
         templateService.contentManager(template.getId()).graphContent().getProperties();
     assertThat(properties.size(), is(1));
   }

@@ -5,7 +5,7 @@ import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.*;
 
-import io.sunshower.service.model.properties.StringProperty;
+import io.sunshower.service.model.Property;
 import io.sunshower.test.common.SerializationAware;
 import io.sunshower.test.common.SerializationTestCase;
 import org.jetbrains.annotations.NotNull;
@@ -13,7 +13,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 
-/** Created by haswell on 5/22/17. */
 @RunWith(JUnitPlatform.class)
 public class GraphTest extends SerializationTestCase {
 
@@ -25,8 +24,7 @@ public class GraphTest extends SerializationTestCase {
         Properties.class,
         Layout.class,
         TestElement.class,
-        Graph.class,
-        StringProperty.class);
+        Graph.class);
   }
 
   @Test
@@ -107,7 +105,7 @@ public class GraphTest extends SerializationTestCase {
   @NotNull
   private Edge createEdge(Vertex fst, Vertex snd) {
     Edge element = new Edge();
-    element.addProperty(new StringProperty("cool", "beans"));
+    element.addProperty(Property.string("cool", "Value", "beans"));
     element.getLayout().setWidth(100);
     element.getLayout().setHeight(100);
     element.getLayout().setX(235);
@@ -120,7 +118,7 @@ public class GraphTest extends SerializationTestCase {
   @NotNull
   private Vertex createVertex(String key) {
     Vertex element = new Vertex();
-    element.addProperty(new StringProperty("label", key));
+    element.addProperty(Property.string("whatever", "label", key));
     element.getLayout().setWidth(10);
     element.getLayout().setHeight(45);
     element.setStyle("color", "red");

@@ -5,9 +5,8 @@ import static org.junit.Assert.assertThat;
 
 import io.sunshower.service.hal.core.Graph;
 import io.sunshower.service.hal.core.Vertex;
+import io.sunshower.service.model.Property;
 import io.sunshower.service.model.PropertyAwareObject;
-import io.sunshower.service.model.properties.IntegerProperty;
-import io.sunshower.service.model.properties.StringProperty;
 import io.sunshower.test.common.SerializationAware;
 import io.sunshower.test.common.SerializationTestCase;
 import org.junit.jupiter.api.Test;
@@ -20,9 +19,7 @@ public class PropertyAwareSerializationTest extends SerializationTestCase {
   public PropertyAwareSerializationTest() {
     super(
         SerializationAware.Format.XML,
-        new Class<?>[] {
-          Graph.class, StringProperty.class, IntegerProperty.class, PropertyAwareObject.class
-        });
+        new Class<?>[] {Graph.class, Property.class, PropertyAwareObject.class});
   }
 
   @Test
@@ -41,7 +38,7 @@ public class PropertyAwareSerializationTest extends SerializationTestCase {
     final Graph g = new Graph();
     g.setName("frapper");
 
-    g.addProperty(new StringProperty("cool"));
+    g.addProperty(new Property(Property.Type.String, "hello", "world", "cool"));
     write(g, System.out);
     assertThat(copy(g).getProperties().size(), is(1));
   }

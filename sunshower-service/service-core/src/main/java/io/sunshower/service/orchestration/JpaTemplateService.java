@@ -278,14 +278,14 @@ public class JpaTemplateService extends BaseRepository<Identifier, Template>
 
   @Override
   @SuppressWarnings("unchecked")
-  public List<Property<?, ?>> getProperties(Identifier tid) {
+  public List<Property> getProperties(Identifier tid) {
     final WorkspaceRef wsref = resolveWorkspace(tid);
     final Workspace ws = wsref.workspace;
     final Identifier id = wsref.template.getId();
     try (GitRepository open = repositoryService.open(ws.getRepository())) {
       open.open();
       final String sid = id.toString();
-      final Set<Property<?, ?>> result = new LinkedHashSet<>();
+      final Set<Property> result = new LinkedHashSet<>();
       final String path = String.format("orchestrations/%s/orchestration.hsf", sid);
 
       final Graph graph = graphContext.load(open.read(path));

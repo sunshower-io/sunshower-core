@@ -7,8 +7,6 @@ import io.sunshower.service.PersistTestCase;
 import io.sunshower.service.model.LinkageMode;
 import io.sunshower.service.model.Property;
 import io.sunshower.service.model.RelationshipType;
-import io.sunshower.service.model.properties.IntegerProperty;
-import io.sunshower.service.model.properties.StringProperty;
 import io.sunshower.service.workspace.model.Workspace;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -29,12 +27,12 @@ public class TemplateTest extends PersistTestCase {
     template.setName("name");
     template.setKey("key");
     workspace.addTemplate(template);
-    template.addProperty(new StringProperty("prop", "prop", "cool"));
-    template.addProperty(new IntegerProperty("prop2", "prop", 100L));
+    template.addProperty(Property.string("prop", "prop", "cool"));
+    template.addProperty(Property.integer("prop2", "prop", "100"));
     entityManager.persist(workspace);
     entityManager.flush();
 
-    List<Property<?, ?>> properties =
+    List<Property> properties =
         entityManager.find(Template.class, template.getId()).getProperties();
 
     assertThat(properties.size(), is(2));

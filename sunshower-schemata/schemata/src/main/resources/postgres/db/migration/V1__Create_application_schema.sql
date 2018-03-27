@@ -25,6 +25,8 @@ CREATE TABLE SUNSHOWER.PROPERTY(
     id    BYTEA PRIMARY KEY,
     property_key text,
     name         text,
+    type         SMALLINT,
+    value        TEXT
 );
 
 
@@ -449,17 +451,4 @@ CREATE TABLE SUNSHOWER.ENTITY_PROPERTIES (
 
 );
 
-CREATE TABLE SUNSHOWER.STRING_PROPERTIES (
-  id    BYTEA PRIMARY KEY,
-  value VARCHAR(4096)
-);
-
-
-CREATE TABLE SUNSHOWER.INTEGER_PROPERTIES (
-  id    BYTEA PRIMARY KEY,
-  value BIGINT
-);
-
-
-  
 

@@ -73,10 +73,10 @@ public class JpaContentHandler implements ContentHandler {
   }
 
   @Override
-  public ContentHandler setProperties(Collection<Property<?, ?>> properties) {
+  public ContentHandler setProperties(Collection<Property> properties) {
     check(PropertyInclusion.Graph);
     graph.clearProperties();
-    for (Property<?, ?> p : properties) {
+    for (Property p : properties) {
       graph.addProperty(p);
     }
     return this;
@@ -84,7 +84,7 @@ public class JpaContentHandler implements ContentHandler {
 
   @Override
   public ContentHandler setProperties(
-      String name, PropertyInclusion property, Collection<Property<?, ?>> properties) {
+      String name, PropertyInclusion property, Collection<Property> properties) {
     check(property);
     switch (property) {
       case Graph:
@@ -99,26 +99,26 @@ public class JpaContentHandler implements ContentHandler {
     return this;
   }
 
-  private void setPropertiesOn(Collection<Property<?, ?>> properties, PropertyAwareObject<?> e) {
+  private void setPropertiesOn(Collection<Property> properties, PropertyAwareObject<?> e) {
     e.clearProperties();
-    for (Property<?, ?> p : properties) {
+    for (Property p : properties) {
       e.addProperty(p);
     }
   }
 
   @Override
-  public ContentHandler setProperties(String name, Collection<Property<?, ?>> properties) {
+  public ContentHandler setProperties(String name, Collection<Property> properties) {
     return null;
   }
 
   @Override
-  public Set<Property<?, ?>> getProperties() {
+  public Set<Property> getProperties() {
     check(PropertyInclusion.Graph);
     return allProperties();
   }
 
   @Override
-  public Set<Property<?, ?>> getProperties(PropertyInclusion inclusion, String name) {
+  public Set<Property> getProperties(PropertyInclusion inclusion, String name) {
     check(inclusion);
     switch (inclusion) {
       case Graph:
@@ -131,7 +131,7 @@ public class JpaContentHandler implements ContentHandler {
     throw new IllegalStateException("Nope");
   }
 
-  private Set<Property<?, ?>> contentProperties(String name) {
+  private Set<Property> contentProperties(String name) {
     Set<Content> contents = element.getContents();
     if (contents != null) {
       for (Content c : contents) {
@@ -143,28 +143,28 @@ public class JpaContentHandler implements ContentHandler {
     return Collections.emptySet();
   }
 
-  private Set<Property<?, ?>> nodeProperties() {
+  private Set<Property> nodeProperties() {
     Set<Content> contents = element.getContents();
-    final Map<String, Property<?, ?>> properties = new LinkedHashMap<>();
+    final Map<String, Property> properties = new LinkedHashMap<>();
     if (contents != null) {
       for (Content c : contents) {
-        List<Property<?, ?>> cprops = c.getProperties();
-        for (Property<?, ?> cprop : cprops) {
+        List<Property> cprops = c.getProperties();
+        for (Property cprop : cprops) {
           properties.put(cprop.getName(), cprop);
         }
       }
     }
     PropertyAwareObject<?> pao = (PropertyAwareObject<?>) element;
-    for (Property<?, ?> p : pao.getProperties()) {
+    for (Property p : pao.getProperties()) {
       properties.remove(p.getName());
       properties.put(p.getName(), p);
     }
     return new LinkedHashSet<>(properties.values());
   }
 
-  private Set<Property<?, ?>> allProperties() {
+  private Set<Property> allProperties() {
 
-    final Set<Property<?, ?>> results = new LinkedHashSet<>();
+    final Set<Property> results = new LinkedHashSet<>();
     results.addAll(graph.getProperties());
     results.addAll(
         graph

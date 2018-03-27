@@ -14,16 +14,16 @@ public interface ContentHandler extends AutoCloseable {
     Content
   }
 
-  ContentHandler setProperties(Collection<Property<?, ?>> properties);
+  ContentHandler setProperties(Collection<Property> properties);
 
   ContentHandler setProperties(
-      String name, PropertyInclusion property, Collection<Property<?, ?>> properties);
+      String name, PropertyInclusion property, Collection<Property> properties);
 
-  ContentHandler setProperties(String name, Collection<Property<?, ?>> properties);
+  ContentHandler setProperties(String name, Collection<Property> properties);
 
-  Set<Property<?, ?>> getProperties();
+  Set<Property> getProperties();
 
-  Set<Property<?, ?>> getProperties(PropertyInclusion inclusion, String name);
+  Set<Property> getProperties(PropertyInclusion inclusion, String name);
 
   Set<Content> list();
 

@@ -4,20 +4,16 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 import io.sunshower.service.git.GitRepositoryTestCase;
-import io.sunshower.service.model.properties.IntegerProperty;
-import io.sunshower.service.model.properties.StringProperty;
+import io.sunshower.service.model.Property;
 import io.sunshower.test.common.SerializationAware;
 import org.junit.Test;
 
-/** Created by haswell on 5/24/17. */
 public class CoreGraphUnitTest extends GitRepositoryTestCase {
 
   public CoreGraphUnitTest() {
     super(
         SerializationAware.Format.JSON,
-        new Class<?>[] {
-          Graph.class, Edge.class, Vertex.class, StringProperty.class, IntegerProperty.class
-        });
+        new Class<?>[] {Graph.class, Edge.class, Vertex.class, Property.class});
   }
 
   @Test
@@ -32,7 +28,7 @@ public class CoreGraphUnitTest extends GitRepositoryTestCase {
     final Vertex nine = newVertex("nine");
     final Vertex ten = newVertex("ten");
 
-    five.addProperty(new StringProperty("frapper", "Dapper", "cool"));
+    five.addProperty(Property.string("frapper", "Dapper", "cool"));
 
     final Graph g = new Graph();
     g.addVertex(five);
