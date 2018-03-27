@@ -11,13 +11,14 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import org.eclipse.persistence.oxm.annotations.XmlClassExtractor;
 
+@MappedSuperclass
 @XmlRootElement(name = "property-aware")
 @XmlClassExtractor(TypeAttributeClassExtractor.class)
 public class PropertyAwareObject<T extends PropertyAwareObject<T>> extends BaseModelObject {
 
   @XmlAttribute(name = "type")
   @XmlJavaTypeAdapter(ClassAdapter.class)
-  private Class<T> type;
+  private Class<?> type;
 
   /**
    * TODO: figure if we want these in the database or in the property graph. There are advantages to
@@ -26,13 +27,14 @@ public class PropertyAwareObject<T extends PropertyAwareObject<T>> extends BaseM
    */
   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   @JoinTable(
+    schema = "SUNSHOWER",
     name = "ENTITY_TO_PROPERTIES",
     joinColumns = {@JoinColumn(name = "entity_id", referencedColumnName = "id")},
     inverseJoinColumns = @JoinColumn(name = "property_id", referencedColumnName = "id")
   )
-  @MapKeyJoinColumn(name = "property_key")
   @XmlElement(name = "property")
   @XmlElementWrapper(name = "properties")
+  @MapKeyJoinColumn(name = "properties_key")
   private Map<String, Property<?, ?>> properties;
 
   protected PropertyAwareObject() {}
@@ -74,8 +76,9 @@ public class PropertyAwareObject<T extends PropertyAwareObject<T>> extends BaseM
         : Collections.unmodifiableList(new ArrayList<>(properties.values()));
   }
 
+  @SuppressWarnings("unchecked")
   public Class<T> getType() {
-    return type;
+    return (Class<T>) type;
   }
 
   public void setType(Class<T> type) {

@@ -15,8 +15,11 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 
+@Entity
 @XmlRootElement(name = "property")
+@Table(name = "PROPERTY", schema = "SUNSHOWER")
 @XmlClassExtractor(TypeAttributeClassExtractor.class)
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class Property<T, U extends Property<T, U>> extends DistributableEntity {
 
   @Transient
@@ -36,7 +39,7 @@ public abstract class Property<T, U extends Property<T, U>> extends Distributabl
   @Transient
   @XmlAttribute(name = "type")
   @XmlJavaTypeAdapter(ClassAdapter.class)
-  private Class<U> type;
+  private Class<?> type;
 
   @SuppressWarnings("unchecked")
   protected Property() {
@@ -70,8 +73,9 @@ public abstract class Property<T, U extends Property<T, U>> extends Distributabl
     this.name = name;
   }
 
+  @SuppressWarnings("unchecked")
   public Class<U> getType() {
-    return type;
+    return (Class<U>) type;
   }
 
   public void setType(Class<U> type) {

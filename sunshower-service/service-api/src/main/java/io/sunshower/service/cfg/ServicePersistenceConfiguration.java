@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
   id = "audit",
   migrationLocations = "classpath:{dialect}",
   scannedPackages = {
+    "io.sunshower.service.model",
     "io.sunshower.model.core.security",
     "io.sunshower.service.revision.model",
     "io.sunshower.service.workspace.model",

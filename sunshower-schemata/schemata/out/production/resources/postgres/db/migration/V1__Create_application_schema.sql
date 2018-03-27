@@ -20,6 +20,20 @@ CREATE TABLE SUNSHOWER.VERSION (
   extension   VARCHAR(31)
 );
 
+
+CREATE TABLE SUNSHOWER.PROPERTY(
+    id    BYTEA PRIMARY KEY,
+    property_key text,
+    name         text,
+);
+
+
+CREATE TABLE SUNSHOWER.ENTITY_TO_PROPERTIES(
+    entity_id       bytea,
+    property_id     bytea,
+    properties_key  text not null
+);
+
 /**
   references: io.sunshower.model.core.Application
   @author haswell

@@ -20,6 +20,15 @@ CREATE TABLE SUNSHOWER.VERSION (
   extension   VARCHAR(31)
 );
 
+
+CREATE TABLE SUNSHOWER.PROPERTY(
+    id    BYTEA PRIMARY KEY,
+    property_key text,
+    name         text,
+);
+
+
+
 /**
   references: io.sunshower.model.core.Application
   @author haswell
@@ -339,6 +348,7 @@ CREATE TABLE SUNSHOWER.TEMPLATE (
   workspace_id BYTEA,
   link_id      BYTEA,
   graph_id     BYTEA,
+  type         TEXT,
 
   key          VARCHAR(255),
   name         VARCHAR(255),
@@ -421,9 +431,9 @@ CREATE TABLE SUNSHOWER.group_members (
 
 
 CREATE TABLE SUNSHOWER.ENTITY_TO_PROPERTIES (
-  entity_id   BYTEA NOT NULL,
-  property_id BYTEA NOT NULL,
-  property_key VARCHAR(255)
+  entity_id       BYTEA NOT NULL,
+  property_id     BYTEA NOT NULL,
+  properties_key  VARCHAR(255)
 );
 
 
