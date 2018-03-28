@@ -46,7 +46,7 @@ public class Property extends DistributableEntity {
   @XmlAttribute(name = "type")
   private Class<?> type = Property.class;
 
-  protected Property() {}
+  public Property() {}
 
   public static Property string(String key, String name, String value) {
     return new Property(Type.String, key, name, value);
