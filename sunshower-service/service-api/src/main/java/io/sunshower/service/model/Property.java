@@ -22,7 +22,8 @@ public class Property extends DistributableEntity {
     Integer,
     String,
     Boolean,
-    Secret
+    Secret,
+    Class
   }
 
   @Basic

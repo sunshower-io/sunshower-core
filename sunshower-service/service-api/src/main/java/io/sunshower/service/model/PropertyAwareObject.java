@@ -70,6 +70,20 @@ public class PropertyAwareObject<T extends PropertyAwareObject<T>> extends BaseM
     return null;
   }
 
+  public <T> void setRole(Class<T> role) {
+    if(role == null) {
+      if(properties != null) {
+        properties.remove("role");
+      }
+    } else {
+      addProperty(new Property(Property.Type.Class, "role", "role", role.getName()));
+    }
+  }
+
+  public <T> void setProperty(Class<T> property, String value) {
+    addProperty(new Property(Property.Type.Class, property.getName(), "", value));
+  }
+
   public List<Property> getProperties() {
     return properties == null
         ? Collections.emptyList()
@@ -88,4 +102,24 @@ public class PropertyAwareObject<T extends PropertyAwareObject<T>> extends BaseM
   public void clearProperties() {
     properties = new LinkedHashMap<>();
   }
+
+  public <T> Property getProperty(Class<T> property) {
+    return getProperty(property.getName());
+  }
+
+  @SuppressWarnings("unchecked")
+  public <T> Class<T> getRole() {
+    final Property role = getProperty("role");
+    if(role == null) {
+      return null;
+    }
+    final String r = role.getValue();
+
+    try {
+      return (Class<T>) Class.forName(r, false, Thread.currentThread().getContextClassLoader());
+    } catch (ClassNotFoundException e) {
+      return null;
+    }
+  }
+
 }
