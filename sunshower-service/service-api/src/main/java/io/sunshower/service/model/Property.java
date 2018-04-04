@@ -41,7 +41,7 @@ public class Property extends DistributableEntity {
   @Enumerated
   @Column(name = "type")
   @XmlAttribute(name = "property-type")
-  private Type propertyType;
+  private Type propertyType = Type.String;
 
   @Transient
   @XmlAttribute(name = "type")
