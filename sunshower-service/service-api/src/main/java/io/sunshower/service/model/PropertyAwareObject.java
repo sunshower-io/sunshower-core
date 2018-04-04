@@ -20,11 +20,6 @@ public class PropertyAwareObject<T extends PropertyAwareObject<T>> extends BaseM
   @XmlJavaTypeAdapter(ClassAdapter.class)
   private Class<?> type;
 
-  /**
-   * TODO: figure if we want these in the database or in the property graph. There are advantages to
-   * having them in the property graph, such as automatically getting revision control. On the other
-   * hand, JAXB inheritance sucks :(
-   */
   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   @JoinTable(
     schema = "SUNSHOWER",
