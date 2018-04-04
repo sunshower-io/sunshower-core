@@ -10,12 +10,10 @@ import io.sunshower.core.security.UserService;
 import io.sunshower.core.security.crypto.EncryptionService;
 import io.sunshower.model.core.auth.User;
 import io.sunshower.service.security.SecurityTest;
-import io.sunshower.test.persist.Principal;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.cache.Cache;
@@ -33,14 +31,14 @@ public class StrongEncryptionServiceTest extends SecurityTest {
 
   @Inject private EncryptionService encryptionService;
 
-//  @Principal
-//  public User user() {
-//    final User u = new User();
-//    u.setUsername("josiah12");
-//    u.setPassword("adapasdfasdf");
-//    u.getDetails().setEmailAddress("adfasdf");
-//    return u;
-//  }
+  //  @Principal
+  //  public User user() {
+  //    final User u = new User();
+  //    u.setUsername("josiah12");
+  //    u.setPassword("adapasdfasdf");
+  //    u.getDetails().setEmailAddress("adfasdf");
+  //    return u;
+  //  }
 
   @Test
   @Transactional

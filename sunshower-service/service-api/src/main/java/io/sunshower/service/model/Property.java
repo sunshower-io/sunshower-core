@@ -73,7 +73,7 @@ public class Property extends DistributableEntity {
   }
 
   public void setValue(String value) {
-    if(value == null) {
+    if (value == null) {
       return;
     }
     switch (propertyType) {

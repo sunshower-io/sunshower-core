@@ -12,7 +12,7 @@ mvn clean install deploy -f bom/pom.xml
 #-Pversion=1.0.0-SNAPSHOT \
 #--console=plain -i
     
-gradle clean build pTML publish \
+gradle clean build pTML publish -i \
 -PmavenRepositoryUrl=${MVN_REPO_URL} \
 -PmavenRepositoryUsername=${MVN_REPO_USERNAME} \
 -PmavenRepositoryPassword=${MVN_REPO_PASSWORD} \
