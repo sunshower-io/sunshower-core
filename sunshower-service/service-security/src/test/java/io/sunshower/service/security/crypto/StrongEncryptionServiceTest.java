@@ -41,7 +41,6 @@ public class StrongEncryptionServiceTest extends SecurityTest {
   //  }
 
   @Test
-  @Transactional
   public void ensureCacheIsHit() {
     final User u = new User();
     u.setUsername("josiah2");

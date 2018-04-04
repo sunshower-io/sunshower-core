@@ -80,9 +80,7 @@ public class PropertyAwareObject<T extends PropertyAwareObject<T>> extends BaseM
   }
 
   public List<Property> getProperties() {
-    return properties == null
-        ? Collections.emptyList()
-        : Collections.unmodifiableList(new ArrayList<>(properties.values()));
+    return properties == null ? new ArrayList<>() : new ArrayList<>(properties.values());
   }
 
   @SuppressWarnings("unchecked")
