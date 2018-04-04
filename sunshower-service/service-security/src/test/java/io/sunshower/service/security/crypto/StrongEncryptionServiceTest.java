@@ -13,9 +13,13 @@ import io.sunshower.service.security.SecurityTest;
 import io.sunshower.test.persist.Principal;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.cache.Cache;
+import org.springframework.transaction.annotation.Transactional;
 
 public class StrongEncryptionServiceTest extends SecurityTest {
 
@@ -23,22 +27,31 @@ public class StrongEncryptionServiceTest extends SecurityTest {
   @Named("caches:authentication")
   private Cache authenticationCache;
 
+  @PersistenceContext private EntityManager entityManager;
+
   @Inject private UserService userService;
 
   @Inject private EncryptionService encryptionService;
 
-  @Principal
-  public User user() {
-    final User u = new User();
-    u.setUsername("josiah");
-    u.setPassword("adapasdfasdf");
-    u.getDetails().setEmailAddress("adfasdf");
-    return u;
-  }
+//  @Principal
+//  public User user() {
+//    final User u = new User();
+//    u.setUsername("josiah12");
+//    u.setPassword("adapasdfasdf");
+//    u.getDetails().setEmailAddress("adfasdf");
+//    return u;
+//  }
 
   @Test
+  @Transactional
   public void ensureCacheIsHit() {
-    User josiah = userService.findByUsername("josiah");
+    final User u = new User();
+    u.setUsername("josiah2");
+    u.setPassword("adapasdfasdadfasdff");
+    u.getDetails().setEmailAddress("adfasdfsdafasdfasdf");
+    entityManager.persist(u);
+    entityManager.flush();
+    User josiah = userService.findByUsername("josiah2");
 
     String next = encryptionService.createToken(josiah);
     encryptionService.findByToken(next);
@@ -48,8 +61,15 @@ public class StrongEncryptionServiceTest extends SecurityTest {
   }
 
   @Test
+  @Transactional
   public void ensureCacheIsInvalidated() {
 
+    final User u = new User();
+    u.setUsername("josiah");
+    u.setPassword("adapasdfasdf");
+    u.getDetails().setEmailAddress("adfasdf");
+    entityManager.persist(u);
+    entityManager.flush();
     User josiah = userService.findByUsername("josiah");
     String next = encryptionService.createToken(josiah);
     encryptionService.findByToken(next);

@@ -18,7 +18,7 @@ import org.eclipse.persistence.oxm.annotations.XmlClassExtractor;
 @XmlClassExtractor(TypeAttributeClassExtractor.class)
 public class Property extends DistributableEntity {
 
-  public enum Type {
+  public enum Type implements PropertyType {
     Integer,
     String,
     Boolean,

@@ -71,8 +71,8 @@ public class PropertyAwareObject<T extends PropertyAwareObject<T>> extends BaseM
   }
 
   public <T> void setRole(Class<T> role) {
-    if(role == null) {
-      if(properties != null) {
+    if (role == null) {
+      if (properties != null) {
         properties.remove("role");
       }
     } else {
@@ -110,7 +110,7 @@ public class PropertyAwareObject<T extends PropertyAwareObject<T>> extends BaseM
   @SuppressWarnings("unchecked")
   public <T> Class<T> getRole() {
     final Property role = getProperty("role");
-    if(role == null) {
+    if (role == null) {
       return null;
     }
     final String r = role.getValue();
@@ -121,5 +121,4 @@ public class PropertyAwareObject<T extends PropertyAwareObject<T>> extends BaseM
       return null;
     }
   }
-
 }
