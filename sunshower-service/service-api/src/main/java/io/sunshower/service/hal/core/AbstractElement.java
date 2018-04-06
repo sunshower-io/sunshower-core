@@ -3,7 +3,6 @@ package io.sunshower.service.hal.core;
 import io.sunshower.common.Identifier;
 import io.sunshower.common.rs.MapAdapter;
 import io.sunshower.common.rs.TypeAttributeClassExtractor;
-import io.sunshower.service.model.Property;
 import io.sunshower.service.model.PropertyAwareObject;
 import java.util.*;
 import java.util.function.Consumer;
@@ -60,12 +59,6 @@ public class AbstractElement<T extends AbstractElement<T>> extends PropertyAware
 
   public void setId(Identifier id) {
     super.setId(id);
-  }
-
-  public void setProperties(Collection<? extends Property> properties) {
-    for (Property p : properties) {
-      addProperty(p);
-    }
   }
 
   @Override

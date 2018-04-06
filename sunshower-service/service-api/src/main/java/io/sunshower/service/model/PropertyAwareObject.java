@@ -48,6 +48,15 @@ public class PropertyAwareObject<T extends PropertyAwareObject<T>> extends BaseM
     properties.put(property.getKey(), property);
   }
 
+  public void setProperties(List<Property> properties) {
+    if (properties == null) {
+      clearProperties();
+    }
+    for (Property property : properties) {
+      addProperty(property);
+    }
+  }
+
   public void removeProperty(Property property) {
     if (property == null) {
       return;
