@@ -5,9 +5,16 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.ext.Provider;
 import javax.ws.rs.ext.Providers;
 import org.eclipse.persistence.jaxb.rs.MOXyJsonProvider;
 
+@Provider
+@Consumes({MediaType.APPLICATION_JSON, MediaType.WILDCARD})
+@Produces({MediaType.APPLICATION_JSON, MediaType.WILDCARD, "application/x-javascript"})
 public class DynamicResolvingMoxyJsonProvider extends MOXyJsonProvider {
 
   private final Map<Class<?>, Set<Class<?>>> registrations;
