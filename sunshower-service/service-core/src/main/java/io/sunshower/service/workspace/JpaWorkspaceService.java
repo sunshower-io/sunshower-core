@@ -87,7 +87,7 @@ public class JpaWorkspaceService extends BaseRepository<Identifier, Workspace>
                     + "and w.id = :wsid",
                 Template.class)
             .setParameter("id", getSession().getUsername())
-            .setParameter("wsid", workspaceId.value())
+            .setParameter("wsid", workspaceId)
             .getResultList());
   }
 

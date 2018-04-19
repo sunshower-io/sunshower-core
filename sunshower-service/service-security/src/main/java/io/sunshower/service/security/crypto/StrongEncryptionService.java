@@ -112,7 +112,7 @@ public class StrongEncryptionService implements EncryptionService {
             .createQuery(
                 "select u from User u " + "left join fetch u.roles as r " + "where u.id = :id",
                 User.class)
-            .setParameter("id", id.value())
+            .setParameter("id", id)
             .getSingleResult();
     if (password.equals(user.getPassword())) {
       return user;

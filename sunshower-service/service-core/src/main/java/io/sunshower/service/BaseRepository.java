@@ -1,6 +1,5 @@
 package io.sunshower.service;
 
-import io.sunshower.common.Identifier;
 import io.sunshower.model.core.auth.ProtectedDistributableEntity;
 import io.sunshower.persistence.core.DistributableEntity;
 import io.sunshower.persistence.core.DistributableHierarchicalEntity;
@@ -157,9 +156,10 @@ public abstract class BaseRepository<ID extends Serializable, E extends Persista
     permissionService.delete(type, instance);
   }
 
+  @SuppressWarnings("unchecked")
   protected <T extends Serializable> T idFor(E e) {
     if (e instanceof DistributableEntity || e instanceof DistributableHierarchicalEntity) {
-      return (T) ((Identifier) e.getId()).value();
+      return (T) e.getId();
     }
     return (T) e.getId();
   }

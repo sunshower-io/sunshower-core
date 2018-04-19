@@ -67,7 +67,7 @@ class AuthenticationTest extends SecurityTest {
             .createQuery(
                 "select r from RegistrationRequest r join r.user u where u.id = :id",
                 RegistrationRequest.class)
-            .setParameter("id", user.getId().value())
+            .setParameter("id", user.getId())
             .getSingleResult();
     try {
       authenticationService.authenticate(user2);
