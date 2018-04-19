@@ -6,7 +6,6 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-/** Created by haswell on 5/16/17. */
 @MappedSuperclass
 @EntityListeners(UpdateListener.class)
 public abstract class BaseModelObject extends ProtectedDistributableEntity implements Updatable {

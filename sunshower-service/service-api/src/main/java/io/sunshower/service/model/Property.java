@@ -1,6 +1,9 @@
 package io.sunshower.service.model;
 
+import io.sunshower.common.Identifier;
 import io.sunshower.common.rs.TypeAttributeClassExtractor;
+import io.sunshower.persist.Identifiers;
+import io.sunshower.persist.Sequence;
 import io.sunshower.persistence.core.DistributableEntity;
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -47,7 +50,11 @@ public class Property extends DistributableEntity {
   @XmlAttribute(name = "type")
   private Class<?> type = Property.class;
 
-  public Property() {}
+  static final Sequence<Identifier> seq = Identifiers.newSequence(true);
+
+  public Property() {
+    setId(seq.next());
+  }
 
   public static Property string(String key, String name, String value) {
     return new Property(Type.String, key, name, value);
@@ -66,6 +73,7 @@ public class Property extends DistributableEntity {
   }
 
   public Property(Type type, String key, String name, String value) {
+    setId(seq.next());
     setPropertyType(type);
     setKey(key);
     setName(name);
