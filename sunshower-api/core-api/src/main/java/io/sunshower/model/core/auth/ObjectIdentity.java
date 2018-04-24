@@ -3,7 +3,6 @@ package io.sunshower.model.core.auth;
 import io.sunshower.common.Identifier;
 import io.sunshower.model.core.Schemata;
 import io.sunshower.persistence.core.DistributableEntity;
-import io.sunshower.persistence.core.converters.IdentifierConverter;
 import java.util.Set;
 import javax.persistence.*;
 
@@ -12,7 +11,6 @@ import javax.persistence.*;
 public class ObjectIdentity extends DistributableEntity {
 
   @Basic
-  @Convert(converter = IdentifierConverter.class)
   @Column(name = "object_id_identity")
   private Identifier reference;
 
