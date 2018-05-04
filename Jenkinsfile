@@ -11,7 +11,7 @@ pipeline {
     stages {
         stage('build-docker') {
             steps {
-                sh 'docker build -t sunshower-common -f Dockerfile .'
+                sh 'docker build -t sunshower-core -f Dockerfile .'
                 sh "docker run " +
                         "-e MVN_REPO_USERNAME=${MVN_REPO_USR} " +
                         "-e MVN_REPO_PASSWORD=${MVN_REPO_PSW} " +
