@@ -33,7 +33,6 @@ public class JGitRepositoryTest extends AuthenticatedTestCase {
     final TestRepositoryResolver resolver = new TestRepositoryResolver();
     File resolve = resolver.resolve(new Tenant(), new User(), new Keypair());
     assertTrue(Arrays.asList("build", "out").contains(resolve.getAbsoluteFile().getName()));
-    assertThat(resolve.getAbsoluteFile().getName(), is("build"));
     assertThat(resolve.isDirectory(), is(true));
   }
 }
