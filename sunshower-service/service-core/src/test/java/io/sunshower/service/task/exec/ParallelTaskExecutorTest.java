@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Level;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,6 +32,10 @@ public class ParallelTaskExecutorTest extends ServiceTestCase {
   @Inject private ParallelTaskExecutor executor;
 
   private TaskGraph taskGraph;
+
+  static {
+    ParallelTaskExecutor.log.setLevel(Level.FINEST);
+  }
 
   public ParallelTaskExecutorTest() {
     super(

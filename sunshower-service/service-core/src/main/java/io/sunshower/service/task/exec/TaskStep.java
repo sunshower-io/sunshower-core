@@ -112,7 +112,6 @@ class TaskStep implements Callable<ExecutionResult> {
     }
   }
 
-
   public ExecutionResult<?> call() {
     ParallelTaskExecutor.log.log(Level.INFO, "Beginning execution of task: {0}", taskId);
     subject.onNext(new TaskEvent(TaskEvent.Type.TaskBeginning, scheduleId, taskId));
