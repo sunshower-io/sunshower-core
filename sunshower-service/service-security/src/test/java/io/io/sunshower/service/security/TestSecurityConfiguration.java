@@ -6,6 +6,7 @@ import io.sunshower.persistence.annotations.Persistence;
 import io.sunshower.service.security.PermissionsService;
 import io.sunshower.service.security.SpringPermissionsService;
 import io.sunshower.service.security.crypto.MessageAuthenticationCode;
+import io.sunshower.test.common.TestClasspath;
 import io.sunshower.test.common.TestConfigurations;
 import io.sunshower.test.persist.ConnectionDetectingJDBCTemplate;
 import java.util.concurrent.ExecutorService;
@@ -53,7 +54,12 @@ public class TestSecurityConfiguration {
   @Primary
   @Bean(name = TestConfigurations.TEST_CONFIGURATION_REPOSITORY_PATH)
   public String location() {
-    return "/sunshower-api/core-api/src/test/resources";
+    return TestClasspath.rootDir()
+        .getParent()
+        .getParent()
+        .resolve("sunshower-api/core-api/src/test/resources")
+        .toFile()
+        .getAbsolutePath();
   }
 
   @Bean

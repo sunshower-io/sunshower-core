@@ -10,6 +10,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import org.apache.tinkerpop.gremlin.tinkergraph.structure.TinkerGraph;
 import org.springframework.context.ApplicationContext;
@@ -85,6 +86,7 @@ class ParallelLevelSet implements LevelSet<TaskElement> {
   private void doRun() {
     try {
       CountDownLatch latch = new CountDownLatch(size());
+      ParallelTaskExecutor.log.log(Level.INFO, "Submitting task set of size: {0}", size());
       for (TaskElement e : this) {
         executorService.submit(
             new TaskStep(
@@ -99,7 +101,8 @@ class ParallelLevelSet implements LevelSet<TaskElement> {
                 parallelTaskExecutor));
       }
       try {
-        latch.await();
+        ParallelTaskExecutor.log.log(Level.INFO, "Awaiting results...", size());
+        latch.await(10, TimeUnit.SECONDS);
       } catch (InterruptedException e) {
         e.printStackTrace();
       }

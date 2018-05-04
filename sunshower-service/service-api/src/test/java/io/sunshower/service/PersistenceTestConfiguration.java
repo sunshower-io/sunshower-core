@@ -2,6 +2,7 @@ package io.sunshower.service;
 
 import io.sunshower.persistence.Dialect;
 import io.sunshower.persistence.annotations.Persistence;
+import io.sunshower.test.common.TestClasspath;
 import io.sunshower.test.common.TestConfigurations;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,7 +15,12 @@ public class PersistenceTestConfiguration {
   @Primary
   @Bean(name = TestConfigurations.TEST_CONFIGURATION_REPOSITORY_PATH)
   public String location() {
-    return "/sunshower-api/core-api/src/test/resources";
+    return TestClasspath.rootDir()
+        .getParent()
+        .getParent()
+        .resolve("sunshower-api/core-api/src/test/resources")
+        .toFile()
+        .getAbsolutePath();
   }
 
   @Bean

@@ -113,7 +113,7 @@ class TaskStep implements Callable<ExecutionResult> {
   }
 
   public ExecutionResult<?> call() {
-    ParallelTaskExecutor.log.info("Beginning task execution");
+    ParallelTaskExecutor.log.log(Level.INFO, "Beginning execution of task: {0}", taskId);
     subject.onNext(new TaskEvent(TaskEvent.Type.TaskBeginning, scheduleId, taskId));
     try {
       Object result = doRun();
@@ -128,6 +128,7 @@ class TaskStep implements Callable<ExecutionResult> {
       subject.onError(new TaskException(e, scheduleId, taskId));
       return new ExecResult(e);
     } finally {
+      ParallelTaskExecutor.log.log(Level.INFO, "Concluding execution of task: {0}", taskId);
       latch.countDown();
     }
   }

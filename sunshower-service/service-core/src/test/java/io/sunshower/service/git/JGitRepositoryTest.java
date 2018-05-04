@@ -9,6 +9,7 @@ import io.sunshower.model.core.auth.User;
 import io.sunshower.service.AuthenticatedTestCase;
 import io.sunshower.service.model.io.FileResolutionStrategy;
 import java.io.File;
+import java.util.Arrays;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -31,7 +32,7 @@ public class JGitRepositoryTest extends AuthenticatedTestCase {
   public void ensureResolvingDirectoryRootWorksAndProducesBuild() {
     final TestRepositoryResolver resolver = new TestRepositoryResolver();
     File resolve = resolver.resolve(new Tenant(), new User(), new Keypair());
-    assertThat(resolve.getAbsoluteFile().getName(), is("build"));
+    assertTrue(Arrays.asList("build", "out").contains(resolve.getAbsoluteFile().getName()));
     assertThat(resolve.isDirectory(), is(true));
   }
 }
