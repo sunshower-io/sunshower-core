@@ -52,7 +52,8 @@ public class PropertyAwareObject<T extends PropertyAwareObject<T>> extends BaseM
     if (properties == null) {
       clearProperties();
     }
-    for (Property property : properties) {
+    final List<Property> ps = properties == null ? Collections.emptyList() : properties;
+    for (Property property : ps) {
       addProperty(property);
     }
   }

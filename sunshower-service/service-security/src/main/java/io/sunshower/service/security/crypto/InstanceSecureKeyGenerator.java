@@ -6,7 +6,6 @@ import java.util.Base64;
 import javax.inject.Singleton;
 import org.springframework.stereotype.Service;
 
-/** Created by haswell on 10/20/16. */
 @Service
 @Singleton
 public class InstanceSecureKeyGenerator implements KeyProvider {

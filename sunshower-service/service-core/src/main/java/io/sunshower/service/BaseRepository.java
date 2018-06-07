@@ -19,7 +19,6 @@ import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.security.acls.model.Permission;
 import org.springframework.transaction.annotation.Transactional;
 
-/** Created by haswell on 5/16/17. */
 @Transactional
 public abstract class BaseRepository<ID extends Serializable, E extends Persistable<ID>>
     implements EntityRepository<ID, E> {
