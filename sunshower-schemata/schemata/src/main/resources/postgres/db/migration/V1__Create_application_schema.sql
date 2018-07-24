@@ -452,3 +452,19 @@ CREATE TABLE SUNSHOWER.ENTITY_PROPERTIES (
 );
 
 
+
+
+create table SUNSHOWER.PRODUCT (
+  id           BYTEA PRIMARY KEY,
+  name         TEXT,
+  description  TEXT
+);
+
+create table SUNSHOWER.REQUEST_TO_PRODUCT (
+  product_id BYTEA not null,
+  request_id BYTEA not null,
+  CONSTRAINT fk_product_id_to_product FOREIGN KEY (product_id) REFERENCES SUNSHOWER.PRODUCT(id),
+  CONSTRAINT fk_request_id_to_request FOREIGN KEY (request_id) REFERENCES SUNSHOWER.REGISTRATION_REQUEST(id)
+);
+
+

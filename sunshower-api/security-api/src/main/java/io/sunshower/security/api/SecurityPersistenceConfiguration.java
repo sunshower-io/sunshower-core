@@ -1,12 +1,20 @@
 package io.sunshower.security.api;
 
 import io.sunshower.persistence.annotations.Persistence;
+import io.sunshower.service.signup.Products;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Persistence(
   id = "audit",
-  scannedPackages = "io.sunshower.service.signup",
-  migrationLocations = "classpath:{dialect}"
+  migrationLocations = "classpath:{dialect}",
+  scannedPackages = {"io.sunshower.service.signup", "io.sunshower.core.security"}
 )
 @Configuration
-public class SecurityPersistenceConfiguration {}
+public class SecurityPersistenceConfiguration {
+
+  @Bean
+  public ProductService productsService() {
+    return new Products();
+  }
+}

@@ -7,10 +7,14 @@ import io.sunshower.model.core.auth.User;
 import io.sunshower.persistence.core.DistributableEntity;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @XmlRootElement(name = "request")
@@ -34,11 +38,23 @@ public class RegistrationRequest extends DistributableEntity {
   @Temporal(TemporalType.DATE)
   private Date expires;
 
+  @Getter
+  @Setter
+  @OneToMany(mappedBy = "request", cascade = CascadeType.PERSIST)
+  private Set<Product> products;
+
   public RegistrationRequest() {}
 
   public RegistrationRequest(User user) {
     this.user = user;
     this.setDefaults();
+  }
+
+  public void addProduct(Product p) {
+    if (products == null) {
+      products = new HashSet<>();
+    }
+    products.add(p);
   }
 
   public void setRequestId(String requestId) {

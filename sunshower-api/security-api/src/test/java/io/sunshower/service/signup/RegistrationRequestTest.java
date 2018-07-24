@@ -8,6 +8,7 @@ import io.sunshower.model.core.PersistenceConfiguration;
 import io.sunshower.model.core.auth.User;
 import io.sunshower.persist.core.DataSourceConfiguration;
 import io.sunshower.persist.hibernate.HibernateConfiguration;
+import io.sunshower.security.api.SecurityPersistenceConfiguration;
 import io.sunshower.test.common.SerializationAware;
 import io.sunshower.test.common.SerializationTestCase;
 import io.sunshower.test.common.TestConfigurationConfiguration;
@@ -31,6 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
     HibernateConfiguration.class,
     DataSourceConfiguration.class,
     PersistenceConfiguration.class,
+    SecurityPersistenceConfiguration.class,
     PersistenceTestConfiguration.class,
   }
 )
@@ -40,6 +42,11 @@ public class RegistrationRequestTest extends SerializationTestCase {
 
   public RegistrationRequestTest() {
     super(SerializationAware.Format.JSON, RegistrationRequest.class);
+  }
+
+  @Test
+  void ensureProductsAreSavedCorrectly() {
+    assertThat(entityManager.createQuery("select p from Product p").getResultList().size(), is(3));
   }
 
   @Test

@@ -6,6 +6,7 @@ import io.sunshower.core.security.RoleService;
 import io.sunshower.core.security.UserService;
 import io.sunshower.core.security.crypto.EncryptionService;
 import io.sunshower.model.core.vault.KeyProvider;
+import io.sunshower.security.api.SecurityPersistenceConfiguration;
 import io.sunshower.service.application.DefaultApplicationService;
 import io.sunshower.service.security.crypto.InstanceSecureKeyGenerator;
 import io.sunshower.service.security.crypto.MessageAuthenticationCode;
@@ -27,6 +28,7 @@ import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
@@ -47,6 +49,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @EnableCaching
+@Import(SecurityPersistenceConfiguration.class)
 @EnableGlobalMethodSecurity(prePostEnabled = true, jsr250Enabled = true, securedEnabled = true)
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 

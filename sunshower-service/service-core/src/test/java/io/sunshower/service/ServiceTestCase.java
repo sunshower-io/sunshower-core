@@ -4,6 +4,7 @@ import io.sunshower.jpa.flyway.FlywayConfiguration;
 import io.sunshower.model.core.PersistenceConfiguration;
 import io.sunshower.persist.core.DataSourceConfiguration;
 import io.sunshower.persist.hibernate.HibernateConfiguration;
+import io.sunshower.security.api.SecurityPersistenceConfiguration;
 import io.sunshower.service.security.SecurityConfiguration;
 import io.sunshower.test.common.SerializationAware;
 import io.sunshower.test.common.SerializationTestCase;
@@ -33,6 +34,7 @@ import org.springframework.transaction.support.TransactionTemplate;
 @RunWith(JUnitPlatform.class)
 @ContextConfiguration(
   classes = {
+    SecurityPersistenceConfiguration.class,
     TestConfigurationConfiguration.class,
     HibernateConfiguration.class,
     PersistenceConfiguration.class,
