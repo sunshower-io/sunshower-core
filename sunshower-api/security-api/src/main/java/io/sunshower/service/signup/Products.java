@@ -7,7 +7,6 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.persistence.*;
 import javax.transaction.*;
-import javax.transaction.RollbackException;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,13 +18,17 @@ public class Products implements ApplicationListener<ContextRefreshedEvent>, Pro
 
   @Override
   @Transactional
-  public void onApplicationEvent(ContextRefreshedEvent event) {}
+  public void onApplicationEvent(ContextRefreshedEvent event) {
+    try {
+      onSave();
+    } catch (SystemException e) {
+      throw new RuntimeException(e);
+    }
+  }
 
   @PostConstruct
   @Transactional
-  public void onSave()
-      throws SystemException, HeuristicRollbackException, HeuristicMixedException,
-          RollbackException {
+  public void onSave() throws SystemException {
     final EntityManager entityManager = entityManagerFactory.createEntityManager();
     try {
       userTransaction.begin();
