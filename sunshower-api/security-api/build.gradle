@@ -1,9 +1,11 @@
 dependencies {
     compile 'javax.validation:validation-api'
     compile 'javax.ws.rs:javax.ws.rs-api'
+    compile 'org.springframework:spring-tx'
     compile project(":sunshower-api:core-api")
     compile project(":sunshower-api:common-api")
     compile 'com.zaxxer:HikariCP'
+
     compile project(':sunshower-schemata:schemata')
     testCompile 'io.sunshower.test:test-persist'
 }

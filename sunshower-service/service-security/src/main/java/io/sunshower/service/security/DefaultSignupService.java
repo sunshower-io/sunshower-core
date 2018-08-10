@@ -5,8 +5,11 @@ import io.sunshower.core.security.RoleService;
 import io.sunshower.core.security.crypto.EncryptionService;
 import io.sunshower.model.core.auth.Role;
 import io.sunshower.model.core.auth.User;
+import io.sunshower.security.api.ProductService;
+import io.sunshower.service.signup.Product;
 import io.sunshower.service.signup.RegistrationRequest;
 import io.sunshower.service.signup.SignupService;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import javax.inject.Inject;
@@ -26,6 +29,8 @@ public class DefaultSignupService implements SignupService {
 
   @Inject private RoleService roleService;
 
+  @Inject private ProductService products;
+
   @PersistenceContext private EntityManager entityManager;
 
   @Inject private EncryptionService encryptionService;
@@ -34,11 +39,31 @@ public class DefaultSignupService implements SignupService {
 
   @Override
   public RegistrationRequest signup(User user) {
+    return signup(user, Collections.emptyList());
+  }
+
+  @Override
+  public RegistrationRequest signup(User user, List<String> productIds) {
+
+    final List<Product> products;
+    if (productIds.isEmpty()) {
+      products = Collections.emptyList();
+    } else {
+      products =
+          entityManager
+              .createQuery(
+                  "select distinct(p) " + "from Product p " + "where p.name in :names",
+                  Product.class)
+              .setParameter("names", productIds)
+              .getResultList();
+    }
+
     if (user.getRoles() != null) {
       user.getRoles().clear();
     }
     user.setActive(false);
     final RegistrationRequest registrationRequest = new RegistrationRequest(user);
+    for (Product p : products) {}
     entityManager.persist(registrationRequest);
 
     final Role role = roleService.findOrCreate(DefaultRoles.TENANT_USER.toRole());

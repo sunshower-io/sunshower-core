@@ -4,9 +4,7 @@ import io.sunshower.common.Identifier;
 import io.sunshower.model.core.auth.User;
 import java.util.List;
 
-/** Created by haswell on 10/17/16. */
 public interface SignupService {
-
   /** @return */
   List<User> list();
 
@@ -27,6 +25,8 @@ public interface SignupService {
    * @return
    */
   RegistrationRequest signup(User input);
+
+  RegistrationRequest signup(User input, List<String> productIds);
 
   /** @return */
   List<RegistrationRequest> pendingRegistrations();

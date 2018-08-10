@@ -8,9 +8,12 @@ import io.sunshower.model.core.PersistenceConfiguration;
 import io.sunshower.model.core.auth.User;
 import io.sunshower.persist.core.DataSourceConfiguration;
 import io.sunshower.persist.hibernate.HibernateConfiguration;
+import io.sunshower.security.api.SecurityPersistenceConfiguration;
 import io.sunshower.test.common.SerializationAware;
 import io.sunshower.test.common.SerializationTestCase;
 import io.sunshower.test.common.TestConfigurationConfiguration;
+import java.util.Arrays;
+import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import org.junit.jupiter.api.Test;
@@ -31,6 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
     HibernateConfiguration.class,
     DataSourceConfiguration.class,
     PersistenceConfiguration.class,
+    SecurityPersistenceConfiguration.class,
     PersistenceTestConfiguration.class,
   }
 )
@@ -40,6 +44,29 @@ public class RegistrationRequestTest extends SerializationTestCase {
 
   public RegistrationRequestTest() {
     super(SerializationAware.Format.JSON, RegistrationRequest.class);
+  }
+
+  @Test
+  void ensureProductsAreSavedCorrectly() {
+    List<Product> products =
+        Arrays.asList(
+            new Product(
+                "stratosphere:design",
+                "Low-code Deployment across Clouds with Stratosphere:Design"),
+            new Product(
+                "stratosphere:discover",
+                "Cross-cloud infrastructure "
+                    + "discovery and management with Stratosphere:Discover"),
+            new Product("anvil", "Cross-cloud Infrastructure Optimization"));
+    for (Product product : products) {
+      entityManager.persist(product);
+    }
+    assertThat(
+        entityManager
+            .createQuery("select p from Product p where p.name = 'stratosphere:discover'")
+            .getResultList()
+            .size(),
+        is(1));
   }
 
   @Test

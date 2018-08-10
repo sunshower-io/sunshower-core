@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Configuration;
     "io.sunshower.service.signup",
     "io.sunshower.model.core.auth",
     "io.sunshower.model.core",
+    "io.sunshower.core.security",
     "io.sunshower.model.core.deployment",
     "io.sunshower.model.core.configuration"
   }

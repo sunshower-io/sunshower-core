@@ -5,6 +5,7 @@ import io.sunshower.jpa.flyway.FlywayConfiguration;
 import io.sunshower.model.core.PersistenceConfiguration;
 import io.sunshower.persist.core.DataSourceConfiguration;
 import io.sunshower.persist.hibernate.HibernateConfiguration;
+import io.sunshower.security.api.SecurityPersistenceConfiguration;
 import io.sunshower.test.common.TestConfigurationConfiguration;
 import io.sunshower.test.persist.AuthenticationTestExecutionListener;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 @ContextConfiguration(
   classes = {
     TestConfigurationConfiguration.class,
+    SecurityPersistenceConfiguration.class,
     SecurityConfiguration.class,
     HibernateConfiguration.class,
     DataSourceConfiguration.class,

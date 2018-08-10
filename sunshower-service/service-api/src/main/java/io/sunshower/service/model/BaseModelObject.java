@@ -12,7 +12,7 @@ public abstract class BaseModelObject extends ProtectedDistributableEntity imple
 
   @Basic
   @Column(name = "name", unique = true)
-  @Size(min = 3, max = 255)
+  @Size(min = 0, max = 65535)
   private String name;
 
   @NotNull

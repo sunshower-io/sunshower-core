@@ -13,6 +13,8 @@ public class Impersonation extends User implements Authentication, UserDetails {
   final GrantedAuthority[] roles;
   final Tenant tenant = new Tenant();
 
+  static final ThreadLocal<User> user = new ThreadLocal<>();
+
   public Impersonation(GrantedAuthority... roles) {
     this.roles = roles;
   }
@@ -59,7 +61,10 @@ public class Impersonation extends User implements Authentication, UserDetails {
 
   @Override
   public Object getCredentials() {
-    return new User();
+    if (user.get() == null) {
+      user.set(new User());
+    }
+    return user.get();
   }
 
   @Override

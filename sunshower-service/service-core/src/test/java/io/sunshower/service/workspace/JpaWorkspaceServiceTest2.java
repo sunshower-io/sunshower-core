@@ -8,6 +8,7 @@ import io.sunshower.model.core.auth.Role;
 import io.sunshower.model.core.auth.User;
 import io.sunshower.persist.core.DataSourceConfiguration;
 import io.sunshower.persist.hibernate.HibernateConfiguration;
+import io.sunshower.security.api.SecurityPersistenceConfiguration;
 import io.sunshower.service.CoreServiceConfiguration;
 import io.sunshower.service.TestConfiguration;
 import io.sunshower.service.security.PermissionsService;
@@ -38,6 +39,7 @@ import org.springframework.transaction.annotation.Transactional;
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(
   classes = {
+    SecurityPersistenceConfiguration.class,
     TestConfigurationConfiguration.class,
     HibernateConfiguration.class,
     PersistenceConfiguration.class,
