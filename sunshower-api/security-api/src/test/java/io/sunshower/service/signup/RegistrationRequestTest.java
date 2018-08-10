@@ -12,6 +12,8 @@ import io.sunshower.security.api.SecurityPersistenceConfiguration;
 import io.sunshower.test.common.SerializationAware;
 import io.sunshower.test.common.SerializationTestCase;
 import io.sunshower.test.common.TestConfigurationConfiguration;
+import java.util.Arrays;
+import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import org.junit.jupiter.api.Test;
@@ -46,7 +48,25 @@ public class RegistrationRequestTest extends SerializationTestCase {
 
   @Test
   void ensureProductsAreSavedCorrectly() {
-    assertThat(entityManager.createQuery("select p from Product p").getResultList().size(), is(3));
+    List<Product> products =
+        Arrays.asList(
+            new Product(
+                "stratosphere:design",
+                "Low-code Deployment across Clouds with Stratosphere:Design"),
+            new Product(
+                "stratosphere:discover",
+                "Cross-cloud infrastructure "
+                    + "discovery and management with Stratosphere:Discover"),
+            new Product("anvil", "Cross-cloud Infrastructure Optimization"));
+    for (Product product : products) {
+      entityManager.persist(product);
+    }
+    assertThat(
+        entityManager
+            .createQuery("select p from Product p where p.name = 'stratosphere:discover'")
+            .getResultList()
+            .size(),
+        is(1));
   }
 
   @Test

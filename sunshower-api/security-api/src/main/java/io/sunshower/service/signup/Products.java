@@ -1,8 +1,6 @@
 package io.sunshower.service.signup;
 
 import io.sunshower.security.api.ProductService;
-import java.util.Arrays;
-import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.persistence.*;
@@ -29,29 +27,29 @@ public class Products implements ApplicationListener<ContextRefreshedEvent>, Pro
   @PostConstruct
   @Transactional
   public void onSave() throws SystemException {
-    final EntityManager entityManager = entityManagerFactory.createEntityManager();
-    try {
-      userTransaction.begin();
-
-      List<Product> products =
-          Arrays.asList(
-              new Product(
-                  "stratosphere:design",
-                  "Low-code Deployment across Clouds with Stratosphere:Design"),
-              new Product(
-                  "stratosphere:discover",
-                  "Cross-cloud infrastructure "
-                      + "discovery and management with Stratosphere:Discover"),
-              new Product("anvil", "Cross-cloud Infrastructure Optimization"));
-      for (Product product : products) {
-        entityManager.persist(product);
-      }
-      entityManager.flush();
-      userTransaction.commit();
-    } catch (Exception e) {
-      userTransaction.rollback();
-    } finally {
-      entityManager.close();
-    }
+    //    final EntityManager entityManager = entityManagerFactory.createEntityManager();
+    //    try {
+    //      userTransaction.begin();
+    //
+    //      List<Product> products =
+    //          Arrays.asList(
+    //              new Product(
+    //                  "stratosphere:design",
+    //                  "Low-code Deployment across Clouds with Stratosphere:Design"),
+    //              new Product(
+    //                  "stratosphere:discover",
+    //                  "Cross-cloud infrastructure "
+    //                      + "discovery and management with Stratosphere:Discover"),
+    //              new Product("anvil", "Cross-cloud Infrastructure Optimization"));
+    //      for (Product product : products) {
+    //        entityManager.persist(product);
+    //      }
+    //      entityManager.flush();
+    //      userTransaction.commit();
+    //    } catch (Exception e) {
+    //      userTransaction.rollback();
+    //    } finally {
+    //      entityManager.close();
+    //    }
   }
 }
