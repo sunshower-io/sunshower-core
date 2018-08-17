@@ -5,6 +5,8 @@ import java.util.List;
 /** Created by haswell on 5/16/17. */
 public interface EntityRepository<ID, E> {
 
+  Long count();
+
   E save(E entity);
 
   /**
