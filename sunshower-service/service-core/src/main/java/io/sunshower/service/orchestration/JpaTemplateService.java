@@ -278,7 +278,7 @@ public class JpaTemplateService extends BaseRepository<Identifier, Template>
 
   @Override
   @SuppressWarnings("unchecked")
-  public List<Property> getProperties(Identifier tid) {
+  public List<Property> getProperties(@P("id") Identifier tid) {
     final WorkspaceRef wsref = resolveWorkspace(tid);
     final Workspace ws = wsref.workspace;
     final Identifier id = wsref.template.getId();

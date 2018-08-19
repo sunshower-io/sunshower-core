@@ -3,6 +3,9 @@ package io.sunshower.service.task.exec;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
+import io.sunshower.core.security.crypto.EncryptionService;
+import io.sunshower.model.core.auth.Role;
+import io.sunshower.model.core.auth.User;
 import io.sunshower.service.AuthenticatedTestCase;
 import io.sunshower.service.graph.service.GraphService;
 import io.sunshower.service.graph.service.TaskService;
@@ -13,6 +16,8 @@ import io.sunshower.service.orchestration.model.Template;
 import io.sunshower.service.orchestration.service.TemplateService;
 import io.sunshower.service.workspace.model.Workspace;
 import io.sunshower.service.workspace.service.WorkspaceService;
+import io.sunshower.test.persist.Authority;
+import io.sunshower.test.persist.Principal;
 import javax.inject.Inject;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.test.context.support.WithUserDetails;
@@ -32,7 +37,21 @@ public class DefaultTaskServiceTest extends AuthenticatedTestCase {
 
   @Inject private TemplateService templateService;
 
+  @Inject private EncryptionService encryptionService;
+
+  @Principal
+  public User createUserPrincipal(@Authority("tenant:user") Role userRole) {
+    User user = new User();
+    user.setUsername("user");
+    user.setPassword(encryptionService.encrypt("password"));
+    user.getDetails().setEmailAddress("user123");
+    user.addRole(userRole);
+    user.setActive(true);
+    return user;
+  }
+
   @Test
+  @WithUserDetails("user")
   public void ensureGraphContentsAddsStuff() {
     final Graph graph = new Graph();
     final Vertex fst = new Vertex();
@@ -55,7 +74,6 @@ public class DefaultTaskServiceTest extends AuthenticatedTestCase {
 
     workspace.addTemplate(template);
     workspaceService.create(workspace);
-    workspaceService.save(workspace);
     templateService.saveGraph(template.getId(), graph);
     try (ContentHandler mgr =
         templateService.contentManager(template.getId()).contentFor(fst.getId(), Vertex.class)) {

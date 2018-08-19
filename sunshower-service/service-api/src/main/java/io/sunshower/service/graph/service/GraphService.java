@@ -6,7 +6,6 @@ import io.sunshower.service.hal.core.GraphSummary;
 import io.sunshower.service.hal.core.contents.ContentManager;
 import io.sunshower.service.revision.model.Revision;
 
-/** Created by haswell on 5/25/17. */
 public interface GraphService {
 
   ContentManager contentManager(Identifier templateId);
