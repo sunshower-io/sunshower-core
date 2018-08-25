@@ -11,7 +11,6 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-/** Created by haswell on 3/5/17. */
 public class GridTokenManager implements TokenManager {
   static final Logger log = Logger.getLogger(GridTokenManager.class.getName());
 

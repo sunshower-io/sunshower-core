@@ -3,13 +3,23 @@ package io.sunshower.model.core.auth;
 import io.sunshower.model.core.Schemata;
 import io.sunshower.model.core.io.File;
 import io.sunshower.persistence.core.DistributableEntity;
+import io.sunshower.persistence.core.converters.LocaleConverter;
 import java.util.Date;
+import java.util.Locale;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "USER_DETAILS", schema = Schemata.SUNSHOWER)
 public class Details extends DistributableEntity {
+
+  @Column(name = "locale")
+  @Convert(converter = LocaleConverter.class)
+  private Locale locale;
 
   @Basic
   @Size(min = 3, max = 255)
