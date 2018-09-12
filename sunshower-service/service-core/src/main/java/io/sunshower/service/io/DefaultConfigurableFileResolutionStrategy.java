@@ -9,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 
-/** Created by haswell on 5/25/17. */
 public class DefaultConfigurableFileResolutionStrategy implements FileResolutionStrategy {
 
   static final Logger logger =
@@ -38,14 +37,13 @@ public class DefaultConfigurableFileResolutionStrategy implements FileResolution
   }
 
   private File configureDefault(Tenant tenant, User user, Credential credential) {
-    logger.info(
-        "Configuration parameter 'sunshower.storage.root' not set.  checking HASLI_HOME...");
+    logger.info("Configuration parameter 'sunshower.storage.root' not set.  checking SUNSHOWER...");
     String root = System.getenv("HASLI_HOME");
     logger.info("HASLI_HOME: {}", root == null || root.trim().equals("") ? "<unset>" : root);
     if (root != null) {
       File f = new File(root);
       if (f.exists() && f.isDirectory()) {
-        logger.info("Configuring storage from HASLI_HOME at: {}", f);
+        logger.info("Configuring storage from SUNSHOWER at: {}", f);
         return f;
       }
     }

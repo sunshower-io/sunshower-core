@@ -11,7 +11,6 @@ import javax.xml.bind.Unmarshaller;
 import org.eclipse.persistence.jaxb.JAXBContextFactory;
 import org.w3c.dom.Element;
 
-/** Created by haswell on 3/27/17. */
 public class SpringElementContext implements ElementContext {
 
   static final Logger log = Logger.getLogger(SpringElementContext.class.getName());

@@ -1,10 +1,13 @@
 package io.sunshower.service.security;
 
 import io.sunshower.common.Identifier;
+import io.sunshower.model.core.auth.Details;
 import io.sunshower.model.core.auth.User;
 import io.sunshower.persistence.core.Persistable;
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.List;
+import java.util.Locale;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -12,6 +15,26 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
 public class AuthenticationSession implements Session {
+
+  @Override
+  public Locale getLocale() {
+    List<Locale> locales = SessionLocales.getLocales();
+    if (!(locales == null || locales.isEmpty())) {
+      final Locale locale = locales.get(0);
+      if (locale != null) {
+        return locale;
+      }
+    }
+
+    Object principal = getPrincipal();
+    if (principal != null && principal instanceof User) {
+      final Details details = ((User) principal).getDetails();
+      if (details != null && details.getLocale() != null) {
+        return details.getLocale();
+      }
+    }
+    return Locale.getDefault();
+  }
 
   @Override
   @SuppressWarnings("unchecked")

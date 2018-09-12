@@ -261,7 +261,6 @@ public class TemplateGraphTests extends AuthenticatedTestCase {
 
   private void doSave() {
     workspaceService.save(workspace);
-    templateService.save(template);
     templateService.saveGraph(template.getId(), persistentGraph);
   }
 

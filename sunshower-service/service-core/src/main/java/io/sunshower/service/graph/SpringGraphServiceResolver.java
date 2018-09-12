@@ -4,7 +4,6 @@ import io.sunshower.service.graph.service.GraphService;
 import io.sunshower.service.graph.service.GraphServiceResolver;
 import org.springframework.context.ApplicationContext;
 
-/** Created by haswell on 5/25/17. */
 public class SpringGraphServiceResolver implements GraphServiceResolver {
 
   private final ApplicationContext context;

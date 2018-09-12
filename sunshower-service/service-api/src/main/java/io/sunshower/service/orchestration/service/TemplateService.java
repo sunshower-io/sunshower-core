@@ -29,11 +29,11 @@ public interface TemplateService
   @PreAuthorize("hasPermission(#id, 'io.sunshower.service.orchestration.model.Template', 'READ')")
   Graph getGraph(Identifier id, Revision revision);
 
-  @PreAuthorize("hasPermission(#id, 'io.sunshower.service.orchestration.model.Template', 'READ')")
-  Graph getCurrentGraph(Identifier id);
+  @PreAuthorize("hasPermission(#tid, 'io.sunshower.service.orchestration.model.Template', 'READ')")
+  Graph getCurrentGraph(Identifier tid);
 
-  @PreAuthorize("hasPermission(#id, 'io.sunshower.service.orchestration.model.Template', 'WRITE')")
-  void saveGraph(Identifier id, Graph graph);
+  @PreAuthorize("hasPermission(#tid, 'io.sunshower.service.orchestration.model.Template', 'WRITE')")
+  void saveGraph(Identifier tid, Graph graph);
 
   @PreAuthorize("hasPermission(#id, 'io.sunshower.service.orchestration.model.Template', 'WRITE')")
   Revision commit(Identifier id);

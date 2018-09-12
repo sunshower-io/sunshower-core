@@ -22,6 +22,7 @@ public class TokenAuthenticationFilter implements AuthenticationFilter {
   public void filter(ContainerRequestContext requestContext) throws IOException {
     final String token = requestContext.getHeaderString(HEADER_KEY);
     tokenManager.check(token);
+    SessionLocales.setLocales(requestContext.getAcceptableLanguages());
   }
 
   @Override

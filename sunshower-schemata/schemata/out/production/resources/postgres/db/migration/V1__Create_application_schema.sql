@@ -112,6 +112,7 @@ CREATE TABLE SUNSHOWER.USER_DETAILS (
   active_until  TIMESTAMP,
   email_address VARCHAR(255) UNIQUE NOT NULL,
   root_id       BYTEA,
+  locale        TEXT,
 
   FOREIGN KEY (root_id) REFERENCES SUNSHOWER.FILE (id)
 );
@@ -468,3 +469,18 @@ create table SUNSHOWER.REQUEST_TO_PRODUCT (
 );
 
 
+
+insert into
+  SUNSHOWER.PRODUCT(id, name, description)
+  values
+  ('8807AD34A9EF6309', 'stratosphere', 'sunshower.products.description.stratosphere');
+
+insert into
+  SUNSHOWER.PRODUCT(id, name, description)
+  values
+  ('8D5832035969F6B8', 'troposphere', 'sunshower.products.description.stratosphere');
+
+insert into
+  SUNSHOWER.PRODUCT(id, name, description)
+  values
+  ('8D5832035969F888', 'anvil', 'sunshower.products.description.anvil');

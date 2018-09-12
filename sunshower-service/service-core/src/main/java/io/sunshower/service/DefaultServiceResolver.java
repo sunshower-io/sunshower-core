@@ -5,7 +5,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.inject.Inject;
 import org.springframework.context.ApplicationContext;
 
-/** Created by haswell on 3/3/17. */
 public class DefaultServiceResolver implements ServiceResolver {
 
   static final String defaultRegion = "default";

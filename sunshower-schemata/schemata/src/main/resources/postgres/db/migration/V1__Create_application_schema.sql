@@ -112,6 +112,7 @@ CREATE TABLE SUNSHOWER.USER_DETAILS (
   active_until  TIMESTAMP,
   email_address VARCHAR(255) UNIQUE NOT NULL,
   root_id       BYTEA,
+  locale        TEXT,
 
   FOREIGN KEY (root_id) REFERENCES SUNSHOWER.FILE (id)
 );

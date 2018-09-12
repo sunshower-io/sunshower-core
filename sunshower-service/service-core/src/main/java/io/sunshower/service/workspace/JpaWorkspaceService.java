@@ -21,10 +21,10 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/** Created by haswell on 5/9/17. */
 @Service
 @Transactional
 public class JpaWorkspaceService extends BaseRepository<Identifier, Workspace>
@@ -42,6 +42,7 @@ public class JpaWorkspaceService extends BaseRepository<Identifier, Workspace>
   @PreAuthorize("hasAuthority('tenant:user')")
   public Workspace create(Workspace entity) {
     repositoryFor(entity);
+    setPermissions(entity.getTemplates());
     return super.create(entity);
   }
 
@@ -130,5 +131,19 @@ public class JpaWorkspaceService extends BaseRepository<Identifier, Workspace>
     repository.setLocal(local);
     repositoryService.open(repository).initialize();
     return repository;
+  }
+
+  private void setPermissions(Set<Template> templates) {
+    if (templates != null) {
+      for (Template template : templates) {
+        grant(
+            Template.class,
+            template,
+            BasePermission.ADMINISTRATION,
+            BasePermission.WRITE,
+            BasePermission.READ,
+            BasePermission.DELETE);
+      }
+    }
   }
 }

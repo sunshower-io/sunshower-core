@@ -98,6 +98,20 @@ public abstract class BaseRepository<ID extends Serializable, E extends Persista
     //      return entity;
   }
 
+  @PreAuthorize("hasAuthority('tenant:user')")
+  public Long count() {
+    final String template =
+        String.format(
+            "select count(e) from %s as e "
+                + "join e.identity oid "
+                + "where oid.owner.username = :id ",
+            entityName);
+    return entityManager
+        .createQuery(template, Long.class)
+        .setParameter("id", session.getUsername())
+        .getSingleResult();
+  }
+
   protected long count(E entity) {
     final String template =
         String.format(

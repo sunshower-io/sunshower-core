@@ -5,7 +5,6 @@ import javax.xml.bind.annotation.XmlAnyElement;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
-/** Created by haswell on 3/26/17. */
 @XmlRootElement
 public class Node {
 

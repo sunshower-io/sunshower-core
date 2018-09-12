@@ -186,7 +186,6 @@ public class JpaTemplateServiceTest extends BaseRepositoryTest<Identifier, Templ
   public void ensureContentIsSavedWithCorrectProperties() throws IOException, InterruptedException {
     Template template = newTemplate();
     workspaceService.save(template.getWorkspace());
-    templateService.save(template);
     final Graph g = new Graph();
     final Vertex v = new Vertex();
     v.setId(Identifier.random());
@@ -220,7 +219,6 @@ public class JpaTemplateServiceTest extends BaseRepositoryTest<Identifier, Templ
 
     Template template = newTemplate();
     workspaceService.save(template.getWorkspace());
-    templateService.save(template);
     final Graph g = new Graph();
     final Vertex v = new Vertex();
     v.setId(Identifier.random());
@@ -243,7 +241,6 @@ public class JpaTemplateServiceTest extends BaseRepositoryTest<Identifier, Templ
   public void ensureContentServiceApiMakesSense() throws IOException, InterruptedException {
     Template template = newTemplate();
     workspaceService.save(template.getWorkspace());
-    templateService.save(template);
     final Graph g = new Graph();
     final Vertex v = new Vertex();
     v.setId(Identifier.random());

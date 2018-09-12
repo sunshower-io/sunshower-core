@@ -25,7 +25,6 @@ import org.apache.tinkerpop.gremlin.tinkergraph.structure.TinkerGraph;
 import org.javatuples.Triplet;
 import org.springframework.context.ApplicationContext;
 
-/** Created by haswell on 2/4/17. */
 public class ParallelTaskExecutor implements Thread.UncaughtExceptionHandler {
 
   public static final Logger log = Logger.getLogger(ParallelTaskExecutor.class.getName());
