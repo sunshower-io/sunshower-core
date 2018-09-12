@@ -13,7 +13,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedHashMap;
 import org.springframework.util.FastByteArrayOutputStream;
 
-/** Created by haswell on 5/24/17. */
 @SuppressWarnings("unchecked")
 public class MOXyJsonGraphContext implements GraphSerializationContext {
 
