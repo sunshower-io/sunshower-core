@@ -1,14 +1,14 @@
 package io.sunshower.service.hal.core;
 
-import io.sunshower.common.Identifier;
-import io.sunshower.test.common.SerializationAware;
-import io.sunshower.test.common.SerializationTestCase;
-import org.junit.jupiter.api.Test;
-
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
+
+import io.sunshower.common.Identifier;
+import io.sunshower.test.common.SerializationAware;
+import io.sunshower.test.common.SerializationTestCase;
+import org.junit.jupiter.api.Test;
 
 class VertexTest extends SerializationTestCase {
 
