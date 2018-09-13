@@ -53,13 +53,16 @@ public abstract class BaseRepository<ID extends Serializable, E extends Persista
         BasePermission.WRITE,
         BasePermission.READ,
         BasePermission.DELETE);
+    entityManager.flush();
     return entity;
   }
 
   @Override
   @PreAuthorize("hasPermission(#entity, 'WRITE')")
   public E update(E entity) {
-    return entityManager.merge(entity);
+    E e = entityManager.merge(entity);
+    entityManager.flush();
+    return e;
   }
 
   @Override
