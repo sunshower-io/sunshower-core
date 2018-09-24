@@ -4,10 +4,7 @@ import io.sunshower.test.common.SerializationAware;
 import io.sunshower.test.common.SerializationTestCase;
 import java.util.Date;
 import org.junit.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 
-@RunWith(JUnitPlatform.class)
 public class AbstractEdgeTest extends SerializationTestCase {
 
   public AbstractEdgeTest() {

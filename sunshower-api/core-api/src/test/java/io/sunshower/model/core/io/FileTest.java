@@ -7,11 +7,8 @@ import static org.junit.Assert.*;
 import io.sunshower.test.common.SerializationAware;
 import io.sunshower.test.common.SerializationTestCase;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 
 /** Created by haswell on 10/14/17. */
-@RunWith(JUnitPlatform.class)
 public class FileTest extends SerializationTestCase {
 
   public FileTest() {

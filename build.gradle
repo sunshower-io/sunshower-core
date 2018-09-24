@@ -24,29 +24,34 @@ allprojects {
             googleJavaFormat('1.5')
         }
     }
-    
+
     clover {
         report {
             html = true
         }
-        
+
         compiler {
             debug = true
             additionalArgs = '-parameters'
         }
     }
 
+//
+//    def repos = [
+//            "http://oss.sonatype.org/content/repositories/snapshots",
+//            'http://repo.spring.io/snapshot',
+//            "http://repo.spring.io/libs-milestone",
+//            "http://oss.sonatype.org/content/repositories/snapshots",
+//            "http://www.gridgainsystems.com/nexus/content/repositories/external"
+//    ]
 
     def repos = [
-            "http://oss.sonatype.org/content/repositories/snapshots",
-            'http://repo.spring.io/snapshot',
-            "http://repo.spring.io/libs-milestone",
-            "http://oss.sonatype.org/content/repositories/snapshots",
-            "http://www.gridgainsystems.com/nexus/content/repositories/external"
+            'http://artifacts.sunshower.io/repository/sunshower-releases',
+            'http://artifacts.sunshower.io/repository/sunshower-cache',
+            'http://artifacts.sunshower.io/repository/sunshower-snapshots',
     ]
 
-
-    task testArtifact(type:Jar, dependsOn: testClasses) {
+    task testArtifact(type: Jar, dependsOn: testClasses) {
         classifier = 'tests'
         from sourceSets.test.output
     }
@@ -66,6 +71,9 @@ allprojects {
         mavenLocal()
         mavenCentral()
 
+        repos.each { repo ->
+            maven { url "$repo" }
+        }
         maven {
             url mavenRepositoryUrl
 
@@ -74,23 +82,25 @@ allprojects {
                 password mavenRepositoryPassword
             }
         }
-        repos.each { repo ->
-            maven { url "$repo" }
-        }
     }
 
     dependencyManagement {
         imports {
-            mavenBom("io.sunshower.core:bom-imported:${version}")
+            mavenBom("io.sunshower.core:bom-imported:${version}") {
+                bomProperties([
+                        'env.version': '1.0.8.Final'
+                ])
+            }
         }
     }
+
 
     plugins.withType(JavaPlugin) {
 
         dependencies {
             compileOnly 'org.projectlombok:lombok:1.16.20'
             apt "org.projectlombok:lombok:1.16.20"
-            
+
             compile 'javax.ws.rs:javax.ws.rs-api'
             compile 'org.eclipse.persistence:org.eclipse.persistence.moxy'
             compile 'org.hibernate.javax.persistence:hibernate-jpa-2.1-api'
@@ -105,7 +115,11 @@ allprojects {
         }
     }
 
-    
+
+
+    test {
+        useJUnitPlatform()
+    }
 
     publishing {
         repositories {
@@ -132,8 +146,8 @@ allprojects {
             }
         }
     }
-    
-    
+
+
 }
 
 
@@ -144,7 +158,7 @@ publishing {
 
             credentials {
                 username mavenRepositoryUsername
-                password mavenRepositoryPassword 
+                password mavenRepositoryPassword
             }
         }
     }

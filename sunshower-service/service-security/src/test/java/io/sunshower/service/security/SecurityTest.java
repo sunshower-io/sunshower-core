@@ -9,8 +9,6 @@ import io.sunshower.security.api.SecurityPersistenceConfiguration;
 import io.sunshower.test.common.TestConfigurationConfiguration;
 import io.sunshower.test.persist.AuthenticationTestExecutionListener;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 import org.springframework.security.test.context.support.WithSecurityContextTestExecutionListener;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
@@ -19,7 +17,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
 @ExtendWith(SpringExtension.class)
-@RunWith(JUnitPlatform.class)
 @ContextConfiguration(
   classes = {
     TestConfigurationConfiguration.class,

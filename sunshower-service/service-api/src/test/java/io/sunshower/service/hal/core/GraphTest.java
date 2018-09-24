@@ -10,10 +10,7 @@ import io.sunshower.test.common.SerializationAware;
 import io.sunshower.test.common.SerializationTestCase;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 
-@RunWith(JUnitPlatform.class)
 public class GraphTest extends SerializationTestCase {
 
   public GraphTest() {

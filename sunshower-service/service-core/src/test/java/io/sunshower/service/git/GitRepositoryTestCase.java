@@ -15,10 +15,7 @@ import java.nio.file.Paths;
 import java.util.UUID;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 
-@RunWith(JUnitPlatform.class)
 public class GitRepositoryTestCase extends SerializationTestCase {
   protected File root;
   protected Local local;

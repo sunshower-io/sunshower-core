@@ -22,8 +22,6 @@ import javax.persistence.PersistenceContext;
 import org.junit.FixMethodOrder;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -35,7 +33,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @SuppressWarnings("unchecked")
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-@RunWith(JUnitPlatform.class)
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(
   classes = {

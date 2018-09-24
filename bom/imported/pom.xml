@@ -17,18 +17,19 @@
 
 
     <properties>
-      <sunshower-base.version>1.0.0-SNAPSHOT</sunshower-base.version>
+        <env.version>1.0.8.Final</env.version>
+        <sunshower-base.version>1.0.1.Final</sunshower-base.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
-          <dependency>
-            <groupId>io.sunshower.base</groupId>
-            <artifactId>bom-exported</artifactId>
-            <version>${sunshower-base.version}</version>
-            <type>pom</type>
-            <scope>import</scope>
-          </dependency>
+            <dependency>
+                <groupId>io.sunshower.base</groupId>
+                <artifactId>bom-exported</artifactId>
+                <version>${sunshower-base.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 </project>

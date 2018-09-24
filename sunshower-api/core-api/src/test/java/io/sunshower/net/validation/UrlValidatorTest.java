@@ -7,11 +7,8 @@ import java.util.*;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 
 /** Created by haswell on 5/22/17. */
-@RunWith(JUnitPlatform.class)
 public class UrlValidatorTest {
 
   private UrlValidator urlValidator;
