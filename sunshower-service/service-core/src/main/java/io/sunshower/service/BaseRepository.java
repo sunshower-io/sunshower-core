@@ -158,6 +158,9 @@ public abstract class BaseRepository<ID extends Serializable, E extends Persista
     permissionService.grantWithCurrentSession(entityType, instance, permissions);
   }
 
+  protected <T extends ProtectedDistributableEntity, U extends ProtectedDistributableEntity>
+      void grant(Class<T> entityType, T instance, Class<U> parentEntityType, U parentEntity) {}
+
   @SuppressWarnings("unchecked")
   protected <T extends Persistable> void grant(T instance, Permission... permissions) {
     permissionService.grantWithCurrentSession((Class<T>) entityType, instance, permissions);

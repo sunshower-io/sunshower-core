@@ -9,6 +9,10 @@ public interface PermissionsService<U> {
 
   void impersonate(Action action, GrantedAuthority... roles);
 
+  <T extends ProtectedDistributableEntity, V extends ProtectedDistributableEntity>
+      void grantWithCurrentSession(
+          Class<T> type, T instance, Class<V> parent, V parentInstance, U... permissions);
+
   /**
    * @param type
    * @param instance

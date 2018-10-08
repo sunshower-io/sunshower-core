@@ -36,14 +36,6 @@ allprojects {
         }
     }
 
-//
-//    def repos = [
-//            "http://oss.sonatype.org/content/repositories/snapshots",
-//            'http://repo.spring.io/snapshot',
-//            "http://repo.spring.io/libs-milestone",
-//            "http://oss.sonatype.org/content/repositories/snapshots",
-//            "http://www.gridgainsystems.com/nexus/content/repositories/external"
-//    ]
 
     def repos = [
             'http://artifacts.sunshower.io/repository/sunshower-releases',
