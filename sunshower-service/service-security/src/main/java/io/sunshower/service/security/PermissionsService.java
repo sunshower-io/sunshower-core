@@ -1,5 +1,6 @@
 package io.sunshower.service.security;
 
+import io.sunshower.common.Identifier;
 import io.sunshower.model.core.auth.ProtectedDistributableEntity;
 import io.sunshower.persistence.core.Persistable;
 import org.springframework.security.acls.model.Permission;
@@ -8,6 +9,10 @@ import org.springframework.security.core.GrantedAuthority;
 public interface PermissionsService<U> {
 
   void impersonate(Action action, GrantedAuthority... roles);
+
+  void impersonate(Action action, String username);
+
+  void impersonate(Action action, Identifier id);
 
   <T extends ProtectedDistributableEntity, V extends ProtectedDistributableEntity>
       void grantWithCurrentSession(
