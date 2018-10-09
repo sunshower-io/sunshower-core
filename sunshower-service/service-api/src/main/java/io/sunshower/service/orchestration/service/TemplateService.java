@@ -18,7 +18,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 public interface TemplateService
     extends EntityRepository<Identifier, Template>, GraphService, ObservableSource<TemplateEvent> {
 
-  public static final String NAME = "services:orchestration-template";
+  String NAME = "services:orchestration-template";
 
   @Override
   void subscribe(Observer<? super TemplateEvent> observer);
