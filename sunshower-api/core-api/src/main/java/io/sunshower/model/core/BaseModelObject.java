@@ -1,4 +1,4 @@
-package io.sunshower.service.model;
+package io.sunshower.model.core;
 
 import io.sunshower.model.core.auth.ProtectedDistributableEntity;
 import java.util.Date;

@@ -1,6 +1,6 @@
-package io.sunshower.model.core.auth;
+package io.sunshower.model.core;
 
-import io.sunshower.model.core.Schemata;
+import io.sunshower.model.core.auth.ImageType;
 import io.sunshower.persistence.core.DistributableEntity;
 import javax.persistence.*;
 import lombok.AllArgsConstructor;

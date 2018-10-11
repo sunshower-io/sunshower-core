@@ -1,5 +1,6 @@
 package io.sunshower.service.model;
 
+import io.sunshower.model.core.PropertyAwareObject;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;

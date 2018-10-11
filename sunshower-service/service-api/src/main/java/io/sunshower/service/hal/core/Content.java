@@ -1,7 +1,7 @@
 package io.sunshower.service.hal.core;
 
+import io.sunshower.model.core.PropertyAwareObject;
 import io.sunshower.model.core.io.File;
-import io.sunshower.service.model.PropertyAwareObject;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;

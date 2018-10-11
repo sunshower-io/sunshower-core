@@ -1,5 +1,6 @@
 package io.sunshower.model.core.auth;
 
+import io.sunshower.model.core.ImageAware;
 import io.sunshower.model.core.Schemata;
 import io.sunshower.model.core.io.File;
 import io.sunshower.persistence.core.converters.LocaleConverter;
@@ -19,10 +20,6 @@ public class Details extends ImageAware {
   @Column(name = "locale")
   @Convert(converter = LocaleConverter.class)
   private Locale locale;
-
-  @Basic
-  @Size(min = 3, max = 255)
-  private String firstname;
 
   @Basic
   @Size(min = 3, max = 255)
@@ -109,11 +106,11 @@ public class Details extends ImageAware {
   }
 
   public String getFirstname() {
-    return firstname;
+    return getName();
   }
 
   public void setFirstname(String firstname) {
-    this.firstname = firstname;
+    setName(firstname);
   }
 
   public String getLastname() {

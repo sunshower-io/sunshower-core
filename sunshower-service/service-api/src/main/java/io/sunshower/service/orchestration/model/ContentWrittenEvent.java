@@ -1,9 +1,9 @@
 package io.sunshower.service.orchestration.model;
 
 import io.sunshower.common.Identifier;
+import io.sunshower.model.core.PropertyAwareObject;
 import io.sunshower.service.hal.core.Content;
 import io.sunshower.service.hal.core.Element;
-import io.sunshower.service.model.PropertyAwareObject;
 
 public class ContentWrittenEvent extends TemplateEvent {
   private final Content content;

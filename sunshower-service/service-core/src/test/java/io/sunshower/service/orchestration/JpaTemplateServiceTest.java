@@ -4,6 +4,7 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import io.sunshower.common.Identifier;
+import io.sunshower.model.core.Property;
 import io.sunshower.service.BaseRepository;
 import io.sunshower.service.BaseRepositoryTest;
 import io.sunshower.service.git.GitRepository;
@@ -12,7 +13,6 @@ import io.sunshower.service.graph.service.ContentResolver;
 import io.sunshower.service.graph.service.GraphServiceResolver;
 import io.sunshower.service.hal.core.*;
 import io.sunshower.service.hal.core.contents.ContentHandler;
-import io.sunshower.service.model.Property;
 import io.sunshower.service.orchestration.model.Template;
 import io.sunshower.service.orchestration.service.TemplateService;
 import io.sunshower.service.serialization.DynamicResolvingMoxyJsonProvider;

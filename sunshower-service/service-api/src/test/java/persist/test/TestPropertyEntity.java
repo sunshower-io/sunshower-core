@@ -1,6 +1,6 @@
 package persist.test;
 
-import io.sunshower.service.model.PropertyAwareObject;
+import io.sunshower.model.core.PropertyAwareObject;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
