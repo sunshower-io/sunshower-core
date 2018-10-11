@@ -3,9 +3,9 @@ package io.sunshower.service.orchestration.model;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
+import io.sunshower.model.core.Property;
 import io.sunshower.service.PersistTestCase;
 import io.sunshower.service.model.LinkageMode;
-import io.sunshower.service.model.Property;
 import io.sunshower.service.model.RelationshipType;
 import io.sunshower.service.workspace.model.Workspace;
 import java.util.List;

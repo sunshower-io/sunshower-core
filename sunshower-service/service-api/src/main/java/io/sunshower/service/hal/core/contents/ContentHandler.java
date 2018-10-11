@@ -1,8 +1,8 @@
 package io.sunshower.service.hal.core.contents;
 
+import io.sunshower.model.core.Property;
 import io.sunshower.service.graph.service.ContentResolver;
 import io.sunshower.service.hal.core.Content;
-import io.sunshower.service.model.Property;
 import java.util.Collection;
 import java.util.Set;
 

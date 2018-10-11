@@ -3,7 +3,7 @@ package io.sunshower.service.hal.core;
 import io.sunshower.common.Identifier;
 import io.sunshower.common.rs.MapAdapter;
 import io.sunshower.common.rs.TypeAttributeClassExtractor;
-import io.sunshower.service.model.PropertyAwareObject;
+import io.sunshower.model.core.PropertyAwareObject;
 import java.util.*;
 import java.util.function.Consumer;
 import javax.xml.bind.annotation.*;

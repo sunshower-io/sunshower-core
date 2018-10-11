@@ -3,10 +3,10 @@ package io.sunshower.service.orchestration.model;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
+import io.sunshower.model.core.Property;
+import io.sunshower.model.core.PropertyAwareObject;
 import io.sunshower.service.hal.core.Graph;
 import io.sunshower.service.hal.core.Vertex;
-import io.sunshower.service.model.Property;
-import io.sunshower.service.model.PropertyAwareObject;
 import io.sunshower.test.common.SerializationAware;
 import io.sunshower.test.common.SerializationTestCase;
 import org.junit.jupiter.api.Test;

@@ -97,7 +97,11 @@ CREATE TABLE SUNSHOWER.TENANT_DETAILS (
   tenant_id  BYTEA,
   root_id    BYTEA,
   image_id   BYTEA,
+  name       VARCHAR(255),
+  created    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  modified   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   visibility SMALLINT NOT NULL,
+  type       VARCHAR(255),
 
   FOREIGN KEY (root_id) REFERENCES SUNSHOWER.FILE (id),
   FOREIGN KEY (tenant_id) REFERENCES SUNSHOWER.TENANT (id),
@@ -113,7 +117,7 @@ CREATE TABLE SUNSHOWER.TENANT_DETAILS (
 
 CREATE TABLE SUNSHOWER.USER_DETAILS (
   id            BYTEA PRIMARY KEY,
-  firstname     VARCHAR(255),
+  name          VARCHAR(255),
   lastname      VARCHAR(255),
   phone_number  VARCHAR(63),
   registered    TIMESTAMP DEFAULT now(),
@@ -122,8 +126,12 @@ CREATE TABLE SUNSHOWER.USER_DETAILS (
   email_address VARCHAR(255) UNIQUE NOT NULL,
   root_id       BYTEA,
   locale        TEXT,
-  visibility    SMALLINT            NOT NULL,
   image_id      BYTEA,
+  type          VARCHAR(255),
+
+  created       TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  modified      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  visibility    SMALLINT            NOT NULL,
   FOREIGN KEY (root_id) REFERENCES SUNSHOWER.FILE (id),
   FOREIGN KEY (image_id) REFERENCES SUNSHOWER.IMAGE (id)
 );

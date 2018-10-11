@@ -1,7 +1,7 @@
 package io.sunshower.service.workspace.model;
 
+import io.sunshower.model.core.BaseModelObject;
 import io.sunshower.model.core.Schemata;
-import io.sunshower.service.model.BaseModelObject;
 import io.sunshower.service.orchestration.model.Template;
 import io.sunshower.service.revision.model.Repository;
 import java.util.HashSet;

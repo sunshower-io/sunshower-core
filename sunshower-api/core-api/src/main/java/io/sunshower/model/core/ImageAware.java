@@ -1,4 +1,4 @@
-package io.sunshower.model.core.auth;
+package io.sunshower.model.core;
 
 import javax.persistence.*;
 import lombok.Getter;
@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @MappedSuperclass
-public class ImageAware extends ProtectedDistributableEntity {
+public class ImageAware extends PropertyAwareObject<ImageAware> implements ImageCapable {
 
   @JoinColumn(name = "image_id")
   @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)

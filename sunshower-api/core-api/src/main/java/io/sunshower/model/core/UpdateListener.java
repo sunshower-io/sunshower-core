@@ -1,4 +1,4 @@
-package io.sunshower.service.model;
+package io.sunshower.model.core;
 
 import java.util.Date;
 import javax.persistence.PrePersist;

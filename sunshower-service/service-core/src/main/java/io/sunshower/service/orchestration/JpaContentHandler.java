@@ -2,12 +2,12 @@ package io.sunshower.service.orchestration;
 
 import io.reactivex.subjects.Subject;
 import io.sunshower.common.Identifier;
+import io.sunshower.model.core.Property;
+import io.sunshower.model.core.PropertyAwareObject;
 import io.sunshower.service.git.GitRepository;
 import io.sunshower.service.graph.service.ContentResolver;
 import io.sunshower.service.hal.core.*;
 import io.sunshower.service.hal.core.contents.ContentHandler;
-import io.sunshower.service.model.Property;
-import io.sunshower.service.model.PropertyAwareObject;
 import io.sunshower.service.orchestration.model.Template;
 import io.sunshower.service.orchestration.model.TemplateEvent;
 import java.io.File;

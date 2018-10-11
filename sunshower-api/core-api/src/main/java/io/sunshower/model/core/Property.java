@@ -1,4 +1,4 @@
-package io.sunshower.service.model;
+package io.sunshower.model.core;
 
 import io.sunshower.common.Identifier;
 import io.sunshower.common.rs.TypeAttributeClassExtractor;

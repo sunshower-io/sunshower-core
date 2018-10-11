@@ -2,9 +2,9 @@ package io.sunshower.service.hal.core;
 
 import io.sunshower.common.Identifier;
 import io.sunshower.common.rs.MapAdapter;
+import io.sunshower.model.core.PropertyAwareObject;
 import io.sunshower.persist.Sequence;
 import io.sunshower.persistence.core.DistributableEntity;
-import io.sunshower.service.model.PropertyAwareObject;
 import java.util.*;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;

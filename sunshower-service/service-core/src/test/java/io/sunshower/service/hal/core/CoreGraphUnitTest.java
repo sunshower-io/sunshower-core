@@ -3,8 +3,8 @@ package io.sunshower.service.hal.core;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
+import io.sunshower.model.core.Property;
 import io.sunshower.service.git.GitRepositoryTestCase;
-import io.sunshower.service.model.Property;
 import io.sunshower.test.common.SerializationAware;
 import org.junit.Test;
 

@@ -1,5 +1,6 @@
 package io.sunshower.model.core.auth;
 
+import io.sunshower.model.core.ImageAware;
 import io.sunshower.model.core.Schemata;
 import io.sunshower.model.core.io.File;
 import javax.persistence.*;

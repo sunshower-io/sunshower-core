@@ -1,10 +1,10 @@
 package io.sunshower.service.orchestration.model;
 
+import io.sunshower.model.core.PropertyAwareObject;
 import io.sunshower.model.core.Schemata;
 import io.sunshower.model.core.Version;
 import io.sunshower.service.model.Link;
 import io.sunshower.service.model.Linked;
-import io.sunshower.service.model.PropertyAwareObject;
 import io.sunshower.service.workspace.model.Workspace;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
