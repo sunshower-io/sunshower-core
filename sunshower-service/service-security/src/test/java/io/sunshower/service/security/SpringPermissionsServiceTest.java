@@ -7,7 +7,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.acls.model.Permission;
+import org.springframework.security.test.context.support.WithMockUser;
 
+@WithMockUser(username = "test")
 class SpringPermissionsServiceTest extends SecurityTest {
 
   @PersistenceContext private EntityManager entityManager;

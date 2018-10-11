@@ -51,7 +51,8 @@ CREATE TABLE SUNSHOWER.APPLICATION (
 
 CREATE TABLE SUNSHOWER.IMAGE (
   id         BYTEA PRIMARY KEY,
-  image_data BYTEA
+  image_data BYTEA,
+  type       SMALLINT
 );
 
 
@@ -248,9 +249,9 @@ CREATE TABLE SUNSHOWER.CREDENTIAL (
   author: haswell
  */
 CREATE TABLE SUNSHOWER.KEYPAIR_CREDENTIAL (
-  id     BYTEA NOT NULL PRIMARY KEY,
-  key    TEXT  NOT NULL,
-  secret TEXT  NOT NULL,
+  id         BYTEA    NOT NULL PRIMARY KEY,
+  key        TEXT     NOT NULL,
+  secret     TEXT     NOT NULL,
   visibility SMALLINT NOT NULL
 );
 
@@ -286,11 +287,12 @@ CREATE TABLE SUNSHOWER.GIT_REMOTE (
 );
 
 CREATE TABLE SUNSHOWER.GIT_REPOSITORY (
-  id        BYTEA NOT NULL PRIMARY KEY,
+  id         BYTEA    NOT NULL PRIMARY KEY,
 
-  local_id  BYTEA,
+  local_id   BYTEA,
+  visibility SMALLINT NOT NULL,
 
-  remote_id BYTEA,
+  remote_id  BYTEA,
 
   FOREIGN KEY (local_id) REFERENCES SUNSHOWER.GIT_LOCAL (id),
   FOREIGN KEY (remote_id) REFERENCES SUNSHOWER.GIT_REMOTE (id)
@@ -304,6 +306,7 @@ CREATE TABLE SUNSHOWER.WORKSPACE (
   classification SMALLINT,
   created        TIMESTAMP    NOT NULL DEFAULT now(),
   modified       TIMESTAMP    NOT NULL DEFAULT now(),
+  visibility     SMALLINT     NOT NULL,
 
   repository_id  BYTEA,
 
@@ -370,6 +373,7 @@ CREATE TABLE SUNSHOWER.TEMPLATE (
   name         VARCHAR(255),
   description  VARCHAR(255),
 
+  visibility   SMALLINT  NOT NULL,
   created      TIMESTAMP NOT NULL DEFAULT now(),
   modified     TIMESTAMP NOT NULL DEFAULT now(),
 

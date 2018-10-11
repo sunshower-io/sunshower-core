@@ -90,8 +90,9 @@ allprojects {
     plugins.withType(JavaPlugin) {
 
         dependencies {
-            apt "org.projectlombok:lombok:1.18.2"
+            annotationProcessor "org.projectlombok:lombok:1.18.2"
             compileOnly 'org.projectlombok:lombok:1.18.2'
+            testCompileOnly 'org.projectlombok:lombok:1.18.2'
 
             compile 'javax.ws.rs:javax.ws.rs-api'
             compile 'org.eclipse.persistence:org.eclipse.persistence.moxy'
