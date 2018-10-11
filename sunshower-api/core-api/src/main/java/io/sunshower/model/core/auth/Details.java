@@ -2,7 +2,6 @@ package io.sunshower.model.core.auth;
 
 import io.sunshower.model.core.Schemata;
 import io.sunshower.model.core.io.File;
-import io.sunshower.persistence.core.DistributableEntity;
 import io.sunshower.persistence.core.converters.LocaleConverter;
 import java.util.Date;
 import java.util.Locale;
@@ -15,7 +14,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "USER_DETAILS", schema = Schemata.SUNSHOWER)
-public class Details extends DistributableEntity {
+public class Details extends ImageAware {
 
   @Column(name = "locale")
   @Convert(converter = LocaleConverter.class)

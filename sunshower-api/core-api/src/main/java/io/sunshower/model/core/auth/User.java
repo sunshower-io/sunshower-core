@@ -21,7 +21,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @XmlRootElement(name = "user")
 @XmlAccessorType(XmlAccessType.NONE)
 @Table(name = "PRINCIPAL", schema = Schemata.SUNSHOWER)
-public class User extends DistributableEntity implements UserDetails, TenantAware {
+public class User extends ProtectedDistributableEntity implements UserDetails, TenantAware {
 
   @NotNull
   @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
@@ -56,7 +56,7 @@ public class User extends DistributableEntity implements UserDetails, TenantAwar
   private Tenant tenant;
 
   public User() {
-    super(DistributableEntity.sequence.next());
+    setId(DistributableEntity.sequence.next());
   }
 
   public User(User copy) {
@@ -64,13 +64,18 @@ public class User extends DistributableEntity implements UserDetails, TenantAwar
   }
 
   public User(Identifier id, final String username, final String password) {
-    super(id);
+    setId(id);
     this.username = username;
     this.password = password;
   }
 
   public User(Identifier uuid) {
-    super(uuid);
+    setId(uuid);
+  }
+
+  public void setVisibility(Visibility visibility) {
+    super.setVisibility(visibility);
+    getDetails().setVisibility(visibility);
   }
 
   public Set<Role> getRoles() {
@@ -108,6 +113,7 @@ public class User extends DistributableEntity implements UserDetails, TenantAwar
   @Override
   protected void setDefaults() {
     this.setDetails(new Details(this));
+    this.setVisibility(Visibility.Public);
   }
 
   public User addRole(Role role) {

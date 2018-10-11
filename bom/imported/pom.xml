@@ -18,7 +18,7 @@
 
     <properties>
         <env.version>1.0.8.Final</env.version>
-        <sunshower-base.version>1.0.1.Final</sunshower-base.version>
+        <sunshower-base.version>1.0.2.Final</sunshower-base.version>
     </properties>
 
     <dependencyManagement>

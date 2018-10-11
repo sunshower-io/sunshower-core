@@ -6,14 +6,13 @@ import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 
-import io.sunshower.model.core.auth.Role;
-import io.sunshower.model.core.auth.Tenant;
-import io.sunshower.model.core.auth.TenantDetails;
-import io.sunshower.model.core.auth.User;
+import io.sunshower.io.Files;
+import io.sunshower.model.core.auth.*;
 import io.sunshower.model.core.io.File;
 import java.util.Date;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.annotation.Rollback;
 
@@ -38,6 +37,23 @@ class UserPersistenceTest extends PersistenceTest {
   }
 
   @Test
+  @SneakyThrows
+  void ensureImageCanBeSavedOnUser() {
+
+    final User user = new User();
+    user.getDetails().setEmailAddress("joe@134whatever.com");
+    user.setUsername("coolbeans");
+    user.setPassword("whatever");
+
+    Image icon = new Image();
+    icon.setData(Files.read(ClassLoader.getSystemResourceAsStream("icons/kubernetes.png")));
+    user.getDetails().setImage(icon);
+
+    entityManager.persist(user);
+    entityManager.flush();
+  }
+
+  @Test
   public void ensurePersonIsSavedWithActiveFalse() {
 
     final User user = new User();
@@ -52,7 +68,7 @@ class UserPersistenceTest extends PersistenceTest {
   }
 
   @Test
-  public void ensureUserWithRoleCanBePersisted() {
+  void ensureUserWithRoleCanBePersisted() {
     final User user = new User();
     user.setUsername("whatever");
     user.setPassword("whatever");
@@ -66,7 +82,7 @@ class UserPersistenceTest extends PersistenceTest {
   }
 
   @Test
-  public void ensureRoleCanBeRemoved() {
+  void ensureRoleCanBeRemoved() {
     final User user = new User();
     final Role role = new Role("coolbeans");
     user.addRole(role);
@@ -78,7 +94,7 @@ class UserPersistenceTest extends PersistenceTest {
   }
 
   @Test
-  public void ensureSavingUserDetailsFileWorks() {
+  void ensureSavingUserDetailsFileWorks() {
     final User user = new User();
     user.getDetails().setEmailAddress("joe@whatever.com2");
     user.setUsername("fraafp");
@@ -87,7 +103,7 @@ class UserPersistenceTest extends PersistenceTest {
   }
 
   @Test
-  public void ensureRegisteredIsPersisted() {
+  void ensureRegisteredIsPersisted() {
 
     final User user = new User();
     user.getDetails().setEmailAddress("joe2@whatever.com");
@@ -104,15 +120,21 @@ class UserPersistenceTest extends PersistenceTest {
   }
 
   @Test
-  public void ensureTenantCascadesSaveFile() {
+  @SneakyThrows
+  void ensureTenantCascadesSaveFile() {
     final Tenant tenant = new Tenant();
     tenant.setName("coke2");
     tenant.setDetails(new TenantDetails());
+    Image icon = new Image();
+    icon.setData(Files.read(ClassLoader.getSystemResourceAsStream("icons/kubernetes.png")));
+    tenant.getDetails().setImage(icon);
+
     final User user = new User();
     user.getDetails().setEmailAddress("joe@3whatever.com");
     user.setUsername("frapadfasdf13213");
     user.setPassword("asdfasdfasdfasfadfa");
     tenant.addUser(user);
+    user.getDetails().setImage(icon);
 
     final Tenant cokehr = new Tenant();
     cokehr.setName("cokeh2r");
@@ -139,7 +161,6 @@ class UserPersistenceTest extends PersistenceTest {
   public void ensureTenantCascadesSaveToComplexUser() {
     final Tenant tenant = new Tenant();
     tenant.setName("coke");
-    tenant.setDetails(new TenantDetails());
     final User user = new User();
     user.getDetails().setEmailAddress("joe@2whatever.com");
     user.setUsername("frapadfasdf");
@@ -149,7 +170,6 @@ class UserPersistenceTest extends PersistenceTest {
     final Tenant cokehr = new Tenant();
     cokehr.setName("cokehr");
 
-    cokehr.setDetails(new TenantDetails());
     tenant.addChild(cokehr);
 
     entityManager.persist(tenant);
