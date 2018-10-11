@@ -21,14 +21,13 @@ CREATE TABLE SUNSHOWER.VERSION (
 );
 
 
-CREATE TABLE SUNSHOWER.PROPERTY(
-    id    BYTEA PRIMARY KEY,
-    property_key text,
-    name         text,
-    type         SMALLINT,
-    value        TEXT
+CREATE TABLE SUNSHOWER.PROPERTY (
+  id           BYTEA PRIMARY KEY,
+  property_key TEXT,
+  name         TEXT,
+  type         SMALLINT,
+  value        TEXT
 );
-
 
 
 /**
@@ -50,6 +49,11 @@ CREATE TABLE SUNSHOWER.APPLICATION (
   FOREIGN KEY (version_id) REFERENCES SUNSHOWER.VERSION (id)
 );
 
+CREATE TABLE SUNSHOWER.IMAGE (
+  id         BYTEA PRIMARY KEY,
+  image_data BYTEA
+);
+
 
 /**
   references: io.sunshower.model.core.auth.Tenant
@@ -58,9 +62,10 @@ CREATE TABLE SUNSHOWER.APPLICATION (
 
 CREATE TABLE SUNSHOWER.TENANT (
 
-  id        BYTEA PRIMARY KEY,
-  parent_id BYTEA,
-  name      VARCHAR(255) NOT NULL,
+  id         BYTEA PRIMARY KEY,
+  parent_id  BYTEA,
+  name       VARCHAR(255) NOT NULL,
+  visibility SMALLINT     NOT NULL,
 
   FOREIGN KEY (parent_id) REFERENCES SUNSHOWER.TENANT (id)
 );
@@ -87,12 +92,15 @@ CREATE TABLE SUNSHOWER.FILE (
  */
 
 CREATE TABLE SUNSHOWER.TENANT_DETAILS (
-  id        BYTEA PRIMARY KEY,
-  tenant_id BYTEA,
-  root_id   BYTEA,
+  id         BYTEA PRIMARY KEY,
+  tenant_id  BYTEA,
+  root_id    BYTEA,
+  image_id   BYTEA,
+  visibility SMALLINT NOT NULL,
 
   FOREIGN KEY (root_id) REFERENCES SUNSHOWER.FILE (id),
-  FOREIGN KEY (tenant_id) REFERENCES SUNSHOWER.TENANT (id)
+  FOREIGN KEY (tenant_id) REFERENCES SUNSHOWER.TENANT (id),
+  FOREIGN KEY (image_id) REFERENCES SUNSHOWER.IMAGE (id)
 
 );
 
@@ -113,8 +121,10 @@ CREATE TABLE SUNSHOWER.USER_DETAILS (
   email_address VARCHAR(255) UNIQUE NOT NULL,
   root_id       BYTEA,
   locale        TEXT,
-
-  FOREIGN KEY (root_id) REFERENCES SUNSHOWER.FILE (id)
+  visibility    SMALLINT            NOT NULL,
+  image_id      BYTEA,
+  FOREIGN KEY (root_id) REFERENCES SUNSHOWER.FILE (id),
+  FOREIGN KEY (image_id) REFERENCES SUNSHOWER.IMAGE (id)
 );
 
 
@@ -131,6 +141,7 @@ CREATE TABLE SUNSHOWER.PRINCIPAL (
   tenant_id  BYTEA,
   details_id BYTEA,
 
+  visibility SMALLINT            NOT NULL,
   FOREIGN KEY (tenant_id) REFERENCES SUNSHOWER.TENANT (id),
   FOREIGN KEY (details_id) REFERENCES SUNSHOWER.USER_DETAILS (id)
 );
@@ -239,7 +250,8 @@ CREATE TABLE SUNSHOWER.CREDENTIAL (
 CREATE TABLE SUNSHOWER.KEYPAIR_CREDENTIAL (
   id     BYTEA NOT NULL PRIMARY KEY,
   key    TEXT  NOT NULL,
-  secret TEXT  NOT NULL
+  secret TEXT  NOT NULL,
+  visibility SMALLINT NOT NULL
 );
 
 /**
@@ -248,9 +260,10 @@ CREATE TABLE SUNSHOWER.KEYPAIR_CREDENTIAL (
  */
 
 CREATE TABLE SUNSHOWER.USERNAME_PASSWORD_CREDENTIAL (
-  id       BYTEA NOT NULL PRIMARY KEY,
-  username VARCHAR(255),
-  password VARCHAR(1024)
+  id         BYTEA    NOT NULL PRIMARY KEY,
+  visibility SMALLINT NOT NULL,
+  username   VARCHAR(255),
+  password   VARCHAR(1024)
 );
 
 
@@ -434,9 +447,9 @@ CREATE TABLE SUNSHOWER.group_members (
 
 
 CREATE TABLE SUNSHOWER.ENTITY_TO_PROPERTIES (
-  entity_id       BYTEA NOT NULL,
-  property_id     BYTEA NOT NULL,
-  properties_key  VARCHAR(255)
+  entity_id      BYTEA NOT NULL,
+  property_id    BYTEA NOT NULL,
+  properties_key VARCHAR(255)
 );
 
 
@@ -453,34 +466,31 @@ CREATE TABLE SUNSHOWER.ENTITY_PROPERTIES (
 );
 
 
-
-
-create table SUNSHOWER.PRODUCT (
-  id           BYTEA PRIMARY KEY,
-  name         TEXT,
-  description  TEXT
+CREATE TABLE SUNSHOWER.PRODUCT (
+  id          BYTEA PRIMARY KEY,
+  name        TEXT,
+  description TEXT
 );
 
-create table SUNSHOWER.REQUEST_TO_PRODUCT (
-  product_id BYTEA not null,
-  request_id BYTEA not null,
-  CONSTRAINT fk_product_id_to_product FOREIGN KEY (product_id) REFERENCES SUNSHOWER.PRODUCT(id),
-  CONSTRAINT fk_request_id_to_request FOREIGN KEY (request_id) REFERENCES SUNSHOWER.REGISTRATION_REQUEST(id)
+CREATE TABLE SUNSHOWER.REQUEST_TO_PRODUCT (
+  product_id BYTEA NOT NULL,
+  request_id BYTEA NOT NULL,
+  CONSTRAINT fk_product_id_to_product FOREIGN KEY (product_id) REFERENCES SUNSHOWER.PRODUCT (id),
+  CONSTRAINT fk_request_id_to_request FOREIGN KEY (request_id) REFERENCES SUNSHOWER.REGISTRATION_REQUEST (id)
 );
 
 
-
-insert into
-  SUNSHOWER.PRODUCT(id, name, description)
-  values
+INSERT INTO
+  SUNSHOWER.PRODUCT (id, name, description)
+VALUES
   ('8807AD34A9EF6309', 'stratosphere', 'sunshower.products.description.stratosphere');
 
-insert into
-  SUNSHOWER.PRODUCT(id, name, description)
-  values
+INSERT INTO
+  SUNSHOWER.PRODUCT (id, name, description)
+VALUES
   ('8D5832035969F6B8', 'troposphere', 'sunshower.products.description.stratosphere');
 
-insert into
-  SUNSHOWER.PRODUCT(id, name, description)
-  values
+INSERT INTO
+  SUNSHOWER.PRODUCT (id, name, description)
+VALUES
   ('8D5832035969F888', 'anvil', 'sunshower.products.description.anvil');

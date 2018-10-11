@@ -2,7 +2,11 @@ package io.sunshower.model.core.auth;
 
 import io.sunshower.persistence.core.DistributableEntity;
 import javax.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 @MappedSuperclass
 public abstract class ProtectedDistributableEntity extends DistributableEntity {
 
@@ -10,11 +14,9 @@ public abstract class ProtectedDistributableEntity extends DistributableEntity {
   @JoinColumn(name = "id", insertable = false, updatable = false)
   private ObjectIdentity identity;
 
-  public ObjectIdentity getIdentity() {
-    return identity;
-  }
+  @Column @Enumerated private Visibility visibility = Visibility.Private;
 
-  public void setIdentity(ObjectIdentity identity) {
-    this.identity = identity;
+  public ProtectedDistributableEntity() {
+    super();
   }
 }

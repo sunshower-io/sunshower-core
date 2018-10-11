@@ -26,7 +26,10 @@ public class Tenant extends ProtectedDistributableEntity
   @JoinColumn(name = "parent_id")
   private Set<Tenant> children;
 
-  public Tenant() {}
+  public Tenant() {
+    super();
+    setDefaults();
+  }
 
   public String getName() {
     return name;
@@ -92,5 +95,16 @@ public class Tenant extends ProtectedDistributableEntity
       children = new HashSet<>();
     }
     return children;
+  }
+
+  public void setVisibility(Visibility visibility) {
+    super.setVisibility(visibility);
+    getDetails().setVisibility(Visibility.Public);
+  }
+
+  @Override
+  protected void setDefaults() {
+    setDetails(new TenantDetails());
+    setVisibility(Visibility.Public);
   }
 }

@@ -37,12 +37,7 @@ public class SpringPermissionsService implements PermissionsService<Permission> 
   public void impersonate(Action action, GrantedAuthority... roles) {
     log.info("Anonymous impersonation");
     final Authentication impersonatedAuthentication = new Impersonation(roles);
-    try {
-      SecurityContextHolder.getContext().setAuthentication(impersonatedAuthentication);
-      action.apply();
-    } finally {
-      SecurityContextHolder.getContext().setAuthentication(session);
-    }
+    doImpersonate(action, impersonatedAuthentication);
   }
 
   @Override
@@ -59,13 +54,8 @@ public class SpringPermissionsService implements PermissionsService<Permission> 
             user.getPassword(),
             user.getAuthorities(),
             Impersonation.class);
-    log.info("Impersonating {}", user.getUsername());
-    try {
-      SecurityContextHolder.getContext().setAuthentication(impersonation);
-      action.apply();
-    } finally {
-      SecurityContextHolder.getContext().setAuthentication(session);
-    }
+    log.info("{} is impersonating {}", session.getUsername(), user.getUsername());
+    doImpersonate(action, impersonation);
   }
 
   @Override
@@ -81,7 +71,11 @@ public class SpringPermissionsService implements PermissionsService<Permission> 
             user.getPassword(),
             user.getAuthorities(),
             Impersonation.class);
-    log.info("Impersonating {}", user.getUsername());
+    log.info("{} is impersonating {}", session.getUsername(), user.getUsername());
+    doImpersonate(action, impersonation);
+  }
+
+  private void doImpersonate(Action action, Authentication impersonation) {
     try {
       SecurityContextHolder.getContext().setAuthentication(impersonation);
       action.apply();
@@ -97,7 +91,7 @@ public class SpringPermissionsService implements PermissionsService<Permission> 
 
     final ObjectIdentity childOid = new ObjectIdentityImpl(type, instance.getIdentifier());
     final ObjectIdentity parentOid = new ObjectIdentityImpl(parent, parentInstance.getIdentifier());
-    final Sid sid = new PrincipalSid(session.getName());
+    final Sid sid = new PrincipalSid(session.getUsername());
 
     MutableAcl parentAcl = resolveAcl(parentOid, sid);
     MutableAcl childAcl = resolveAcl(childOid, sid);

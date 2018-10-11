@@ -139,7 +139,6 @@ class UserPersistenceTest extends PersistenceTest {
   public void ensureTenantCascadesSaveToComplexUser() {
     final Tenant tenant = new Tenant();
     tenant.setName("coke");
-    tenant.setDetails(new TenantDetails());
     final User user = new User();
     user.getDetails().setEmailAddress("joe@2whatever.com");
     user.setUsername("frapadfasdf");
@@ -149,7 +148,6 @@ class UserPersistenceTest extends PersistenceTest {
     final Tenant cokehr = new Tenant();
     cokehr.setName("cokehr");
 
-    cokehr.setDetails(new TenantDetails());
     tenant.addChild(cokehr);
 
     entityManager.persist(tenant);

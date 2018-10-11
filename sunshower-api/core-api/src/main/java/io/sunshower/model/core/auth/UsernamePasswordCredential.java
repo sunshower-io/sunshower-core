@@ -5,8 +5,12 @@ import javax.persistence.Basic;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
+@Getter
+@Setter
 @Table(name = "USERNAME_PASSWORD_CREDENTIAL", schema = Schemata.SUNSHOWER)
 public class UsernamePasswordCredential extends Credential {
 
@@ -14,22 +18,8 @@ public class UsernamePasswordCredential extends Credential {
 
   @Basic @NotNull private String password;
 
-  public UsernamePasswordCredential() {}
-
-  public String getUsername() {
-    return username;
-  }
-
-  public void setUsername(String username) {
-    this.username = username;
-  }
-
-  public String getPassword() {
-    return password;
-  }
-
-  public void setPassword(String password) {
-    this.password = password;
+  public UsernamePasswordCredential() {
+    setVisibility(Visibility.Private);
   }
 
   @Override
@@ -44,6 +34,6 @@ public class UsernamePasswordCredential extends Credential {
 
   @Override
   public void setSecret(String secret) {
-    this.setPassword(secret);
+    this.password = secret;
   }
 }
