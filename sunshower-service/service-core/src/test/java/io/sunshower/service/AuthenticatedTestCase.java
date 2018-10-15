@@ -101,4 +101,15 @@ public abstract class AuthenticatedTestCase extends ServiceTestCase {
     administrator.setActive(true);
     return administrator;
   }
+
+  @Principal
+  public User tenantUser(@Authority("tenant:user") Role userRole) {
+    final User user = new User();
+    user.setUsername("user");
+    user.setPassword(encryptionService.encrypt("password"));
+    user.getDetails().setEmailAddress("user");
+    user.addRole(userRole);
+    user.setActive(true);
+    return user;
+  }
 }

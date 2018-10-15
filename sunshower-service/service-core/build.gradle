@@ -23,6 +23,7 @@ dependencies {
     compile 'org.eclipse.jgit:org.eclipse.jgit'
     compile 'org.eclipse.jgit:org.eclipse.jgit.lfs'
 
+
     compile 'io.sunshower.persist:persist-hibernate'
     compile 'io.sunshower.persist:persist-ignite'
 
@@ -30,4 +31,10 @@ dependencies {
     compile 'org.springframework.security:spring-security-config'
     compile 'org.springframework.security:spring-security-messaging'
     testImplementation 'io.sunshower.test:test-persist'
+    compile group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: '1.2.71'
+
+
+
+    implementation 'io.sunshower:jdenticon-kotlin'
+    testImplementation 'io.sunshower:jdenticon-kotlin'
 }

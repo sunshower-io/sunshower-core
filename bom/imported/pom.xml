@@ -17,11 +17,17 @@
 
 
     <properties>
+        <jdenticon-kotlin.version>1.0</jdenticon-kotlin.version>
         <sunshower-base.version>1.0.3.Final</sunshower-base.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>io.sunshower</groupId>
+                <artifactId>jdenticon-kotlin</artifactId>
+                <version>${jdenticon-kotlin.version}</version>
+            </dependency>
             <dependency>
                 <groupId>io.sunshower.base</groupId>
                 <artifactId>bom-exported</artifactId>

@@ -9,6 +9,7 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.access.intercept.RunAsUserToken;
@@ -26,7 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class SpringPermissionsService implements PermissionsService<Permission> {
 
-  @Inject private AuthenticationSession session;
+  @Inject private Session session;
 
   @Inject private AclService aclService;
 
@@ -76,11 +77,12 @@ public class SpringPermissionsService implements PermissionsService<Permission> 
   }
 
   private void doImpersonate(Action action, Authentication impersonation) {
+    val current = SecurityContextHolder.getContext().getAuthentication();
     try {
       SecurityContextHolder.getContext().setAuthentication(impersonation);
       action.apply();
     } finally {
-      SecurityContextHolder.getContext().setAuthentication(session);
+      SecurityContextHolder.getContext().setAuthentication(current);
     }
   }
 
@@ -98,9 +100,9 @@ public class SpringPermissionsService implements PermissionsService<Permission> 
     childAcl.setEntriesInheriting(true);
     childAcl.setParent(parentAcl);
 
-    for (Permission permission : permissions) {
-      childAcl.insertAce(childAcl.getEntries().size(), permission, sid, true);
-    }
+    //    for (Permission permission : permissions) {
+    //      childAcl.insertAce(childAcl.getEntries().size(), permission, sid, true);
+    //    }
     ((MutableAclService) aclService).updateAcl(childAcl);
   }
 

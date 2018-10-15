@@ -87,7 +87,11 @@ public class AuthenticationSession implements Session {
 
   @Override
   public String getUsername() {
-    return unwrap(UserDetails.class).getUsername();
+    Object o = unwrap(UserDetails.class);
+    if (o instanceof String) {
+      return (String) o;
+    }
+    return ((UserDetails) o).getUsername();
   }
 
   @Override

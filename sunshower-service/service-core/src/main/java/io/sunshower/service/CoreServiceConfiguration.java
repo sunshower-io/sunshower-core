@@ -2,6 +2,8 @@ package io.sunshower.service;
 
 import io.sunshower.persistence.annotations.Persistence;
 import io.sunshower.service.application.DefaultApplicationService;
+import io.sunshower.service.ext.IconService;
+import io.sunshower.service.ext.IdenticonIconService;
 import io.sunshower.service.git.JGitRepositoryService;
 import io.sunshower.service.git.RepositoryService;
 import io.sunshower.service.graph.SpringGraphServiceResolver;
@@ -47,6 +49,11 @@ import org.springframework.context.annotation.Configuration;
   }
 )
 public class CoreServiceConfiguration {
+
+  @Bean
+  public IconService iconService() {
+    return new IdenticonIconService();
+  }
 
   @Bean
   public GraphTransformer graphTransformer() {
