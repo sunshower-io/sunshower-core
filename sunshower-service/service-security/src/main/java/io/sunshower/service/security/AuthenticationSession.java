@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
+import lombok.val;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -121,7 +122,11 @@ public class AuthenticationSession implements Session {
       return (T) SecurityContextHolder.getContext().getAuthentication();
     }
     if (UserDetails.class.isAssignableFrom(type)) {
-      return (T) unwrap(Authentication.class).getPrincipal();
+      val unwrapped = unwrap(Authentication.class);
+      if (unwrapped == null) {
+        throw new IllegalArgumentException("Cannot unwrap " + type + " ");
+      }
+      return (T) unwrapped.getPrincipal();
     }
     return null;
   }

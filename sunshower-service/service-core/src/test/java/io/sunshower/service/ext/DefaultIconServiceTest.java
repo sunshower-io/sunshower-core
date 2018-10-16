@@ -3,6 +3,7 @@ package io.sunshower.service.ext;
 import static io.sunshower.service.ext.BaseUserServiceTest.testUser;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import io.sunshower.core.security.RoleService;
 import io.sunshower.core.security.UserService;
@@ -13,9 +14,11 @@ import io.sunshower.service.AuthenticatedTestCase;
 import io.sunshower.service.security.PermissionsService;
 import javax.inject.Inject;
 import lombok.val;
+import lombok.var;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.acls.model.Permission;
 import org.springframework.security.test.context.support.WithUserDetails;
 
@@ -36,14 +39,10 @@ class DefaultIconServiceTest extends AuthenticatedTestCase {
   }
 
   @Test
-  @WithUserDetails("user")
+  @WithUserDetails
   void ensureChangingImageWorks() {
     final User user = testUser(roleService);
-    permissionsService.impersonate(
-        () -> {
-          userService.save(user);
-        },
-        "administrator");
+    permissionsService.impersonate(() -> userService.save(user), "administrator");
 
     permissionsService.impersonate(
         () -> {
@@ -56,6 +55,50 @@ class DefaultIconServiceTest extends AuthenticatedTestCase {
           assertThat(actual, is(expected));
         },
         "test");
+  }
+
+  @Test
+  @WithUserDetails
+  void ensureRetrievingImageFailsIfUserDoesntHavePermissions() {
+    val user = testUser(roleService);
+    permissionsService.impersonate(
+        () -> {
+          userService.save(user);
+        },
+        "administrator");
+    val details = userService.findByUsername("test").getDetails();
+    assertThrows(
+        AccessDeniedException.class, () -> iconService.getIcon(Details.class, details.getId()));
+  }
+
+  @Test
+  @WithUserDetails
+  void ensureRetrievingAndSkippingAuthWorks() {
+    val user = testUser(roleService);
+    permissionsService.impersonate(
+        () -> {
+          userService.save(user);
+        },
+        "administrator");
+    val details = userService.findByUsername("test").getDetails();
+    iconService.getIcon(Details.class, details.getId(), true);
+  }
+
+  @Test
+  @WithUserDetails
+  void ensureRetrievingAndSettingImageSucceedsWhenUserHasPermissions() {
+    val icon = iconService.iconDirect("test", 64, 64);
+
+    var user = testUser(roleService);
+    permissionsService.impersonate(
+        () -> {
+          val u = userService.save(user);
+          iconService.setIcon(Details.class, u.getDetails().getId(), icon);
+        },
+        "administrator");
+    assertThrows(
+        AccessDeniedException.class,
+        () -> iconService.getIcon(Details.class, user.getDetails().getId()));
   }
 
   @Test

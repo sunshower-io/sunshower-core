@@ -161,7 +161,9 @@ public class DefaultSignupService implements SignupService {
         .createQuery(
             "select r from RegistrationRequest r "
                 + "inner join r.user as u "
-                + "inner join u.roles as roles",
+                + "inner join u.roles as roles "
+                + "left outer join u.details as details "
+                + "left outer join details.image as image",
             RegistrationRequest.class)
         .getResultList();
   }

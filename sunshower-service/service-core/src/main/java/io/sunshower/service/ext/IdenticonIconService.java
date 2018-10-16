@@ -50,16 +50,35 @@ public class IdenticonIconService implements IconService {
   @Override
   @Transactional
   public <T extends ImageAware> Image setIcon(Class<T> type, Identifier id, Image image) {
-    final T t = entityManager.find(type, id);
-    if (t == null) {
-      throw new EntityNotFoundException("No imageaware with that id");
-    }
-    permissionsService.checkPermission(t, BasePermission.WRITE);
+    final T t = doLoad(type, id, false);
     if (t.getImage() != null) {
       entityManager.remove(t.getImage());
     }
     t.setImage(image);
     entityManager.flush();
     return image;
+  }
+
+  @Override
+  public <T extends ImageAware> Image getIcon(Class<T> type, Identifier id, boolean skipAuth) {
+    final T t = doLoad(type, id, skipAuth);
+    return t.getImage();
+  }
+
+  @Override
+  public <T extends ImageAware> Image getIcon(Class<T> type, Identifier id) {
+    final T loaded = doLoad(type, id, false);
+    return loaded.getImage();
+  }
+
+  private <T extends ImageAware> T doLoad(Class<T> type, Identifier id, boolean skipAuth) {
+    final T t = entityManager.find(type, id);
+    if (t == null) {
+      throw new EntityNotFoundException("No imageaware with that id");
+    }
+    if (!skipAuth) {
+      permissionsService.checkPermission(t, BasePermission.WRITE);
+    }
+    return t;
   }
 }
