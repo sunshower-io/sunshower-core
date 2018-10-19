@@ -55,7 +55,6 @@ public class SpringPermissionsService implements PermissionsService<Permission> 
             user.getPassword(),
             user.getAuthorities(),
             Impersonation.class);
-    log.info("{} is impersonating {}", session.getUsername(), user.getUsername());
     doImpersonate(action, impersonation);
   }
 

@@ -36,6 +36,7 @@ public class DefaultAuthenticationService implements AuthenticationService {
                   + "this is in error, please contact your system administrator");
         }
         final String token = encryptionService.createToken(u);
+        u.getDetails().setLastActive(new Date());
         return new Authentication(u, new Token(token, new Date()));
       }
     } catch (UsernameNotFoundException ex) {

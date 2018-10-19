@@ -7,6 +7,7 @@ import io.sunshower.core.security.InvalidCredentialException;
 import io.sunshower.core.security.InvalidTokenException;
 import io.sunshower.core.security.crypto.EncryptionService;
 import io.sunshower.model.core.auth.User;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
@@ -18,6 +19,7 @@ import org.jasypt.util.text.TextEncryptor;
 import org.springframework.cache.Cache;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class StrongEncryptionService implements EncryptionService {
@@ -75,6 +77,7 @@ public class StrongEncryptionService implements EncryptionService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public User findByToken(String token) {
     if (isLogoutRequest(token)) {
       final String[] parts = token.split("\\$\\$");
@@ -114,6 +117,7 @@ public class StrongEncryptionService implements EncryptionService {
                 User.class)
             .setParameter("id", id)
             .getSingleResult();
+    user.getDetails().setLastActive(new Date());
     if (password.equals(user.getPassword())) {
       return user;
     }

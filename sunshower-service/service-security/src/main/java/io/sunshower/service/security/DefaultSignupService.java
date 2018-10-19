@@ -3,6 +3,7 @@ package io.sunshower.service.security;
 import io.sunshower.common.Identifier;
 import io.sunshower.core.security.RoleService;
 import io.sunshower.core.security.crypto.EncryptionService;
+import io.sunshower.model.core.auth.Details;
 import io.sunshower.model.core.auth.Role;
 import io.sunshower.model.core.auth.User;
 import io.sunshower.security.api.ProductService;
@@ -19,6 +20,8 @@ import javax.persistence.PersistenceContext;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.acls.domain.BasePermission;
+import org.springframework.security.acls.model.Permission;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ReflectionUtils;
@@ -31,11 +34,11 @@ public class DefaultSignupService implements SignupService {
 
   @Inject private ProductService products;
 
-  @PersistenceContext private EntityManager entityManager;
-
   @Inject private EncryptionService encryptionService;
 
+  @PersistenceContext private EntityManager entityManager;
   @Inject private ApplicationContext applicationContext;
+  @Inject private PermissionsService<Permission> permissionsService;
 
   @Override
   public RegistrationRequest signup(User user) {
@@ -73,6 +76,24 @@ public class DefaultSignupService implements SignupService {
 
     entityManager.merge(user);
     entityManager.flush();
+    permissionsService.impersonate(
+        () -> {
+          permissionsService.grantWithCurrentSession(
+              User.class,
+              user,
+              BasePermission.READ,
+              BasePermission.WRITE,
+              BasePermission.DELETE,
+              BasePermission.ADMINISTRATION);
+          permissionsService.grantWithCurrentSession(
+              Details.class,
+              user.getDetails(),
+              BasePermission.READ,
+              BasePermission.WRITE,
+              BasePermission.DELETE,
+              BasePermission.ADMINISTRATION);
+        },
+        user.getUsername());
 
     return registrationRequest;
   }

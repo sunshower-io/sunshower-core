@@ -12,6 +12,8 @@ import io.sunshower.model.core.auth.Details;
 import io.sunshower.model.core.auth.User;
 import io.sunshower.service.AuthenticatedTestCase;
 import io.sunshower.service.security.PermissionsService;
+import java.util.Arrays;
+import java.util.List;
 import javax.inject.Inject;
 import lombok.val;
 import lombok.var;
@@ -28,6 +30,16 @@ class DefaultIconServiceTest extends AuthenticatedTestCase {
   @Inject private IconService iconService;
   @Inject private RoleService roleService;
   @Inject private PermissionsService<Permission> permissionsService;
+
+  @Test
+  void ensureLisaWorks() {
+    List<String> icons = Arrays.asList("Jim", "Bas", "Tif", "Charisse", "Wade", "Tiffany");
+    for (String icon : icons) {
+
+      val img = new String(iconService.iconDirect(icon, 64, 64).getData());
+      System.out.println(icon + "\n" + img);
+    }
+  }
 
   @Test
   void ensureWhateverWorks() {
