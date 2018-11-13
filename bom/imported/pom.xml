@@ -18,7 +18,7 @@
 
     <properties>
         <jdenticon-kotlin.version>1.0</jdenticon-kotlin.version>
-        <sunshower-base.version>1.0.4.Final</sunshower-base.version>
+        <sunshower-base.version>1.0.5-SNAPSHOT</sunshower-base.version>
     </properties>
 
     <dependencyManagement>

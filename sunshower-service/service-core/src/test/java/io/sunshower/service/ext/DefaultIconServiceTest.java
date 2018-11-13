@@ -33,7 +33,19 @@ class DefaultIconServiceTest extends AuthenticatedTestCase {
 
   @Test
   void ensureLisaWorks() {
-    List<String> icons = Arrays.asList("Jim", "Bas", "Tif", "Charisse", "Wade", "Tiffany");
+    List<String> icons =
+        Arrays.asList(
+            "Jim",
+            "Bas",
+            "Tif",
+            "Charisse",
+            "Wade",
+            "Tiffany",
+            "Sally",
+            "Mom",
+            "mom",
+            "gigi",
+            "Gigi");
     for (String icon : icons) {
 
       val img = new String(iconService.iconDirect(icon, 64, 64).getData());
