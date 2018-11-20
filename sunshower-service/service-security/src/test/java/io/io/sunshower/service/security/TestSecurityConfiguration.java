@@ -1,8 +1,11 @@
 package io.io.sunshower.service.security;
 
+import static org.mockito.Mockito.mock;
+
 import io.sunshower.core.security.CredentialService;
 import io.sunshower.persistence.Dialect;
 import io.sunshower.persistence.annotations.Persistence;
+import io.sunshower.service.ext.IconService;
 import io.sunshower.service.security.PermissionsService;
 import io.sunshower.service.security.SpringPermissionsService;
 import io.sunshower.service.security.crypto.MessageAuthenticationCode;
@@ -14,7 +17,6 @@ import java.util.concurrent.ForkJoinPool;
 import javax.sql.DataSource;
 import org.jasypt.util.text.BasicTextEncryptor;
 import org.jasypt.util.text.TextEncryptor;
-import org.mockito.Mockito;
 import org.springframework.cache.Cache;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -39,6 +41,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
   }
 )
 public class TestSecurityConfiguration {
+  @Bean
+  public IconService iconService() {
+    return mock(IconService.class);
+  }
 
   @Bean
   @Primary
@@ -69,7 +75,7 @@ public class TestSecurityConfiguration {
 
   @Bean(name = "caches:authentication")
   public Cache authenticationCache() {
-    return Mockito.mock(Cache.class);
+    return mock(Cache.class);
   }
 
   @Bean
