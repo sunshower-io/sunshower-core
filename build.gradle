@@ -38,6 +38,7 @@ allprojects {
 
 
     def repos = [
+            'http://www.gridgainsystems.com/nexus/content/repositories/external',
             'http://artifacts.sunshower.io/repository/sunshower-releases',
             'http://artifacts.sunshower.io/repository/sunshower-cache',
             'http://artifacts.sunshower.io/repository/sunshower-snapshots',
@@ -80,7 +81,7 @@ allprojects {
         imports {
             mavenBom("io.sunshower.core:bom-imported:${version}") {
                 bomProperties([
-                        'env.version': '1.0.8.Final'
+                        'env.version': '1.0.10.Final'
                 ])
             }
         }
