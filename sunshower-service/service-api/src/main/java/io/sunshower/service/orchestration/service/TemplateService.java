@@ -3,7 +3,7 @@ package io.sunshower.service.orchestration.service;
 import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
 import io.sunshower.common.Identifier;
-import io.sunshower.model.core.Property;
+import io.sunshower.model.core.AbstractProperty;
 import io.sunshower.service.graph.service.GraphService;
 import io.sunshower.service.hal.core.Graph;
 import io.sunshower.service.model.Message;
@@ -24,7 +24,7 @@ public interface TemplateService
   void subscribe(Observer<? super TemplateEvent> observer);
 
   @PreAuthorize("hasPermission(#id, 'io.sunshower.service.orchestration.model.Template', 'READ')")
-  List<Property> getProperties(Identifier id);
+  List<AbstractProperty> getProperties(Identifier id);
 
   @PreAuthorize("hasPermission(#id, 'io.sunshower.service.orchestration.model.Template', 'READ')")
   Graph getGraph(Identifier id, Revision revision);

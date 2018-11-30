@@ -13,13 +13,25 @@ import java.util.Date;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import lombok.SneakyThrows;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.annotation.Rollback;
+import org.springframework.transaction.annotation.Transactional;
 
 @Rollback
+@Transactional
 class UserPersistenceTest extends PersistenceTest {
 
   @PersistenceContext private EntityManager entityManager;
+  private User user;
+
+  @BeforeEach
+  public void setUp() {
+    user = new User();
+    user.getDetails().setEmailAddress("joe@134whatever.com");
+    user.setUsername("frapasdfasdf");
+    user.setPassword("asdfasdfasdfasfasdfasf");
+  }
 
   @Test
   public void ensureEntityManagerIsInjected() {
@@ -28,22 +40,36 @@ class UserPersistenceTest extends PersistenceTest {
 
   @Test
   public void ensureSavingPersonWorks() {
-    final User user = new User();
-    user.getDetails().setEmailAddress("joe@134whatever.com");
-    user.setUsername("frapasdfasdf");
-    user.setPassword("asdfasdfasdfasfasdfasf");
     entityManager.persist(user);
     entityManager.flush();
   }
 
   @Test
+  public void ensureSettingConfigurationWorks() {
+    assertThat(user.getConfiguration(), is(not(nullValue())));
+    entityManager.persist(user);
+    entityManager.flush();
+  }
+
+  @Test
+  public void ensureAddingConfigurationValueWorks() {
+    user.setConfigurationValue(Property.Type.Boolean, "test", true);
+    entityManager.persist(user);
+    entityManager.flush();
+  }
+
+  @Test
+  void ensureAddingConfigurationSetsConfigurationCorrectly() {
+    user.setConfigurationValue(Property.Type.Boolean, "test", true);
+    entityManager.persist(user);
+    entityManager.flush();
+    boolean test = entityManager.find(User.class, user.getId()).getConfigurationValue("test");
+    assertThat(test, is(true));
+  }
+
+  @Test
   @SneakyThrows
   void ensureImageCanBeSavedOnUser() {
-
-    final User user = new User();
-    user.getDetails().setEmailAddress("joe@134whatever.com");
-    user.setUsername("coolbeans");
-    user.setPassword("whatever");
 
     Image icon = new Image();
     icon.setData(Files.read(ClassLoader.getSystemResourceAsStream("icons/kubernetes.png")));
@@ -55,25 +81,14 @@ class UserPersistenceTest extends PersistenceTest {
 
   @Test
   public void ensurePersonIsSavedWithActiveFalse() {
-
-    final User user = new User();
-    user.getDetails().setEmailAddress("joe@whatever.com");
-    user.setUsername("frap");
-    user.setPassword("asdfasdfasdfasf");
     entityManager.persist(user);
     entityManager.flush();
-
     final User saved = entityManager.find(User.class, user.getId());
     assertFalse(saved.isEnabled());
   }
 
   @Test
   void ensureUserWithRoleCanBePersisted() {
-    final User user = new User();
-    user.setUsername("whatever");
-    user.setPassword("whatever");
-    user.getDetails().setFirstname("whatever");
-    user.getDetails().setEmailAddress("frap@dap.wab");
 
     final Role role = new Role("coolbeans");
     user.addRole(role);
@@ -83,7 +98,6 @@ class UserPersistenceTest extends PersistenceTest {
 
   @Test
   void ensureRoleCanBeRemoved() {
-    final User user = new User();
     final Role role = new Role("coolbeans");
     user.addRole(role);
     assertThat(user.getRoles().size(), is(1));
@@ -95,20 +109,17 @@ class UserPersistenceTest extends PersistenceTest {
 
   @Test
   void ensureSavingUserDetailsFileWorks() {
-    final User user = new User();
     user.getDetails().setEmailAddress("joe@whatever.com2");
     user.setUsername("fraafp");
     user.setPassword("asdfasdfasdfasfadsfadf");
     user.getDetails().setRoot(new File("coolbeans"));
+    entityManager.persist(user);
+    entityManager.flush();
   }
 
   @Test
   void ensureRegisteredIsPersisted() {
 
-    final User user = new User();
-    user.getDetails().setEmailAddress("joe2@whatever.com");
-    user.setUsername("frap1212");
-    user.setPassword("asdfasdfasdfasf");
     final Date date = new Date();
     user.getDetails().setRegistered(date);
     entityManager.persist(user);
@@ -129,10 +140,6 @@ class UserPersistenceTest extends PersistenceTest {
     icon.setData(Files.read(ClassLoader.getSystemResourceAsStream("icons/kubernetes.png")));
     tenant.getDetails().setImage(icon);
 
-    final User user = new User();
-    user.getDetails().setEmailAddress("joe@3whatever.com");
-    user.setUsername("frapadfasdf13213");
-    user.setPassword("asdfasdfasdfasfadfa");
     tenant.addUser(user);
     user.getDetails().setImage(icon);
 
@@ -161,10 +168,6 @@ class UserPersistenceTest extends PersistenceTest {
   public void ensureTenantCascadesSaveToComplexUser() {
     final Tenant tenant = new Tenant();
     tenant.setName("coke");
-    final User user = new User();
-    user.getDetails().setEmailAddress("joe@2whatever.com");
-    user.setUsername("frapadfasdf");
-    user.setPassword("asdfasdfasdfasfadfa");
     tenant.addUser(user);
 
     final Tenant cokehr = new Tenant();

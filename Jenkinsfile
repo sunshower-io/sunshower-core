@@ -1,9 +1,7 @@
 pipeline {
     environment {
-
         MVN_REPO = credentials('artifacts-credentials')
         GITHUB = credentials('github-build-credentials')
-
     }
     agent {
         docker {

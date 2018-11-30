@@ -9,7 +9,7 @@ import io.reactivex.Observer;
 import io.reactivex.subjects.PublishSubject;
 import io.reactivex.subjects.Subject;
 import io.sunshower.common.Identifier;
-import io.sunshower.model.core.Property;
+import io.sunshower.model.core.AbstractProperty;
 import io.sunshower.model.core.faults.SystemException;
 import io.sunshower.persistence.core.DistributableEntity;
 import io.sunshower.service.BaseRepository;
@@ -278,14 +278,14 @@ public class JpaTemplateService extends BaseRepository<Identifier, Template>
 
   @Override
   @SuppressWarnings("unchecked")
-  public List<Property> getProperties(@P("id") Identifier tid) {
+  public List<AbstractProperty> getProperties(@P("id") Identifier tid) {
     final WorkspaceRef wsref = resolveWorkspace(tid);
     final Workspace ws = wsref.workspace;
     final Identifier id = wsref.template.getId();
     try (GitRepository open = repositoryService.open(ws.getRepository())) {
       open.open();
       final String sid = id.toString();
-      final Set<Property> result = new LinkedHashSet<>();
+      final Set<AbstractProperty> result = new LinkedHashSet<>();
       final String path = String.format("orchestrations/%s/orchestration.hsf", sid);
 
       final Graph graph = graphContext.load(open.read(path));
