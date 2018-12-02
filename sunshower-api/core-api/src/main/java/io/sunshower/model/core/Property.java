@@ -69,7 +69,11 @@ public class Property extends DistributableEntity {
   }
 
   public static Property bool(String key, String name, String value) {
-    return new Property(Type.Secret, key, name, value);
+    return new Property(Type.Boolean, key, name, value);
+  }
+
+  public static Property type(String key, String name, String value) {
+    return new Property(Type.Class, key, name, value);
   }
 
   public Property(Type type, String key, String name, String value) {
