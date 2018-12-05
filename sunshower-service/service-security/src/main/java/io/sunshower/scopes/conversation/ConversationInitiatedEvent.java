@@ -1,7 +1,3 @@
 package io.sunshower.scopes.conversation;
 
-public class ConversationInitiatedEvent {
-
-
-
-}
+public class ConversationInitiatedEvent {}

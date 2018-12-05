@@ -1,146 +1,144 @@
 package io.sunshower.scopes;
 
-import io.sunshower.security.events.LogoutEvent;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.DisposableBean;
-import org.springframework.beans.factory.ObjectFactory;
-import org.springframework.beans.factory.config.Scope;
-import org.springframework.context.ApplicationListener;
-
 import com.google.common.cache.CacheBuilder;
 import io.sunshower.common.Identifier;
 import io.sunshower.model.core.auth.UserConfigurations;
 import io.sunshower.model.core.vault.KeyProvider;
+import io.sunshower.security.events.LogoutEvent;
 import io.sunshower.service.security.Session;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
-
+import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import lombok.var;
+import org.springframework.beans.factory.DisposableBean;
+import org.springframework.beans.factory.ObjectFactory;
+import org.springframework.beans.factory.config.Scope;
 import org.springframework.cache.Cache;
+import org.springframework.context.ApplicationListener;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 
 @Slf4j
-public class AbstractSessionAwareScope implements Scope, DisposableBean, ApplicationListener<LogoutEvent> {
-    private final Cache                 cache;
-    private final Session               session;
-    private final Map<String, Runnable> destructionCallbacks;
+public class AbstractSessionAwareScope
+    implements Scope, DisposableBean, ApplicationListener<LogoutEvent> {
+  private final Cache cache;
+  private final Session session;
+  private final Map<String, Runnable> destructionCallbacks;
 
+  protected final KeyProvider keyProvider;
 
+  protected AbstractSessionAwareScope(Cache cache, Session session, KeyProvider keyProvider) {
+    this.cache = cache;
+    this.session = session;
+    this.keyProvider = keyProvider;
+    destructionCallbacks = new HashMap<>();
+  }
 
-    protected final KeyProvider           keyProvider;
+  @Override
+  @SuppressWarnings("unchecked")
+  public Object get(String name, ObjectFactory<?> objectFactory) {
+    val id = getId();
+    val region = resolveRegion(id);
+    var scopedObject = region.get(name);
 
-    protected AbstractSessionAwareScope(Cache cache, Session session, KeyProvider keyProvider) {
-        this.cache = cache;
-        this.session = session;
-        this.keyProvider = keyProvider;
-        destructionCallbacks = new HashMap<>();
+    if (scopedObject == null) {
+      scopedObject = objectFactory.getObject();
+      region.put(name, scopedObject);
     }
+    return scopedObject;
+  }
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public Object get(String name, ObjectFactory<?> objectFactory) {
-        val id           = getId();
-        val region       = resolveRegion(id);
-        var scopedObject = region.get(name);
+  @Override
+  public Object remove(String name) {
+    return resolveRegion(getId()).remove(name);
+  }
 
-        if (scopedObject == null) {
-            scopedObject = objectFactory.getObject();
-            region.put(name, scopedObject);
-        }
-        return scopedObject;
+  @Override
+  public void registerDestructionCallback(String name, Runnable callback) {
+    destructionCallbacks.put(name, callback);
+  }
+
+  @Override
+  public Object resolveContextualObject(String key) {
+    return null;
+  }
+
+  @Override
+  public String getConversationId() {
+    return cacheKey(session);
+  }
+
+  @Override
+  public void destroy() {
+
+    log.info("Clearing all existing authentication-scoped data");
+    clearSessions();
+    log.info("Successfully cleared all authentication-scoped data");
+
+    log.info("Shutting down AuthenticationScope");
+    for (Runnable callback : destructionCallbacks.values()) {
+      try {
+        log.info("Running destruction callback: {}", callback);
+        callback.run();
+      } catch (Exception ex) {
+        log.warn(
+            "Error: Caught exception {} while executing destruction callback: {}",
+            ex.getMessage(),
+            callback);
+      }
     }
+    log.info("Authentication callbacks run");
+  }
 
-    @Override
-    public Object remove(String name) {
-        return resolveRegion(getId()).remove(name);
+  @Override
+  public void onApplicationEvent(LogoutEvent event) {
+    clearSessions();
+  }
+
+  @SuppressWarnings("unchecked")
+  private Map<String, Object> resolveRegion(Identifier id) {
+    val nodeId = cacheKey(session);
+    var scope =
+        (Map<Identifier, com.google.common.cache.Cache<String, Object>>)
+            cache.get(nodeId, Map.class);
+
+    if (scope == null) {
+      scope = new ConcurrentHashMap<>();
+      cache.put(nodeId, scope);
     }
+    val timeout = getTimeoutMillis();
+    final com.google.common.cache.Cache<String, Object> userCache =
+        CacheBuilder.newBuilder()
+            .expireAfterWrite(timeout, TimeUnit.MILLISECONDS)
+            .maximumSize(10000)
+            .build();
+    return scope.computeIfAbsent(id, i -> userCache).asMap();
+  }
 
-    @Override
-    public void registerDestructionCallback(String name, Runnable callback) {
-        destructionCallbacks.put(name, callback);
+  private void clearSessions() {
+    cache.evict(cacheKey(session));
+  }
+
+  public long getTimeoutMillis() {
+    val cfg = session.getUserConfiguration();
+    Integer timeout = cfg.getValue(UserConfigurations.Keys.Timeout);
+    if (timeout == null) {
+      return TimeUnit.MINUTES.toMillis(60);
     }
+    return timeout;
+  }
 
-    @Override
-    public Object resolveContextualObject(String key) {
-        return null;
+  protected String cacheKey(Session session) {
+    return String.format("%s:%s", keyProvider.getKey(), "authentication-scope");
+  }
+
+  private Identifier getId() {
+    final Identifier id = session.getId();
+    if (id == null) {
+      throw new AuthenticationCredentialsNotFoundException("Nobody appears to be logged in");
     }
-
-    @Override
-    public String getConversationId() {
-        return cacheKey(session);
-    }
-
-    @Override
-    public void destroy() {
-
-        log.info("Clearing all existing authentication-scoped data");
-        clearSessions();
-        log.info("Successfully cleared all authentication-scoped data");
-
-        log.info("Shutting down AuthenticationScope");
-        for (Runnable callback : destructionCallbacks.values()) {
-            try {
-                log.info("Running destruction callback: {}", callback);
-                callback.run();
-            } catch (Exception ex) {
-                log.warn(
-                        "Error: Caught exception {} while executing destruction callback: {}",
-                        ex.getMessage(),
-                        callback
-                );
-            }
-        }
-        log.info("Authentication callbacks run");
-    }
-
-
-    @Override
-    public void onApplicationEvent(LogoutEvent event) {
-        clearSessions();
-    }
-
-
-    @SuppressWarnings("unchecked")
-    private Map<String, Object> resolveRegion(Identifier id) {
-        val nodeId = cacheKey(session);
-        var scope  = (Map<Identifier, com.google.common.cache.Cache<String, Object>>) cache.get(nodeId, Map.class);
-
-        if (scope == null) {
-            scope = new ConcurrentHashMap<>();
-            cache.put(nodeId, scope);
-        }
-        val timeout = getTimeoutMillis();
-        final com.google.common.cache.Cache<String, Object> userCache = CacheBuilder.newBuilder().expireAfterWrite(timeout, TimeUnit.MILLISECONDS)
-                .maximumSize(10000).build();
-        return scope.computeIfAbsent(id, i -> userCache).asMap();
-
-    }
-    private void clearSessions() {
-        cache.evict(cacheKey(session));
-    }
-
-    public long getTimeoutMillis() {
-        val     cfg     = session.getUserConfiguration();
-        Integer timeout = cfg.getValue(UserConfigurations.Keys.Timeout);
-        if (timeout == null) {
-            return TimeUnit.MINUTES.toMillis(60);
-        }
-        return timeout;
-    }
-
-    protected String cacheKey(Session session) {
-        return String.format("%s:%s", keyProvider.getKey(), "authentication-scope");
-    }
-
-    private Identifier getId() {
-        final Identifier id = session.getId();
-        if (id == null) {
-            throw new AuthenticationCredentialsNotFoundException("Nobody appears to be logged in");
-        }
-        return id;
-    }
+    return id;
+  }
 }

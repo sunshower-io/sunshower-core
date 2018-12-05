@@ -4,12 +4,10 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import io.sunshower.common.Identifier;
 import io.sunshower.scopes.AbstractScopeTest;
-
 import lombok.SneakyThrows;
 import lombok.val;
 import org.junit.jupiter.api.Test;
@@ -44,7 +42,6 @@ class AuthenticationScopeTest extends AbstractScopeTest {
     bean = (String) context.getBean("authenticationScopedBean");
     assertThat(bean, is("wab0"));
     context.stop();
-
   }
 
   @Test

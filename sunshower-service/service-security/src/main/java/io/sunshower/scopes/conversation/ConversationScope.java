@@ -11,26 +11,21 @@ import org.springframework.cache.Cache;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.EventListener;
 
-
 @Slf4j
-public class ConversationScope extends AbstractSessionAwareScope implements Scope, DisposableBean, ApplicationListener<LogoutEvent> {
+public class ConversationScope extends AbstractSessionAwareScope
+    implements Scope, DisposableBean, ApplicationListener<LogoutEvent> {
 
+  public ConversationScope(Cache cache, Session session, KeyProvider keyProvider) {
+    super(cache, session, keyProvider);
+  }
 
-    public ConversationScope(Cache cache, Session session, KeyProvider keyProvider) {
-        super(cache, session, keyProvider);
-    }
+  @EventListener(ConversationInitiatedEvent.class)
+  public void onConversationInitiated(ConversationInitiatedEvent event) {
+    super.
+  }
 
-
-    @EventListener(ConversationInitiatedEvent.class)
-    public void onConversationInitiated(ConversationInitiatedEvent event) {
-        System.out.println("GOT ONE");
-
-    }
-
-    @EventListener(ConversationFinalizedEvent.class)
-    public void onConversationFinalized(ConversationFinalizedEvent event) {
-        System.out.println("GOT two");
-
-    }
-
+  @EventListener(ConversationFinalizedEvent.class)
+  public void onConversationFinalized(ConversationFinalizedEvent event) {
+    System.out.println("GOT two");
+  }
 }

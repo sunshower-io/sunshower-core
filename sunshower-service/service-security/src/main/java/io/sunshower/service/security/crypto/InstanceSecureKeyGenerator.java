@@ -5,7 +5,6 @@ import io.sunshower.model.core.vault.KeyProvider;
 import java.security.SecureRandom;
 import java.util.Base64;
 import javax.inject.Singleton;
-
 import lombok.val;
 import org.springframework.stereotype.Service;
 
@@ -29,8 +28,6 @@ public class InstanceSecureKeyGenerator implements KeyProvider {
   public String getKey() {
     return key;
   }
-
-
 
   static final String generateKey() {
     final byte[] bytes = random.generateSeed(32);
