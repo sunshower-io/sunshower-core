@@ -38,6 +38,10 @@ public class AbstractScopeTest {
         () -> configuration);
   }
 
+  protected void stop() {
+    context.close();
+  }
+
   protected void doSetup() {
     when(session.getUsername()).thenReturn("wab");
     val uid1 = Identifier.random();

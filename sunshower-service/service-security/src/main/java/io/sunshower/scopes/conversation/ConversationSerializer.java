@@ -5,10 +5,11 @@ import java.io.OutputStream;
 
 public interface ConversationSerializer {
 
-    ConversationContext parse(String input);
-    ConversationContext parse(InputStream input);
+  ConversationContext parse(String input);
 
-    void write(OutputStream os, ConversationContext conversationContext);
+  ConversationContext parse(InputStream input);
 
-    String write(ConversationContext conversationContext);
+  void write(OutputStream os, ConversationContext conversationContext);
+
+  String write(ConversationContext conversationContext);
 }

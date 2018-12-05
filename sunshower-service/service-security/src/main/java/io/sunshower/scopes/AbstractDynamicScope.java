@@ -6,6 +6,8 @@ import io.sunshower.model.core.auth.UserConfigurations;
 import io.sunshower.model.core.vault.KeyProvider;
 import io.sunshower.security.events.LogoutEvent;
 import io.sunshower.service.security.Session;
+
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -21,20 +23,22 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 
 @Slf4j
-public class AbstractSessionAwareScope
+public abstract class AbstractDynamicScope<K extends Serializable>
     implements Scope, DisposableBean, ApplicationListener<LogoutEvent> {
   private final Cache cache;
-  private final Session session;
+  protected final Session session;
   private final Map<String, Runnable> destructionCallbacks;
 
   protected final KeyProvider keyProvider;
 
-  protected AbstractSessionAwareScope(Cache cache, Session session, KeyProvider keyProvider) {
+  protected AbstractDynamicScope(Cache cache, Session session, KeyProvider keyProvider) {
     this.cache = cache;
     this.session = session;
     this.keyProvider = keyProvider;
     destructionCallbacks = new HashMap<>();
   }
+
+  protected abstract int getMaxSize();
 
   @Override
   @SuppressWarnings("unchecked")
@@ -97,11 +101,12 @@ public class AbstractSessionAwareScope
     clearSessions();
   }
 
+
   @SuppressWarnings("unchecked")
-  private Map<String, Object> resolveRegion(Identifier id) {
+  private Map<String, Object> resolveRegion(K id) {
     val nodeId = cacheKey(session);
     var scope =
-        (Map<Identifier, com.google.common.cache.Cache<String, Object>>)
+        (Map<K, com.google.common.cache.Cache<String, Object>>)
             cache.get(nodeId, Map.class);
 
     if (scope == null) {
@@ -112,7 +117,7 @@ public class AbstractSessionAwareScope
     final com.google.common.cache.Cache<String, Object> userCache =
         CacheBuilder.newBuilder()
             .expireAfterWrite(timeout, TimeUnit.MILLISECONDS)
-            .maximumSize(10000)
+            .maximumSize(getMaxSize())
             .build();
     return scope.computeIfAbsent(id, i -> userCache).asMap();
   }
@@ -134,11 +139,7 @@ public class AbstractSessionAwareScope
     return String.format("%s:%s", keyProvider.getKey(), "authentication-scope");
   }
 
-  private Identifier getId() {
-    final Identifier id = session.getId();
-    if (id == null) {
-      throw new AuthenticationCredentialsNotFoundException("Nobody appears to be logged in");
-    }
-    return id;
-  }
+  protected abstract K getId();
+
+
 }

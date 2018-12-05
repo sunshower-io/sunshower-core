@@ -1,8 +1,7 @@
 package io.sunshower.scopes.conversation;
 
 public interface Conversation {
-    String getId();
+  String getId();
 
-    ConversationState getState();
-
+  ConversationState getState();
 }

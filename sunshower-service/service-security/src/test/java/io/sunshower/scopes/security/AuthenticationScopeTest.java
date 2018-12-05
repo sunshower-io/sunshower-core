@@ -41,7 +41,7 @@ class AuthenticationScopeTest extends AbstractScopeTest {
     Thread.sleep(25);
     bean = (String) context.getBean("authenticationScopedBean");
     assertThat(bean, is("wab0"));
-    context.stop();
+    context.close();
   }
 
   @Test
@@ -52,7 +52,7 @@ class AuthenticationScopeTest extends AbstractScopeTest {
     when(session.getId()).thenReturn(uid1);
     String bean = (String) context.getBean("authenticationScopedBean");
     assertThat(bean, is("wab0"));
-    context.stop();
+    context.close();
   }
 
   @Test
@@ -70,5 +70,6 @@ class AuthenticationScopeTest extends AbstractScopeTest {
     when(session.getId()).thenReturn(uid2);
     bean = (String) context.getBean("authenticationScopedBean");
     assertThat(bean, is("dab1"));
+    context.close();
   }
 }
