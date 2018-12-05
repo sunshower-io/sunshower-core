@@ -3,6 +3,7 @@ package io.sunshower.service.security.user;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
 import io.sunshower.common.Identifier;
@@ -22,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 class DefaultUserServiceTest extends SecurityTest {
 
+
   @Inject private Dialect dialect;
 
   @Inject private UserService userService;
@@ -38,6 +40,8 @@ class DefaultUserServiceTest extends SecurityTest {
     return user;
   }
 
+
+
   @Test
   @WithMockUser(authorities = "admin")
   public void ensureListingActiveUsersReturnsNoInactiveUsers() {
@@ -45,6 +49,17 @@ class DefaultUserServiceTest extends SecurityTest {
     entityManager.persist(u);
     assertThat(userService.activeUsers().size(), is(1));
   }
+
+
+  @Test
+  void ensureDetailsServiceRetrievesUserDetails() {
+    final User u = createUser(true);
+    entityManager.persist(u);
+    assertNotNull(userService.getConfiguration(u.getId()));
+  }
+
+
+
 
   @Test
   @WithMockUser(authorities = "admin")

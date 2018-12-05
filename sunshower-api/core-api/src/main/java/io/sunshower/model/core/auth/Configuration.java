@@ -38,7 +38,7 @@ public abstract class Configuration extends DistributableEntity {
     return properties == null ? Collections.emptyList() : new ArrayList<>(properties.values());
   }
 
-  public boolean addProperty(Property property) {
+  public boolean addProperty(AbstractProperty property) {
     if (properties == null) {
       properties = new HashMap<>();
     }

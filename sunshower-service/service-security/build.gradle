@@ -1,6 +1,7 @@
 apply plugin: 'java'
 dependencies {
     implementation 'com.zaxxer:HikariCP'
+    implementation 'com.google.guava:guava'
 
     api project(':sunshower-service:service-api')
     api project(":sunshower-api:core-api")

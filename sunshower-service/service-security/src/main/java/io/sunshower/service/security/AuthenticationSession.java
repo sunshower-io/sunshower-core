@@ -1,6 +1,8 @@
 package io.sunshower.service.security;
 
 import io.sunshower.common.Identifier;
+import io.sunshower.core.security.UserService;
+import io.sunshower.model.core.auth.Configuration;
 import io.sunshower.model.core.auth.Details;
 import io.sunshower.model.core.auth.User;
 import io.sunshower.persistence.core.Persistable;
@@ -16,6 +18,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
 public class AuthenticationSession implements Session {
+
+
+  final UserService userService;
+  public AuthenticationSession(UserService service) {
+    this.userService = service;
+  }
 
   @Override
   public Locale getLocale() {
@@ -35,6 +43,11 @@ public class AuthenticationSession implements Session {
       }
     }
     return Locale.getDefault();
+  }
+
+  @Override
+  public Configuration getUserConfiguration() {
+    return null;
   }
 
   @Override

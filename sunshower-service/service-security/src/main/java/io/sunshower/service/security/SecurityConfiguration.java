@@ -53,6 +53,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableGlobalMethodSecurity(prePostEnabled = true, jsr250Enabled = true, securedEnabled = true)
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
+  @Inject private UserService userService;
   static final Logger logger = LoggerFactory.getLogger(SecurityConfiguration.class);
 
   @Bean
@@ -72,11 +73,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     http.authorizeRequests().anyRequest().permitAll();
   }
 
-  @Inject private UserService userService;
 
   @Bean
   public Session userFacade() {
-    return new AuthenticationSession();
+    return new AuthenticationSession(userService);
   }
 
   @Bean

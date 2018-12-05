@@ -2,9 +2,9 @@
 
 
 dependencies {
-    implementation project(':sunshower-service:service-common')
-    implementation project(':sunshower-service:service-api')
-    implementation project(':sunshower-service:service-security')
+    api project(':sunshower-service:service-common')
+    api project(':sunshower-service:service-api')
+    api project(':sunshower-service:service-security')
 
     implementation 'com.google.guava:guava'
     implementation 'org.hibernate:hibernate-search-orm'
