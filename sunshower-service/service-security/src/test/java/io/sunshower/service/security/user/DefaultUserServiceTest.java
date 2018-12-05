@@ -8,21 +8,23 @@ import static org.junit.Assert.assertThat;
 
 import io.sunshower.common.Identifier;
 import io.sunshower.core.security.UserService;
+import io.sunshower.model.core.Property;
 import io.sunshower.model.core.auth.Role;
 import io.sunshower.model.core.auth.User;
 import io.sunshower.persistence.Dialect;
 import io.sunshower.service.security.SecurityTest;
 import io.sunshower.test.persist.Principal;
+import java.util.Arrays;
 import java.util.UUID;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import lombok.val;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.transaction.annotation.Transactional;
 
 class DefaultUserServiceTest extends SecurityTest {
-
 
   @Inject private Dialect dialect;
 
@@ -40,8 +42,6 @@ class DefaultUserServiceTest extends SecurityTest {
     return user;
   }
 
-
-
   @Test
   @WithMockUser(authorities = "admin")
   public void ensureListingActiveUsersReturnsNoInactiveUsers() {
@@ -50,7 +50,6 @@ class DefaultUserServiceTest extends SecurityTest {
     assertThat(userService.activeUsers().size(), is(1));
   }
 
-
   @Test
   void ensureDetailsServiceRetrievesUserDetails() {
     final User u = createUser(true);
@@ -58,8 +57,30 @@ class DefaultUserServiceTest extends SecurityTest {
     assertNotNull(userService.getConfiguration(u.getId()));
   }
 
+  @Test
+  @WithMockUser(authorities = "admin")
+  void ensureSettingConfigurationWorks() {
+    val user = createUser(true);
+    userService.save(user);
+    assertThat(userService.getConfiguration(user.getId()).getProperties().size(), is(1));
+    userService.setConfiguration(
+        user.getId(),
+        Arrays.asList(
+            Property.bool("hello", "world", "true"),
+            Property.bool("frap", "world", "true"),
+            Property.bool("dap", "world", "true")));
 
+    assertThat(userService.getConfiguration(user.getId()).getProperties().size(), is(3));
+  }
 
+  @Test
+  @WithMockUser(authorities = "admin")
+  void ensureDeletingUserWorks() {
+    val user = createUser(true);
+    userService.save(user);
+    userService.delete(user.getId());
+    assertThat(userService.get(user.getId()), is(nullValue()));
+  }
 
   @Test
   @WithMockUser(authorities = "admin")

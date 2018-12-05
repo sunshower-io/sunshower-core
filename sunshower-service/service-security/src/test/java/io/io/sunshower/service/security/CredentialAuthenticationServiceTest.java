@@ -5,7 +5,6 @@ import static org.junit.Assert.*;
 import static org.mockito.BDDMockito.given;
 
 import io.sunshower.common.Identifier;
-import io.sunshower.core.security.CredentialService;
 import io.sunshower.core.security.RoleService;
 import io.sunshower.core.security.crypto.EncryptionService;
 import io.sunshower.model.core.auth.Role;
@@ -27,8 +26,6 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.transaction.annotation.Transactional;
 
 public class CredentialAuthenticationServiceTest extends SecurityTest {
-
-  @Inject private CredentialService credentialService;
 
   @Inject private TestSecureService testSecureService;
 
@@ -149,10 +146,5 @@ public class CredentialAuthenticationServiceTest extends SecurityTest {
     } catch (AccessDeniedException ex) {
 
     }
-  }
-
-  @Test
-  public void ensureServiceIsInjected() {
-    assertThat(credentialService, is(not(nullValue())));
   }
 }

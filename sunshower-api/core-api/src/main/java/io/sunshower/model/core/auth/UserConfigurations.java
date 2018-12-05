@@ -1,5 +1,7 @@
 package io.sunshower.model.core.auth;
 
+import java.util.concurrent.TimeUnit;
+
 public class UserConfigurations {
 
   public interface Keys {
@@ -7,6 +9,6 @@ public class UserConfigurations {
   }
 
   public interface Defaults {
-    int Timeout = 60;
+    int Timeout = (int) TimeUnit.MINUTES.toMillis(60);
   }
 }

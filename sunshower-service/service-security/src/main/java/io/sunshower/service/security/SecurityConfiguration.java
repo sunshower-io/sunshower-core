@@ -73,9 +73,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     http.authorizeRequests().anyRequest().permitAll();
   }
 
-
   @Bean
-  public Session userFacade() {
+  public Session userFacade(UserService userService) {
     return new AuthenticationSession(userService);
   }
 

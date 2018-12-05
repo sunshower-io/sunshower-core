@@ -19,8 +19,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 public class AuthenticationSession implements Session {
 
-
   final UserService userService;
+
   public AuthenticationSession(UserService service) {
     this.userService = service;
   }
@@ -47,7 +47,7 @@ public class AuthenticationSession implements Session {
 
   @Override
   public Configuration getUserConfiguration() {
-    return null;
+    return userService.getConfiguration(getId());
   }
 
   @Override

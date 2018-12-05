@@ -1,16 +1,14 @@
 package io.sunshower.service.security;
 
+import io.sunshower.model.core.auth.Configuration;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Locale;
-
-import io.sunshower.model.core.auth.Configuration;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 public interface Session extends UserDetails, Authentication {
-
 
   Locale getLocale();
 

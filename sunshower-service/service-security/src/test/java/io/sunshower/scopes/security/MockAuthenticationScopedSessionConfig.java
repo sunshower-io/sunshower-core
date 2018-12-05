@@ -22,6 +22,8 @@ import org.springframework.context.annotation.Scope;
 @EnableCaching
 class MockAuthenticationScopedSessionConfig {
 
+  static int called = 0;
+
   private final Session session;
 
   @Getter private AuthenticationScope scope;
@@ -38,7 +40,7 @@ class MockAuthenticationScopedSessionConfig {
   @Bean
   @Scope("authentication")
   public String authenticationScopedBean() {
-    return session.getUsername();
+    return session.getUsername() + called++;
   }
 
   @Bean
