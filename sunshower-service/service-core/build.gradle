@@ -7,8 +7,6 @@ dependencies {
     implementation project(':sunshower-service:service-security')
 
     implementation 'com.google.guava:guava'
-    implementation 'org.apache.tinkerpop:gremlin-core'
-    implementation 'org.apache.tinkerpop:tinkergraph-gremlin'
     implementation 'org.hibernate:hibernate-search-orm'
     implementation 'org.springframework:spring-websocket'
     implementation 'org.springframework:spring-tx'
