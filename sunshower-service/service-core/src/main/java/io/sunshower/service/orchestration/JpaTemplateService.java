@@ -1,10 +1,5 @@
 package io.sunshower.service.orchestration;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.Matchers.nullValue;
-import static org.junit.Assert.assertThat;
-
 import io.reactivex.Observer;
 import io.reactivex.subjects.PublishSubject;
 import io.reactivex.subjects.Subject;
@@ -23,7 +18,7 @@ import io.sunshower.service.model.Message;
 import io.sunshower.service.orchestration.model.*;
 import io.sunshower.service.orchestration.service.TemplateService;
 import io.sunshower.service.revision.model.Revision;
-import io.sunshower.service.security.AuthenticationSession;
+import io.sunshower.service.security.Session;
 import io.sunshower.service.workspace.model.Workspace;
 import io.sunshower.service.workspace.service.WorkspaceService;
 import java.io.IOException;
@@ -32,7 +27,6 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
-import org.junit.Test;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
@@ -54,18 +48,13 @@ public class JpaTemplateService extends BaseRepository<Identifier, Template>
 
   @Inject private GraphSerializationContext graphContext;
 
-  @Inject private AuthenticationSession session;
+  @Inject private Session session;
 
   @Inject private PlatformTransactionManager transactionManager;
 
   public JpaTemplateService() {
     super(Template.class, "Template");
     this.topic = PublishSubject.create();
-  }
-
-  @Test
-  public void ensureSessionIsInjected() {
-    assertThat(session, is(not(nullValue())));
   }
 
   @Override

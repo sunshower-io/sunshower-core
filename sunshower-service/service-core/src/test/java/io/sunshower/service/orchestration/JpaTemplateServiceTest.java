@@ -15,6 +15,7 @@ import io.sunshower.service.hal.core.*;
 import io.sunshower.service.hal.core.contents.ContentHandler;
 import io.sunshower.service.orchestration.model.Template;
 import io.sunshower.service.orchestration.service.TemplateService;
+import io.sunshower.service.security.Session;
 import io.sunshower.service.serialization.DynamicResolvingMoxyJsonProvider;
 import io.sunshower.service.workspace.model.Workspace;
 import io.sunshower.service.workspace.service.WorkspaceService;
@@ -38,6 +39,7 @@ public class JpaTemplateServiceTest extends BaseRepositoryTest<Identifier, Templ
 
   @Inject private GraphServiceResolver resolver;
 
+  @Inject private Session session;
   @Inject private WorkspaceService workspaceService;
 
   @Inject private RepositoryService repositoryService;
@@ -183,7 +185,7 @@ public class JpaTemplateServiceTest extends BaseRepositoryTest<Identifier, Templ
 
   @Test
   @WithUserDetails("administrator")
-  public void ensureContentIsSavedWithCorrectProperties() throws IOException, InterruptedException {
+  public void ensureContentIsSavedWithCorrectProperties() {
     Template template = newTemplate();
     workspaceService.save(template.getWorkspace());
     final Graph g = new Graph();
@@ -234,6 +236,11 @@ public class JpaTemplateServiceTest extends BaseRepositoryTest<Identifier, Templ
     Set<Property> properties =
         templateService.contentManager(template.getId()).graphContent().getProperties();
     assertThat(properties.size(), is(1));
+  }
+
+  @Test
+  void ensureSessionIsInjected() {
+    assertThat(session, is(not(nullValue())));
   }
 
   @Test

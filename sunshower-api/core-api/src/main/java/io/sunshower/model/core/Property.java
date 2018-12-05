@@ -11,6 +11,9 @@ import lombok.Setter;
 @XmlRootElement(name = "property")
 @Table(name = "PROPERTY", schema = "SUNSHOWER")
 public class Property extends AbstractProperty {
+  {
+    setType(Property.class);
+  }
 
   Property() {}
 

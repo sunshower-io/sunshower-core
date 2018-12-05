@@ -1,6 +1,7 @@
 package io.sunshower.model.core;
 
 import io.sunshower.common.Identifier;
+import io.sunshower.common.rs.TypeAttributeClassExtractor;
 import io.sunshower.persist.Identifiers;
 import io.sunshower.persist.Sequence;
 import io.sunshower.persistence.core.DistributableEntity;
@@ -10,11 +11,13 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import lombok.Getter;
 import lombok.Setter;
+import org.eclipse.persistence.oxm.annotations.XmlClassExtractor;
 
 @Getter
 @Setter
 @MappedSuperclass
 @XmlRootElement(name = "property")
+@XmlClassExtractor(TypeAttributeClassExtractor.class)
 public class AbstractProperty extends DistributableEntity {
 
   public enum Type implements PropertyType {
@@ -42,6 +45,8 @@ public class AbstractProperty extends DistributableEntity {
   @Column(name = "type")
   @XmlAttribute(name = "property-type")
   private Type propertyType = Type.String;
+
+  @Transient @XmlAttribute private Class<?> type;
 
   static final Sequence<Identifier> seq = Identifiers.newSequence(true);
 

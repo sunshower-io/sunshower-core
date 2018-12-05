@@ -1,11 +1,11 @@
 dependencies {
+    compile 'org.springframework.security:spring-security-core'
 
     compile 'com.zaxxer:HikariCP'
 
     compile "io.sunshower.common:core"
     compile "io.sunshower.common:annotations"
     compile 'io.sunshower.persist:persist-api'
-    compile 'org.springframework.security:spring-security-core'
     compile 'org.hibernate.validator:hibernate-validator'
     compile 'javax.validation:validation-api'
     

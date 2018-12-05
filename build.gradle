@@ -5,9 +5,14 @@ buildscript {
     }
 }
 
+plugins {
+    id 'java-library'
+}
+
 apply plugin: 'nebula-aggregate-javadocs'
 
 allprojects {
+    apply plugin: 'java-library'
     apply plugin: 'idea'
     apply plugin: 'java'
     apply plugin: 'net.ltgt.apt'
