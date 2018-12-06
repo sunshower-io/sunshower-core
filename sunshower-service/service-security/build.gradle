@@ -21,6 +21,7 @@ dependencies {
     testCompile 'com.fasterxml.jackson.core:jackson-databind'
 
     testCompile 'net.bytebuddy:byte-buddy:1.7.5'
+    testImplementation 'org.junit.platform:junit-platform-commons:1.3.2'
     testImplementation 'io.sunshower.test:test-persist'
     implementation 'javax.annotation:javax.annotation-api'
 }

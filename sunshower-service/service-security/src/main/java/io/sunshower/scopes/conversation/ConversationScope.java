@@ -12,11 +12,15 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.EventListener;
 
 @Slf4j
-public class ConversationScope extends AbstractDynamicScope
+public class ConversationScope extends AbstractDynamicScope<String>
     implements Scope, DisposableBean, ApplicationListener<LogoutEvent> {
 
-  public ConversationScope(Cache cache, Session session, KeyProvider keyProvider) {
+  private final Conversation conversation;
+
+  public ConversationScope(
+      Conversation conversation, Cache cache, Session session, KeyProvider keyProvider) {
     super(cache, session, keyProvider);
+    this.conversation = conversation;
   }
 
   @Override
@@ -24,12 +28,21 @@ public class ConversationScope extends AbstractDynamicScope
     return 10;
   }
 
+  @Override
+  protected String getId() {
+    return conversation.getId();
+  }
+
+  @Override
+  protected String cacheKey(Session session) {
+    return String.format("%s:%s", keyProvider.getKey(), "conversation-scope");
+  }
+
   @EventListener(ConversationInitiatedEvent.class)
   public void onConversationInitiated(ConversationInitiatedEvent event) {
     log.trace("Conversation with id {} initialized", event.getId());
-    createScopeRegion(event.getId());
+    //    createScopeRegion(event.getId());
   }
-
 
   @EventListener(ConversationFinalizedEvent.class)
   public void onConversationFinalized(ConversationFinalizedEvent event) {
@@ -40,5 +53,4 @@ public class ConversationScope extends AbstractDynamicScope
   public void onConversationCancelled(ConversationFinalizedEvent event) {
     log.trace("Conversation with id {} cancelled", event.getId());
   }
-
 }

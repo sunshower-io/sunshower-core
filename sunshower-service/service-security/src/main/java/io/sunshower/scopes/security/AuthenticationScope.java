@@ -13,7 +13,7 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 
 @Slf4j
-public class AuthenticationScope extends AbstractDynamicScope
+public class AuthenticationScope extends AbstractDynamicScope<Identifier>
     implements Scope, DisposableBean, ApplicationListener<LogoutEvent> {
 
   public AuthenticationScope(Cache cache, Session session, KeyProvider keyProvider) {
@@ -40,5 +40,9 @@ public class AuthenticationScope extends AbstractDynamicScope
       throw new AuthenticationCredentialsNotFoundException("Nobody appears to be logged in");
     }
     return id;
+  }
+
+  protected String cacheKey(Session session) {
+    return String.format("%s:%s", keyProvider.getKey(), "authentication-scope");
   }
 }

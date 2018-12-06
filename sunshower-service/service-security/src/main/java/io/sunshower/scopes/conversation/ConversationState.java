@@ -15,7 +15,7 @@ public enum ConversationState {
     }
     val normalized = s.toLowerCase().trim();
     switch (normalized) {
-      case "initiate":
+      case "initiated":
         return Initiated;
       case "cancelled":
         return Cancelled;

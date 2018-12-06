@@ -1,12 +1,10 @@
 package io.sunshower.scopes;
 
 import com.google.common.cache.CacheBuilder;
-import io.sunshower.common.Identifier;
 import io.sunshower.model.core.auth.UserConfigurations;
 import io.sunshower.model.core.vault.KeyProvider;
 import io.sunshower.security.events.LogoutEvent;
 import io.sunshower.service.security.Session;
-
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,7 +18,6 @@ import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.config.Scope;
 import org.springframework.cache.Cache;
 import org.springframework.context.ApplicationListener;
-import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 
 @Slf4j
 public abstract class AbstractDynamicScope<K extends Serializable>
@@ -101,13 +98,14 @@ public abstract class AbstractDynamicScope<K extends Serializable>
     clearSessions();
   }
 
-
   @SuppressWarnings("unchecked")
   private Map<String, Object> resolveRegion(K id) {
+    if (id == null) {
+      throw new NoActiveConversationException("No conversation active!");
+    }
     val nodeId = cacheKey(session);
     var scope =
-        (Map<K, com.google.common.cache.Cache<String, Object>>)
-            cache.get(nodeId, Map.class);
+        (Map<K, com.google.common.cache.Cache<String, Object>>) cache.get(nodeId, Map.class);
 
     if (scope == null) {
       scope = new ConcurrentHashMap<>();
@@ -135,11 +133,7 @@ public abstract class AbstractDynamicScope<K extends Serializable>
     return timeout;
   }
 
-  protected String cacheKey(Session session) {
-    return String.format("%s:%s", keyProvider.getKey(), "authentication-scope");
-  }
-
   protected abstract K getId();
 
-
+  protected abstract String cacheKey(Session session);
 }

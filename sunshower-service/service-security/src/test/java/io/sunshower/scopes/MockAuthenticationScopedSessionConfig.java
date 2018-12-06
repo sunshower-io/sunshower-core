@@ -1,7 +1,9 @@
 package io.sunshower.scopes;
 
 import io.sunshower.model.core.vault.KeyProvider;
+import io.sunshower.scopes.conversation.Conversation;
 import io.sunshower.scopes.conversation.ConversationScope;
+import io.sunshower.scopes.conversation.ThreadScopedConversation;
 import io.sunshower.scopes.security.AuthenticationScope;
 import io.sunshower.service.security.Session;
 import io.sunshower.service.security.crypto.InstanceSecureKeyGenerator;
@@ -56,9 +58,21 @@ public class MockAuthenticationScopedSessionConfig {
     return cmanager;
   }
 
+  @Bean
+  @Scope("conversation")
+  public String conversationScopedBean(Conversation conversation) {
+    return String.format("conversation:" + conversation.getId());
+  }
+
+  @Bean
+  public Conversation conversationManager() {
+    return new ThreadScopedConversation();
+  }
+
   @Bean("conversation-scope")
-  public ConversationScope conversationScope(Cache cache, KeyProvider provider, Session session) {
-    return (conversationScope = new ConversationScope(cache, session, provider));
+  public ConversationScope conversationScope(
+      Conversation conversation, Cache cache, KeyProvider provider, Session session) {
+    return (conversationScope = new ConversationScope(conversation, cache, session, provider));
   }
 
   @Bean("authentication-scope")
