@@ -20,7 +20,6 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.ws.rs.container.ContainerRequestContext;
 import org.jetbrains.annotations.NotNull;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.security.access.AccessDeniedException;
@@ -76,7 +75,6 @@ class DefaultApplicationServiceTest extends SecurityTest {
   }
 
   @Test
-  @Disabled
   public void ensureSayHelloAdminWorks() throws IOException {
     final User user = new User();
     user.setPassword("frapasdfasdf");

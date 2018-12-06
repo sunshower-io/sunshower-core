@@ -4,6 +4,7 @@ import io.sunshower.model.core.vault.KeyProvider;
 import io.sunshower.scopes.AbstractDynamicScope;
 import io.sunshower.security.events.LogoutEvent;
 import io.sunshower.service.security.Session;
+import javax.inject.Provider;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.config.Scope;
@@ -15,12 +16,19 @@ import org.springframework.context.event.EventListener;
 public class ConversationScope extends AbstractDynamicScope<String>
     implements Scope, DisposableBean, ApplicationListener<LogoutEvent> {
 
-  private final Conversation conversation;
+  private final Provider<Conversation> conversationProvider;
 
   public ConversationScope(
-      Conversation conversation, Cache cache, Session session, KeyProvider keyProvider) {
+      Provider<Conversation> conversation,
+      Provider<Cache> cache,
+      Provider<Session> session,
+      Provider<KeyProvider> keyProvider) {
     super(cache, session, keyProvider);
-    this.conversation = conversation;
+    this.conversationProvider = conversation;
+  }
+
+  protected Conversation conversation() {
+    return conversationProvider.get();
   }
 
   @Override
@@ -30,12 +38,12 @@ public class ConversationScope extends AbstractDynamicScope<String>
 
   @Override
   protected String getId() {
-    return conversation.getId();
+    return conversation().getId();
   }
 
   @Override
   protected String cacheKey(Session session) {
-    return String.format("%s:%s", keyProvider.getKey(), "conversation-scope");
+    return String.format("%s:%s", keyProvider().getKey(), "conversation-scope");
   }
 
   @EventListener(ConversationInitiatedEvent.class)

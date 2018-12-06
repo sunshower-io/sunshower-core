@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
+import javax.inject.Provider;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import lombok.var;
@@ -22,17 +23,30 @@ import org.springframework.context.ApplicationListener;
 @Slf4j
 public abstract class AbstractDynamicScope<K extends Serializable>
     implements Scope, DisposableBean, ApplicationListener<LogoutEvent> {
-  private final Cache cache;
-  protected final Session session;
+  protected final Provider<Cache> cacheProvider;
+  protected final Provider<Session> sessionProvider;
   private final Map<String, Runnable> destructionCallbacks;
 
-  protected final KeyProvider keyProvider;
+  protected final Provider<KeyProvider> keyProvider;
 
-  protected AbstractDynamicScope(Cache cache, Session session, KeyProvider keyProvider) {
-    this.cache = cache;
-    this.session = session;
+  protected AbstractDynamicScope(
+      Provider<Cache> cacheProvider, Provider<Session> session, Provider<KeyProvider> keyProvider) {
+    this.sessionProvider = session;
     this.keyProvider = keyProvider;
+    this.cacheProvider = cacheProvider;
     destructionCallbacks = new HashMap<>();
+  }
+
+  protected KeyProvider keyProvider() {
+    return keyProvider.get();
+  }
+
+  protected Cache cache() {
+    return cacheProvider.get();
+  }
+
+  protected Session session() {
+    return sessionProvider.get();
   }
 
   protected abstract int getMaxSize();
@@ -68,7 +82,7 @@ public abstract class AbstractDynamicScope<K extends Serializable>
 
   @Override
   public String getConversationId() {
-    return cacheKey(session);
+    return cacheKey(session());
   }
 
   @Override
@@ -103,13 +117,13 @@ public abstract class AbstractDynamicScope<K extends Serializable>
     if (id == null) {
       throw new NoActiveConversationException("No conversation active!");
     }
-    val nodeId = cacheKey(session);
+    val nodeId = cacheKey(session());
     var scope =
-        (Map<K, com.google.common.cache.Cache<String, Object>>) cache.get(nodeId, Map.class);
+        (Map<K, com.google.common.cache.Cache<String, Object>>) cache().get(nodeId, Map.class);
 
     if (scope == null) {
       scope = new ConcurrentHashMap<>();
-      cache.put(nodeId, scope);
+      cache().put(nodeId, scope);
     }
     val timeout = getTimeoutMillis();
     final com.google.common.cache.Cache<String, Object> userCache =
@@ -121,11 +135,11 @@ public abstract class AbstractDynamicScope<K extends Serializable>
   }
 
   private void clearSessions() {
-    cache.evict(cacheKey(session));
+    cache().evict(cacheKey(session()));
   }
 
   public long getTimeoutMillis() {
-    val cfg = session.getUserConfiguration();
+    val cfg = session().getUserConfiguration();
     Integer timeout = cfg.getValue(UserConfigurations.Keys.Timeout);
     if (timeout == null) {
       return TimeUnit.MINUTES.toMillis(60);

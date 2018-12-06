@@ -5,6 +5,7 @@ import io.sunshower.model.core.vault.KeyProvider;
 import io.sunshower.scopes.AbstractDynamicScope;
 import io.sunshower.security.events.LogoutEvent;
 import io.sunshower.service.security.Session;
+import javax.inject.Provider;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.config.Scope;
@@ -16,7 +17,8 @@ import org.springframework.security.authentication.AuthenticationCredentialsNotF
 public class AuthenticationScope extends AbstractDynamicScope<Identifier>
     implements Scope, DisposableBean, ApplicationListener<LogoutEvent> {
 
-  public AuthenticationScope(Cache cache, Session session, KeyProvider keyProvider) {
+  public AuthenticationScope(
+      Provider<Cache> cache, Provider<Session> session, Provider<KeyProvider> keyProvider) {
     super(cache, session, keyProvider);
   }
 
@@ -35,7 +37,7 @@ public class AuthenticationScope extends AbstractDynamicScope<Identifier>
   }
 
   protected Identifier getId() {
-    final Identifier id = session.getId();
+    final Identifier id = session().getId();
     if (id == null) {
       throw new AuthenticationCredentialsNotFoundException("Nobody appears to be logged in");
     }
@@ -43,6 +45,6 @@ public class AuthenticationScope extends AbstractDynamicScope<Identifier>
   }
 
   protected String cacheKey(Session session) {
-    return String.format("%s:%s", keyProvider.getKey(), "authentication-scope");
+    return String.format("%s:%s", keyProvider().getKey(), "authentication-scope");
   }
 }

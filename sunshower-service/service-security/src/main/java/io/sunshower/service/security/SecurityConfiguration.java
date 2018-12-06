@@ -6,7 +6,12 @@ import io.sunshower.core.security.RoleService;
 import io.sunshower.core.security.UserService;
 import io.sunshower.core.security.crypto.EncryptionService;
 import io.sunshower.model.core.vault.KeyProvider;
+import io.sunshower.scopes.conversation.Conversation;
+import io.sunshower.scopes.conversation.ConversationScope;
+import io.sunshower.scopes.conversation.ThreadScopedConversation;
+import io.sunshower.scopes.security.AuthenticationScope;
 import io.sunshower.security.api.SecurityPersistenceConfiguration;
+import io.sunshower.service.NamedLazyObjectProvider;
 import io.sunshower.service.application.DefaultApplicationService;
 import io.sunshower.service.security.crypto.InstanceSecureKeyGenerator;
 import io.sunshower.service.security.crypto.MessageAuthenticationCode;
@@ -18,14 +23,17 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 import javax.sql.DataSource;
+import lombok.val;
 import org.apache.ignite.cache.spring.SpringCacheManager;
 import org.jasypt.util.text.StrongTextEncryptor;
 import org.jasypt.util.text.TextEncryptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.config.CustomScopeConfigurer;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -96,6 +104,16 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
   @Bean(name = "caches:spring:acl")
   public Cache springAclCache(CacheManager cacheManager) {
     return cacheManager.getCache("caches:spring:acl");
+  }
+
+  @Bean(name = "caches:spring:conversation")
+  public Cache conversationCache(CacheManager cacheManager) {
+    return cacheManager.getCache("caches:spring:conversation");
+  }
+
+  @Bean(name = "caches:spring:authentication")
+  public Cache authenticationCache(CacheManager cacheManager) {
+    return cacheManager.getCache("caches:spring:authentication");
   }
 
   @Bean
@@ -178,6 +196,33 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     final SpringCacheManager springCacheManager = new SpringCacheManager();
     springCacheManager.setIgniteInstanceName("sunshower-data-fabric");
     return springCacheManager;
+  }
+
+  @Bean
+  public Conversation threadScopedConversation() {
+    return new ThreadScopedConversation();
+  }
+
+  @Bean
+  public CustomScopeConfigurer sessionScopeConfiguration(ApplicationContext context) {
+    val configurer = new CustomScopeConfigurer();
+    val keyProvider =
+        new NamedLazyObjectProvider<KeyProvider>("keyProvider", KeyProvider.class, context);
+    val sessionProvider =
+        new NamedLazyObjectProvider<Session>("userFacade", Session.class, context);
+    val authCacheProvider =
+        new NamedLazyObjectProvider<Cache>("caches:spring:authentication", Cache.class, context);
+    val conversationCacheProvider =
+        new NamedLazyObjectProvider<Cache>("caches:spring:conversation", Cache.class, context);
+    val conversationProvider =
+        new NamedLazyObjectProvider<>("threadScopedConversation", Conversation.class, context);
+    configurer.addScope(
+        "authentication", new AuthenticationScope(authCacheProvider, sessionProvider, keyProvider));
+    configurer.addScope(
+        "conversation",
+        new ConversationScope(
+            conversationProvider, conversationCacheProvider, sessionProvider, keyProvider));
+    return configurer;
   }
 
   @Bean

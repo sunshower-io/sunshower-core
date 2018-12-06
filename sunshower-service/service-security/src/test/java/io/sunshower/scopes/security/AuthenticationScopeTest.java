@@ -11,7 +11,10 @@ import io.sunshower.scopes.AbstractScopeTest;
 import lombok.SneakyThrows;
 import lombok.val;
 import org.junit.jupiter.api.Test;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
+@MockitoSettings(strictness = Strictness.LENIENT)
 class AuthenticationScopeTest extends AbstractScopeTest {
 
   @Test
@@ -47,6 +50,7 @@ class AuthenticationScopeTest extends AbstractScopeTest {
   @Test
   void ensureRetrievingAuthenticationScopedBeanWorksForSingleValue() {
     context.refresh();
+    doSetup();
     when(session.getUsername()).thenReturn("wab");
     val uid1 = Identifier.random();
     when(session.getId()).thenReturn(uid1);
@@ -58,6 +62,7 @@ class AuthenticationScopeTest extends AbstractScopeTest {
   @Test
   void ensureRetrievingAuthenticationScopedObjectWorksForMultipleValues() {
     context.refresh();
+    doSetup();
     when(session.getUsername()).thenReturn("wab");
     val uid1 = Identifier.random();
     val uid2 = Identifier.random();

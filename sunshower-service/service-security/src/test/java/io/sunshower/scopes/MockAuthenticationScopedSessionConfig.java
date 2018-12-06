@@ -5,6 +5,7 @@ import io.sunshower.scopes.conversation.Conversation;
 import io.sunshower.scopes.conversation.ConversationScope;
 import io.sunshower.scopes.conversation.ThreadScopedConversation;
 import io.sunshower.scopes.security.AuthenticationScope;
+import io.sunshower.service.NamedLazyObjectProvider;
 import io.sunshower.service.security.Session;
 import io.sunshower.service.security.crypto.InstanceSecureKeyGenerator;
 import java.util.Arrays;
@@ -16,6 +17,7 @@ import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.concurrent.ConcurrentMapCache;
 import org.springframework.cache.support.SimpleCacheManager;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
@@ -36,7 +38,7 @@ public class MockAuthenticationScopedSessionConfig {
   }
 
   @Bean
-  public Session session() {
+  public Session userFacade() {
     return session;
   }
 
@@ -54,7 +56,10 @@ public class MockAuthenticationScopedSessionConfig {
   @Bean
   public CacheManager cacheManager() {
     val cmanager = new SimpleCacheManager();
-    cmanager.setCaches(Arrays.asList(new ConcurrentMapCache("authentication-authenticationScope")));
+    cmanager.setCaches(
+        Arrays.asList(
+            new ConcurrentMapCache("caches:spring:authentication"),
+            new ConcurrentMapCache("caches:spring:conversation")));
     return cmanager;
   }
 
@@ -64,35 +69,40 @@ public class MockAuthenticationScopedSessionConfig {
     return String.format("conversation:" + conversation.getId());
   }
 
+  @Bean(name = "caches:spring:authentication")
+  public Cache authenticationCache(CacheManager cacheManager) {
+    return cacheManager.getCache("caches:spring:authentication");
+  }
+
+  @Bean(name = "caches:spring:conversation")
+  public Cache conversationCache(CacheManager cacheManager) {
+    return cacheManager.getCache("caches:spring:conversation");
+  }
+
   @Bean
-  public Conversation conversationManager() {
+  public Conversation threadScopedConversation() {
     return new ThreadScopedConversation();
   }
 
-  @Bean("conversation-scope")
-  public ConversationScope conversationScope(
-      Conversation conversation, Cache cache, KeyProvider provider, Session session) {
-    return (conversationScope = new ConversationScope(conversation, cache, session, provider));
-  }
-
-  @Bean("authentication-scope")
-  public AuthenticationScope authenticationScope(
-      Cache cache, KeyProvider provider, Session session) {
-    return (authenticationScope = new AuthenticationScope(cache, session, provider));
-  }
-
   @Bean
-  public Cache cache(CacheManager cacheManager) {
-    return cacheManager.getCache("authentication-authenticationScope");
-  }
-
-  @Bean
-  public CustomScopeConfigurer sessionScopeConfiguration(
-      AuthenticationScope authenticationScope, ConversationScope conversationScope) {
-
+  public CustomScopeConfigurer sessionScopeConfiguration(ApplicationContext context) {
     val configurer = new CustomScopeConfigurer();
-    configurer.addScope("authentication", authenticationScope);
-    configurer.addScope("conversation", conversationScope);
+    val keyProvider =
+        new NamedLazyObjectProvider<KeyProvider>("keyProvider", KeyProvider.class, context);
+    val sessionProvider =
+        new NamedLazyObjectProvider<Session>("userFacade", Session.class, context);
+    val authCacheProvider =
+        new NamedLazyObjectProvider<Cache>("caches:spring:authentication", Cache.class, context);
+    val conversationCacheProvider =
+        new NamedLazyObjectProvider<Cache>("caches:spring:conversation", Cache.class, context);
+    val conversationProvider =
+        new NamedLazyObjectProvider<>("threadScopedConversation", Conversation.class, context);
+    configurer.addScope(
+        "authentication", new AuthenticationScope(authCacheProvider, sessionProvider, keyProvider));
+    configurer.addScope(
+        "conversation",
+        new ConversationScope(
+            conversationProvider, conversationCacheProvider, sessionProvider, keyProvider));
     return configurer;
   }
 }

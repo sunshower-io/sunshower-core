@@ -2,9 +2,12 @@ package io.sunshower.service.conversation;
 
 import io.sunshower.model.core.vault.KeyProvider;
 import io.sunshower.scopes.conversation.*;
+import java.io.IOException;
 import javax.inject.Inject;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
+import javax.ws.rs.container.ContainerResponseContext;
+import javax.ws.rs.container.ContainerResponseFilter;
 import javax.ws.rs.ext.Provider;
 import lombok.val;
 import org.springframework.beans.BeansException;
@@ -14,7 +17,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Provider
-public class KeyedConversationFilter implements ContainerRequestFilter, ApplicationContextAware {
+public class KeyedConversationFilter
+    implements ContainerRequestFilter, ApplicationContextAware, ContainerResponseFilter {
 
   private ApplicationContext context;
   @Inject private KeyProvider keyProvider;
@@ -47,6 +51,17 @@ public class KeyedConversationFilter implements ContainerRequestFilter, Applicat
       case Finalized:
         context.publishEvent(new ConversationFinalizedEvent(conversation));
         break;
+    }
+  }
+
+  @Override
+  public void filter(
+      ContainerRequestContext requestContext, ContainerResponseContext responseContext)
+      throws IOException {
+    val conversation = requestContext.getHeaderString(CONVERSATION_HEADER_KEY);
+    if (conversation != null) {
+      val current = serializer.parse(conversation);
+      responseContext.getHeaders().putSingle(CONVERSATION_HEADER_KEY, current.getId());
     }
   }
 }
