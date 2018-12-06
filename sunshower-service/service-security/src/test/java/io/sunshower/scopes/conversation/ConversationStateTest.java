@@ -19,7 +19,7 @@ class ConversationStateTest {
 
   @Test
   void ensureParsingStateFromValueWorks() {
-    assertThat(ConversationState.fromString("initiate"), is(ConversationState.Initiated));
+    assertThat(ConversationState.fromString("initiated"), is(ConversationState.Initiated));
   }
 
   @Test

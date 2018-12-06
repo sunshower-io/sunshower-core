@@ -13,7 +13,9 @@ public class ConversationHolder {
   }
 
   public static Conversation popConversation() {
-    return conversationHolder.get();
+    val cvs = conversationHolder.get();
+    conversationHolder.set(null);
+    return cvs;
   }
 
   public static Conversation getConversation() {

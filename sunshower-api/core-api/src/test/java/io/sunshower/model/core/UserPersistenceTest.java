@@ -60,7 +60,7 @@ class UserPersistenceTest extends PersistenceTest {
 
   @Test
   void ensureOverridingAndPersistingTimeoutValueResultsInOverriddenValueBeingPreserved() {
-    assertThat(user.getConfigurationValue(UserConfigurations.Keys.Timeout), is(60));
+    assertThat(user.getConfigurationValue(UserConfigurations.Keys.Timeout), is(3600000));
     user.setConfigurationValue(Property.Type.Integer, UserConfigurations.Keys.Timeout, 40);
     entityManager.persist(user);
     entityManager.flush();

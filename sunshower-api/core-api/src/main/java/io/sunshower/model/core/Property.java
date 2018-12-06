@@ -15,7 +15,7 @@ public class Property extends AbstractProperty {
     setType(Property.class);
   }
 
-  Property() {}
+  public Property() {}
 
   public Property(Type type, String key, String value) {
     super(type, key, value);

@@ -5,9 +5,8 @@ import static org.mockito.Mockito.doReturn;
 
 import io.sunshower.scopes.AbstractScopeTest;
 import io.sunshower.scopes.NoActiveConversationException;
-import javax.ws.rs.container.ContainerRequestContext;
-
 import io.sunshower.service.conversation.KeyedConversationFilter;
+import javax.ws.rs.container.ContainerRequestContext;
 import lombok.val;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,11 +28,12 @@ class ConversationScopeTest extends AbstractScopeTest {
     super.setUp();
     start();
     doReturn("conversationid:initiated")
-        .when(requestContext).getHeaderString(KeyedConversationFilter.CONVERSATION_HEADER_KEY);
+        .when(requestContext)
+        .getHeaderString(KeyedConversationFilter.CONVERSATION_HEADER_KEY);
   }
 
   @AfterEach
-  public void tearDown() {
+  void tearDown() {
     stop();
   }
 
@@ -44,7 +44,7 @@ class ConversationScopeTest extends AbstractScopeTest {
   }
 
   @Test
-  void ensureConversationScopedBeanWithoutActiveConversationWorks() {
+  void ensureConversationScopedBeanWithoutActiveConversationFails() {
     assertThrows(
         NoActiveConversationException.class,
         () -> {
@@ -54,9 +54,11 @@ class ConversationScopeTest extends AbstractScopeTest {
 
   @Test
   void ensureConversationScopedWithWithActiveConversationWorks() {
-    ConversationHolder.pushConversation(new ConversationContext("hello", ConversationState.Initiated));
+    ConversationHolder.pushConversation(
+        new ConversationContext("hello", ConversationState.Initiated));
     val event = new ConversationInitiatedEvent("hello");
     publisher.publishEvent(event);
     val bean = context.getBean("conversationScopedBean", String.class);
+    ConversationHolder.popConversation();
   }
 }
