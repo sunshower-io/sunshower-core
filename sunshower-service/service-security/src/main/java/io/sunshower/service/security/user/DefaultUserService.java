@@ -4,8 +4,6 @@ import io.sunshower.common.Identifier;
 import io.sunshower.core.security.UserService;
 import io.sunshower.model.core.AbstractProperty;
 import io.sunshower.model.core.auth.*;
-import io.sunshower.model.core.vault.KeyProvider;
-import io.sunshower.service.ext.IconService;
 import io.sunshower.service.security.PermissionsService;
 import java.util.Collection;
 import java.util.List;
@@ -26,8 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class DefaultUserService implements UserService, UserDetailsService {
 
-  @Inject private KeyProvider keyProvider;
-  @Inject private IconService iconService;
   @Inject private PermissionsService<Permission> permissionsService;
 
   @PersistenceContext private EntityManager entityManager;

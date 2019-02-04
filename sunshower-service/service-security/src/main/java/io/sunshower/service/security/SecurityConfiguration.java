@@ -83,8 +83,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
   }
 
   @Bean
-  public Session userFacade(UserService userService) {
-    return new AuthenticationSession(userService);
+  public Session userFacade() {
+    return new AuthenticationSession();
   }
 
   @Bean

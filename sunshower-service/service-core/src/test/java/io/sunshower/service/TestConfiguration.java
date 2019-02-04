@@ -1,6 +1,5 @@
 package io.sunshower.service;
 
-import io.sunshower.core.security.UserService;
 import io.sunshower.persistence.Dialect;
 import io.sunshower.persistence.annotations.CacheMode;
 import io.sunshower.service.git.MockRepositoryResolutionStrategy;
@@ -67,7 +66,7 @@ public class TestConfiguration {
   }
 
   @Bean
-  public Session userFacade(UserService userService) {
-    return new AuthenticationSession(userService);
+  public Session userFacade() {
+    return new AuthenticationSession();
   }
 }
