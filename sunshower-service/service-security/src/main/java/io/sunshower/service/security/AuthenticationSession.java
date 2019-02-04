@@ -10,6 +10,8 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
+import javax.inject.Inject;
+import javax.inject.Provider;
 import lombok.val;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.Authentication;
@@ -19,11 +21,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 public class AuthenticationSession implements Session {
 
-  final UserService userService;
-
-  public AuthenticationSession(UserService service) {
-    this.userService = service;
-  }
+  @Inject private Provider<UserService> userServiceProvider;
 
   @Override
   public Locale getLocale() {
@@ -47,7 +45,7 @@ public class AuthenticationSession implements Session {
 
   @Override
   public Configuration getUserConfiguration() {
-    return userService.getConfiguration(getId());
+    return userServiceProvider.get().getConfiguration(getId());
   }
 
   @Override
