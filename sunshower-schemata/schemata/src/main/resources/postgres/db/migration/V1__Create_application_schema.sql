@@ -6,6 +6,13 @@
 
 CREATE SCHEMA IF NOT EXISTS SUNSHOWER;
 
+CREATE TABLE SUNSHOWER.CONFIGURATION_PROPERTY (
+  id             BYTEA PRIMARY KEY,
+  property_key   VARCHAR(255) NOT NULL,
+  name           VARCHAR(255) NULL,
+  value          VARCHAR(255) NULL,
+  type           SMALLINT     NOT NULL
+);
 
 /**
   references: io.sunshower.model.core.Version
@@ -72,6 +79,13 @@ CREATE TABLE SUNSHOWER.TENANT (
 );
 
 
+CREATE TABLE SUNSHOWER.TENANT_TO_TENANT_CONFIGURATION (
+  owner_id         BYTEA PRIMARY KEY,
+  property_id BYTEA,
+
+  FOREIGN KEY (owner_id) REFERENCES SUNSHOWER.TENANT(id),
+  FOREIGN KEY (property_id) REFERENCES SUNSHOWER.CONFIGURATION_PROPERTY(id)
+);
 /**
   references: io.sunshower.model.core.io.File
   @author haswell
@@ -156,6 +170,13 @@ CREATE TABLE SUNSHOWER.PRINCIPAL (
 );
 
 
+CREATE TABLE SUNSHOWER.USER_TO_USER_CONFIGURATION (
+  owner_id         BYTEA PRIMARY KEY,
+  property_id BYTEA,
+
+  FOREIGN KEY (owner_id) REFERENCES SUNSHOWER.PRINCIPAL(id),
+  FOREIGN KEY (property_id) REFERENCES SUNSHOWER.CONFIGURATION_PROPERTY(id)
+);
 /**
   references io.sunshower.service.security.Activation
   @author haswell

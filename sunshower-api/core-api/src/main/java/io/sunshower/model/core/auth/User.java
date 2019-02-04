@@ -1,6 +1,7 @@
 package io.sunshower.model.core.auth;
 
 import io.sunshower.common.Identifier;
+import io.sunshower.model.core.Property;
 import io.sunshower.model.core.Schemata;
 import io.sunshower.persistence.core.DistributableEntity;
 import java.util.*;
@@ -21,11 +22,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 @XmlRootElement(name = "user")
 @XmlAccessorType(XmlAccessType.NONE)
 @Table(name = "PRINCIPAL", schema = Schemata.SUNSHOWER)
-public class User extends ProtectedDistributableEntity implements UserDetails, TenantAware {
-
-  @NotNull
-  @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-  private Details details;
+public class User extends ProtectedDistributableEntity
+    implements UserDetails, TenantAware, Configurable {
 
   @Basic
   @XmlAttribute
@@ -55,6 +53,12 @@ public class User extends ProtectedDistributableEntity implements UserDetails, T
   @JoinColumn(name = "tenant_id")
   private Tenant tenant;
 
+  @NotNull
+  @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+  private Details details;
+
+  @Embedded protected UserConfiguration configuration;
+
   public User() {
     setId(DistributableEntity.sequence.next());
   }
@@ -76,6 +80,17 @@ public class User extends ProtectedDistributableEntity implements UserDetails, T
   public void setVisibility(Visibility visibility) {
     super.setVisibility(visibility);
     getDetails().setVisibility(visibility);
+  }
+
+  public Configuration getConfiguration() {
+    if (configuration == null) {
+      configuration = new UserConfiguration();
+    }
+    return configuration;
+  }
+
+  public void setConfiguration(Configuration cfg) {
+    this.configuration = (UserConfiguration) cfg;
   }
 
   public Set<Role> getRoles() {
@@ -112,8 +127,12 @@ public class User extends ProtectedDistributableEntity implements UserDetails, T
 
   @Override
   protected void setDefaults() {
-    this.setDetails(new Details(this));
-    this.setVisibility(Visibility.Public);
+    setDetails(new Details(this));
+    setVisibility(Visibility.Public);
+    setConfigurationValue(
+        Property.Type.Integer,
+        UserConfigurations.Keys.Timeout,
+        UserConfigurations.Defaults.Timeout);
   }
 
   public User addRole(Role role) {

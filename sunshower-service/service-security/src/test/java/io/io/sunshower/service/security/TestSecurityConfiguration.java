@@ -2,7 +2,6 @@ package io.io.sunshower.service.security;
 
 import static org.mockito.Mockito.mock;
 
-import io.sunshower.core.security.CredentialService;
 import io.sunshower.persistence.Dialect;
 import io.sunshower.persistence.annotations.Persistence;
 import io.sunshower.service.ext.IconService;
@@ -96,11 +95,6 @@ public class TestSecurityConfiguration {
     final BasicTextEncryptor encryptor = new BasicTextEncryptor();
     encryptor.setPassword("Frap");
     return encryptor;
-  }
-
-  @Bean
-  public CredentialService credentialService() {
-    return new TestCredentialService();
   }
 
   @Bean

@@ -7,5 +7,7 @@ package io.sunshower.model.core.vault;
  */
 public interface KeyProvider {
 
+  String secureString(int length);
+
   String getKey();
 }

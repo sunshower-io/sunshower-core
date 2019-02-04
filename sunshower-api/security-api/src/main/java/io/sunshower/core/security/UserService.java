@@ -1,13 +1,21 @@
 package io.sunshower.core.security;
 
 import io.sunshower.common.Identifier;
-import io.sunshower.model.core.auth.Details;
-import io.sunshower.model.core.auth.User;
+import io.sunshower.model.core.AbstractProperty;
+import io.sunshower.model.core.auth.*;
+import java.util.Collection;
 import java.util.List;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface UserService {
+
   User get(Identifier id);
+
+  Configuration getConfiguration(Identifier userId);
+
+  User delete(Identifier id);
+
+  void setConfiguration(Identifier userId, Collection<? extends AbstractProperty> properties);
 
   User findByUsername(String username);
 

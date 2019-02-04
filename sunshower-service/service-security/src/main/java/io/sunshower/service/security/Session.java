@@ -1,5 +1,6 @@
 package io.sunshower.service.security;
 
+import io.sunshower.model.core.auth.Configuration;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Locale;
@@ -10,6 +11,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 public interface Session extends UserDetails, Authentication {
 
   Locale getLocale();
+
+  Configuration getUserConfiguration();
 
   @SuppressWarnings("unchecked")
   <T extends Serializable> T getId();

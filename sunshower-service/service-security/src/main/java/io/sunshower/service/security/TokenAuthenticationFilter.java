@@ -1,6 +1,5 @@
 package io.sunshower.service.security;
 
-import java.io.IOException;
 import java.util.logging.Logger;
 import javax.inject.Inject;
 import javax.ws.rs.container.ContainerRequestContext;
@@ -19,7 +18,7 @@ public class TokenAuthenticationFilter implements AuthenticationFilter {
   @Inject private TokenManager tokenManager;
 
   @Override
-  public void filter(ContainerRequestContext requestContext) throws IOException {
+  public void filter(ContainerRequestContext requestContext) {
     final String token = requestContext.getHeaderString(HEADER_KEY);
     tokenManager.check(token);
     SessionLocales.setLocales(requestContext.getAcceptableLanguages());
@@ -27,6 +26,7 @@ public class TokenAuthenticationFilter implements AuthenticationFilter {
 
   @Override
   public void filter(
-      ContainerRequestContext requestContext, ContainerResponseContext responseContext)
-      throws IOException {}
+      ContainerRequestContext requestContext, ContainerResponseContext responseContext) {
+    //    SecurityContextHolder.getContext().setAuthentication(null);
+  }
 }

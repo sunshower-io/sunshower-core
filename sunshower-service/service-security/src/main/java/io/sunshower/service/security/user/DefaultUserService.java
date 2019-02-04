@@ -2,16 +2,20 @@ package io.sunshower.service.security.user;
 
 import io.sunshower.common.Identifier;
 import io.sunshower.core.security.UserService;
-import io.sunshower.model.core.auth.Details;
-import io.sunshower.model.core.auth.User;
+import io.sunshower.model.core.AbstractProperty;
+import io.sunshower.model.core.auth.*;
 import io.sunshower.model.core.vault.KeyProvider;
 import io.sunshower.service.ext.IconService;
 import io.sunshower.service.security.PermissionsService;
+import java.util.Collection;
 import java.util.List;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceContext;
+import lombok.val;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.security.acls.model.Permission;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -51,8 +55,37 @@ public class DefaultUserService implements UserService, UserDetailsService {
   }
 
   @Override
+  @Cacheable(value = "users", key = "#id")
   public User get(Identifier id) {
     return entityManager.find(User.class, id);
+  }
+
+  @Override
+  @Cacheable(value = "userdata", key = "#userId")
+  public Configuration getConfiguration(Identifier userId) {
+    return entityManager.find(User.class, userId).getConfiguration();
+  }
+
+  @Override
+  @CacheEvict(value = "users", key = "#id")
+  public User delete(Identifier id) {
+    val user = get(id);
+    entityManager.remove(user);
+    entityManager.flush();
+    return user;
+  }
+
+  @Override
+  @CacheEvict(value = "userdata", key = "#userId")
+  public void setConfiguration(
+      Identifier userId, Collection<? extends AbstractProperty> properties) {
+    val user = get(userId);
+    val cfg = new UserConfiguration();
+    for (AbstractProperty prop : properties) {
+      cfg.addProperty(prop);
+    }
+    user.setConfiguration(cfg);
+    entityManager.flush();
   }
 
   @Override

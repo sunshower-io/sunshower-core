@@ -8,7 +8,6 @@ import io.sunshower.service.git.JGitRepositoryService;
 import io.sunshower.service.git.RepositoryService;
 import io.sunshower.service.graph.SpringGraphServiceResolver;
 import io.sunshower.service.graph.service.GraphServiceResolver;
-import io.sunshower.service.graph.service.TaskService;
 import io.sunshower.service.io.DefaultConfigurableFileResolutionStrategy;
 import io.sunshower.service.model.io.FileResolutionStrategy;
 import io.sunshower.service.orchestration.JpaTemplateService;
@@ -17,12 +16,8 @@ import io.sunshower.service.security.*;
 import io.sunshower.service.serialization.DynamicJaxrsProviders;
 import io.sunshower.service.serialization.DynamicResolvingMoxyJsonProvider;
 import io.sunshower.service.serialization.MOXyJsonGraphContext;
-import io.sunshower.service.task.ElementContext;
-import io.sunshower.service.task.exec.*;
-import io.sunshower.service.tasks.EntityResolverTask;
 import io.sunshower.service.workspace.JpaWorkspaceService;
 import io.sunshower.service.workspace.service.WorkspaceService;
-import java.util.concurrent.ExecutorService;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.context.ApplicationContext;
@@ -53,16 +48,6 @@ public class CoreServiceConfiguration {
   @Bean
   public IconService iconService() {
     return new IdenticonIconService();
-  }
-
-  @Bean
-  public GraphTransformer graphTransformer() {
-    return new DefaultGraphTransformer();
-  }
-
-  @Bean
-  public TaskService taskService() {
-    return new DefaultTaskService();
   }
 
   @Bean
@@ -114,19 +99,6 @@ public class CoreServiceConfiguration {
   @Bean(name = TemplateService.NAME)
   public TemplateService orchestrationTemplateService() {
     return new JpaTemplateService();
-  }
-
-  @Bean
-  public ParallelTaskExecutor parallelTaskExecutor(
-      ElementContext elementContext, ExecutorService executor, ApplicationContext context) {
-    return new ParallelTaskExecutor(elementContext, executor, context);
-  }
-
-  @Bean
-  public ElementContext elementContext() {
-    ElementContext context = new SpringElementContext();
-    context.register(EntityResolverTask.key, EntityResolverTask.class);
-    return context;
   }
 
   @Bean(name = "caches:authentication")

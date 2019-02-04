@@ -7,7 +7,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.OneToOne;
 
-/** Created by haswell on 5/22/17. */
 @MappedSuperclass
 public abstract class ProtectedDistributableHierarchicalEntity<
         T extends ProtectedDistributableHierarchicalEntity<T>>

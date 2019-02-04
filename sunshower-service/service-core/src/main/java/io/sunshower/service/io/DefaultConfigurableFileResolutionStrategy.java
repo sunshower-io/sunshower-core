@@ -38,8 +38,8 @@ public class DefaultConfigurableFileResolutionStrategy implements FileResolution
 
   private File configureDefault(Tenant tenant, User user, Credential credential) {
     logger.info("Configuration parameter 'sunshower.storage.root' not set.  checking SUNSHOWER...");
-    String root = System.getenv("HASLI_HOME");
-    logger.info("HASLI_HOME: {}", root == null || root.trim().equals("") ? "<unset>" : root);
+    String root = System.getenv("SUNSHOWER_HOME");
+    logger.info("SUNSHOWER_HOME: {}", root == null || root.trim().equals("") ? "<unset>" : root);
     if (root != null) {
       File f = new File(root);
       if (f.exists() && f.isDirectory()) {
@@ -50,7 +50,7 @@ public class DefaultConfigurableFileResolutionStrategy implements FileResolution
 
     String property = System.getProperty("user.dir");
     logger.info(
-        "Failed to configure from HASLI_HOME.  "
+        "Failed to configure from SUNSHOWER_HOME.  "
             + "Either the value did not exist or was not a directory.  "
             + "Trying in user's directory: {}",
         property);

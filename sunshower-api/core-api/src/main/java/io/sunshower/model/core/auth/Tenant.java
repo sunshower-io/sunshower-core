@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "TENANT", schema = Schemata.SUNSHOWER)
 public class Tenant extends ProtectedDistributableEntity
-    implements Hierarchical<Identifier, Tenant> {
+    implements Hierarchical<Identifier, Tenant>, Configurable {
 
   @Basic private String name;
 
@@ -25,6 +25,8 @@ public class Tenant extends ProtectedDistributableEntity
   @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @JoinColumn(name = "parent_id")
   private Set<Tenant> children;
+
+  @Embedded private TenantConfiguration configuration;
 
   public Tenant() {
     super();
@@ -107,4 +109,15 @@ public class Tenant extends ProtectedDistributableEntity
     setDetails(new TenantDetails());
     setVisibility(Visibility.Public);
   }
+
+  @Override
+  public Configuration getConfiguration() {
+    if (configuration == null) {
+      configuration = new TenantConfiguration();
+    }
+    return configuration;
+  }
+
+  @Override
+  public void setConfiguration(Configuration cfg) {}
 }

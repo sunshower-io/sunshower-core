@@ -1,0 +1,34 @@
+package io.sunshower.service.security;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertThat;
+
+import io.sunshower.common.Identifier;
+import io.sunshower.model.core.auth.Role;
+import io.sunshower.model.core.auth.User;
+import io.sunshower.test.persist.Principal;
+import javax.inject.Inject;
+import org.junit.jupiter.api.Test;
+import org.springframework.security.test.context.support.WithUserDetails;
+
+class AuthenticationSessionTest extends SecurityTest {
+
+  @Inject private Session session;
+
+  @Principal
+  public User testUser() {
+    final User user = new User(Identifier.random(), "josiah", "coolbeans");
+    user.getDetails().setEmailAddress("joe@email.com3242adf");
+    user.addRole(new Role("frap"));
+    user.setActive(true);
+    return user;
+  }
+
+  @Test
+  @WithUserDetails("josiah")
+  void ensureDetailsWorks() {
+    assertThat(session.getUserConfiguration(), is(not(nullValue())));
+  }
+}

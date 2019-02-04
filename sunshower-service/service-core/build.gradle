@@ -2,36 +2,38 @@
 
 
 dependencies {
-    compile project(':sunshower-service:service-common')
-    compile project(':sunshower-service:service-api')
-    compile project(':sunshower-service:service-security')
+    api project(':sunshower-service:service-common')
+    api project(':sunshower-service:service-api')
+    api project(':sunshower-service:service-security')
 
-    compile 'org.apache.tinkerpop:gremlin-core'
-    compile 'org.apache.tinkerpop:tinkergraph-gremlin'
-    compile 'org.hibernate:hibernate-search-orm'
-    compile 'org.springframework:spring-websocket'
-    compile 'org.springframework:spring-tx'
-    compile 'org.springframework:spring-orm'
-    compile 'org.springframework:spring-messaging'
-    compile 'org.springframework:spring-web'
-    compile 'org.springframework:spring-webmvc'
-    compile 'io.reactivex.rxjava2:rxjava'
-    compile project(':sunshower-api:security-api')
-    compile project(':sunshower-schemata:schemata')
-    compile 'io.sunshower.persist:persist-api'
+    implementation 'com.google.guava:guava'
+    implementation 'org.hibernate:hibernate-search-orm'
+    implementation 'org.springframework:spring-websocket'
+    implementation 'org.springframework:spring-tx'
+    implementation 'org.springframework:spring-orm'
+    implementation 'org.springframework:spring-messaging'
+    implementation 'org.springframework:spring-web'
+    implementation 'org.springframework:spring-webmvc'
+    implementation 'io.reactivex.rxjava2:rxjava'
+    implementation project(':sunshower-api:security-api')
+    implementation project(':sunshower-schemata:schemata')
+    implementation 'io.sunshower.persist:persist-api'
 
-    compile 'org.eclipse.jgit:org.eclipse.jgit'
-    compile 'org.eclipse.jgit:org.eclipse.jgit.lfs'
+    implementation 'org.eclipse.jgit:org.eclipse.jgit'
+    implementation 'org.eclipse.jgit:org.eclipse.jgit.lfs'
 
 
-    compile 'io.sunshower.persist:persist-hibernate'
-    compile 'io.sunshower.persist:persist-ignite'
+    implementation 'io.sunshower.persist:persist-hibernate'
+    implementation 'io.sunshower.persist:persist-ignite'
 
     
-    compile 'org.springframework.security:spring-security-config'
-    compile 'org.springframework.security:spring-security-messaging'
+    implementation 'org.springframework.security:spring-security-config'
+    implementation 'org.springframework.security:spring-security-messaging'
     testImplementation 'io.sunshower.test:test-persist'
-    compile group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: '1.2.71'
+
+
+
+    implementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: '1.2.71'
 
 
 
