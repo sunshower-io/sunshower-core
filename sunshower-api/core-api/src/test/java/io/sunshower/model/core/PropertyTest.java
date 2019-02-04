@@ -24,6 +24,9 @@ class PropertyTest {
         case Class:
           p = Property.type("schnorp", "porp", t.toString());
           break;
+        case Time:
+          p = Property.time("schnorp", "porp", t.toString());
+          break;
         default:
           p = Property.string("schnorp", "porp", t.toString());
           break;
