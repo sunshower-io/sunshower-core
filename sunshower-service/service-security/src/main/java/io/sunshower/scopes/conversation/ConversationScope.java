@@ -4,6 +4,7 @@ import io.sunshower.model.core.vault.KeyProvider;
 import io.sunshower.scopes.AbstractDynamicScope;
 import io.sunshower.security.events.LogoutEvent;
 import io.sunshower.service.security.Session;
+import java.util.concurrent.TimeUnit;
 import javax.inject.Provider;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.DisposableBean;
@@ -49,7 +50,7 @@ public class ConversationScope extends AbstractDynamicScope<String>
   @EventListener(ConversationInitiatedEvent.class)
   public void onConversationInitiated(ConversationInitiatedEvent event) {
     log.trace("Conversation with id {} initialized", event.getId());
-    //    createScopeRegion(event.getId());
+    //        createScopeRegion(event.getId());
   }
 
   @EventListener(ConversationFinalizedEvent.class)
@@ -60,5 +61,9 @@ public class ConversationScope extends AbstractDynamicScope<String>
   @EventListener(ConversationCancelledEvent.class)
   public void onConversationCancelled(ConversationFinalizedEvent event) {
     log.trace("Conversation with id {} cancelled", event.getId());
+  }
+
+  protected long getTimeoutMillis() {
+    return TimeUnit.MINUTES.toMillis(60);
   }
 }

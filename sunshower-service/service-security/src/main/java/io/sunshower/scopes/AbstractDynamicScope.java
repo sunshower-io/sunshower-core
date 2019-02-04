@@ -118,27 +118,30 @@ public abstract class AbstractDynamicScope<K extends Serializable>
       throw new NoActiveConversationException("No conversation active!");
     }
     val nodeId = cacheKey(session());
+    val cache = cache();
     var scope =
-        (Map<K, com.google.common.cache.Cache<String, Object>>) cache().get(nodeId, Map.class);
+        (Map<K, com.google.common.cache.Cache<String, Object>>) cache.get(nodeId, Map.class);
 
     if (scope == null) {
       scope = new ConcurrentHashMap<>();
-      cache().put(nodeId, scope);
     }
+
     val timeout = getTimeoutMillis();
     final com.google.common.cache.Cache<String, Object> userCache =
         CacheBuilder.newBuilder()
             .expireAfterWrite(timeout, TimeUnit.MILLISECONDS)
             .maximumSize(getMaxSize())
             .build();
-    return scope.computeIfAbsent(id, i -> userCache).asMap();
+    val result = scope.computeIfAbsent(id, i -> userCache).asMap();
+    cache.putIfAbsent(nodeId, scope);
+    return result;
   }
 
   private void clearSessions() {
     cache().evict(cacheKey(session()));
   }
 
-  public long getTimeoutMillis() {
+  protected long getTimeoutMillis() {
     val cfg = session().getUserConfiguration();
     Integer timeout = cfg.getValue(UserConfigurations.Keys.Timeout);
     if (timeout == null) {

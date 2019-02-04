@@ -37,6 +37,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
@@ -104,11 +105,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
   @Bean(name = "caches:spring:acl")
   public Cache springAclCache(CacheManager cacheManager) {
     return cacheManager.getCache("caches:spring:acl");
-  }
-
-  @Bean(name = "caches:spring:conversation")
-  public Cache conversationCache(CacheManager cacheManager) {
-    return cacheManager.getCache("caches:spring:conversation");
   }
 
   @Bean(name = "caches:spring:authentication")
@@ -192,6 +188,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
   }
 
   @Bean
+  @Primary
   public SpringCacheManager springCacheManager() {
     final SpringCacheManager springCacheManager = new SpringCacheManager();
     springCacheManager.setIgniteInstanceName("sunshower-data-fabric");

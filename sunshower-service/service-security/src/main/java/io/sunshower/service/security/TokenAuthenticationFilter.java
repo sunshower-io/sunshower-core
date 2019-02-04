@@ -5,7 +5,6 @@ import javax.inject.Inject;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerResponseContext;
 import javax.ws.rs.ext.Provider;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -28,6 +27,6 @@ public class TokenAuthenticationFilter implements AuthenticationFilter {
   @Override
   public void filter(
       ContainerRequestContext requestContext, ContainerResponseContext responseContext) {
-    SecurityContextHolder.getContext().setAuthentication(null);
+    //    SecurityContextHolder.getContext().setAuthentication(null);
   }
 }

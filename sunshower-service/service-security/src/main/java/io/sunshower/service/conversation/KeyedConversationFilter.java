@@ -3,6 +3,7 @@ package io.sunshower.service.conversation;
 import io.sunshower.model.core.vault.KeyProvider;
 import io.sunshower.scopes.conversation.*;
 import java.io.IOException;
+import java.util.Objects;
 import javax.inject.Inject;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
@@ -43,12 +44,17 @@ public class KeyedConversationFilter
     val conversation = serializer.parse(conversationId);
     switch (conversation.getState()) {
       case Initiated:
-        context.publishEvent(new ConversationInitiatedEvent(keyProvider.secureString(10)));
+        val id = keyProvider.secureString(10);
+        ConversationHolder.pushConversation(
+            new ConversationContext(id, ConversationState.Initiated));
+        context.publishEvent(new ConversationInitiatedEvent(id));
         break;
       case Cancelled:
+        ConversationHolder.pushConversation(conversation);
         context.publishEvent(new ConversationCancelledEvent(conversation));
         break;
       case Finalized:
+        ConversationHolder.pushConversation(conversation);
         context.publishEvent(new ConversationFinalizedEvent(conversation));
         break;
     }
@@ -61,7 +67,18 @@ public class KeyedConversationFilter
     val conversation = requestContext.getHeaderString(CONVERSATION_HEADER_KEY);
     if (conversation != null) {
       val current = serializer.parse(conversation);
-      responseContext.getHeaders().putSingle(CONVERSATION_HEADER_KEY, current.getId());
+      val currentconv = ConversationHolder.getConversation();
+
+      if (!(current == null || currentconv == null)) {
+        if (Objects.equals(current.getId(), currentconv.getId())) {
+          ConversationHolder.popConversation();
+        }
+        responseContext
+            .getHeaders()
+            .putSingle(
+                CONVERSATION_HEADER_KEY,
+                String.format("%s:%s", current.getId(), current.getState()));
+      }
     }
   }
 }
