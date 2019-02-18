@@ -1,6 +1,5 @@
 package io.sunshower.service.security.crypto;
 
-import io.sunshower.core.security.crypto.EncryptionService;
 import io.sunshower.encodings.Base58;
 import io.sunshower.model.core.vault.KeyProvider;
 import java.security.SecureRandom;
@@ -17,15 +16,12 @@ public class InstanceSecureKeyGenerator implements KeyProvider {
 
   static final SecureRandom random = new SecureRandom();
   static String key;
+
   static {
     generateKey();
   }
 
-  final EncryptionService service;
-
-  public InstanceSecureKeyGenerator(EncryptionService service) {
-    this.service = service;
-  }
+  public InstanceSecureKeyGenerator() {}
 
   @Override
   public String secureString(int length) {
@@ -40,8 +36,8 @@ public class InstanceSecureKeyGenerator implements KeyProvider {
   }
 
   @Override
-  public void regenerate() {
-    generateKey();
+  public String regenerate() {
+    return generateKey();
   }
 
   static final String generateKey() {

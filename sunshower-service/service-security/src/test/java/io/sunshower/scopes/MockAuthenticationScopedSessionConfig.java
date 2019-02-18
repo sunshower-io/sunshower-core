@@ -1,6 +1,5 @@
 package io.sunshower.scopes;
 
-import io.sunshower.core.security.crypto.EncryptionService;
 import io.sunshower.model.core.vault.KeyProvider;
 import io.sunshower.scopes.conversation.Conversation;
 import io.sunshower.scopes.conversation.ConversationScope;
@@ -22,8 +21,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
-
-import static org.mockito.Mockito.mock;
 
 @Configuration
 @EnableCaching
@@ -53,7 +50,7 @@ public class MockAuthenticationScopedSessionConfig {
 
   @Bean
   public KeyProvider keyProvider() {
-    return new InstanceSecureKeyGenerator(mock(EncryptionService.class));
+    return new InstanceSecureKeyGenerator();
   }
 
   @Bean

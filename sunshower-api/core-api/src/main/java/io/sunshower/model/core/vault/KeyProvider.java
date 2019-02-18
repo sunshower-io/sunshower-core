@@ -11,5 +11,5 @@ public interface KeyProvider {
 
   String getKey();
 
-  void regenerate();
+  String regenerate();
 }

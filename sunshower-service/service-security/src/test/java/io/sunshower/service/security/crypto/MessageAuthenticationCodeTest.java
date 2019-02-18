@@ -2,10 +2,8 @@ package io.sunshower.service.security.crypto;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.mock;
 
 import io.sunshower.core.security.InvalidTokenException;
-import io.sunshower.core.security.crypto.EncryptionService;
 import io.sunshower.model.core.vault.KeyProvider;
 import java.util.UUID;
 import javax.inject.Inject;
@@ -51,7 +49,7 @@ public class MessageAuthenticationCodeTest {
 
   @Bean
   public InstanceSecureKeyGenerator generator() {
-    return new InstanceSecureKeyGenerator(mock(EncryptionService.class));
+    return new InstanceSecureKeyGenerator();
   }
 
   @Bean

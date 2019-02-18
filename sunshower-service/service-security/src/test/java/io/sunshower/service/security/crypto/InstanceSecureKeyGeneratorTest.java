@@ -3,9 +3,7 @@ package io.sunshower.service.security.crypto;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
 
-import io.sunshower.core.security.crypto.EncryptionService;
 import io.sunshower.model.core.vault.KeyProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,7 +13,7 @@ class InstanceSecureKeyGeneratorTest {
 
   @BeforeEach
   void setUp() {
-    provider = new InstanceSecureKeyGenerator(mock(EncryptionService.class));
+    provider = new InstanceSecureKeyGenerator();
   }
 
   @Test

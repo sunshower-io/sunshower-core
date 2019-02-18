@@ -13,6 +13,7 @@ import io.sunshower.scopes.security.AuthenticationScope;
 import io.sunshower.security.api.SecurityPersistenceConfiguration;
 import io.sunshower.service.NamedLazyObjectProvider;
 import io.sunshower.service.application.DefaultApplicationService;
+import io.sunshower.service.security.crypto.ClusterTokenBasedStrongEncryptor;
 import io.sunshower.service.security.crypto.InstanceSecureKeyGenerator;
 import io.sunshower.service.security.crypto.MessageAuthenticationCode;
 import io.sunshower.service.security.crypto.StrongEncryptionService;
@@ -25,7 +26,6 @@ import javax.inject.Singleton;
 import javax.sql.DataSource;
 import lombok.val;
 import org.apache.ignite.cache.spring.SpringCacheManager;
-import org.jasypt.util.text.StrongTextEncryptor;
 import org.jasypt.util.text.TextEncryptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,10 +34,7 @@ import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.*;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
@@ -128,8 +125,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
   }
 
   @Bean
-  public KeyProvider keyProvider(EncryptionService service) {
-    return new InstanceSecureKeyGenerator(service);
+  public KeyProvider keyProvider() {
+    return new InstanceSecureKeyGenerator();
   }
 
   @Bean
@@ -145,8 +142,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
   }
 
   @Bean
-  public EncryptionService encryptionService() {
-    return new StrongEncryptionService();
+  public EncryptionService encryptionService(KeyProvider provider, TextEncryptor encryptor) {
+    return new StrongEncryptionService(provider, encryptor);
   }
 
   @Bean
@@ -160,10 +157,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
   }
 
   @Bean
-  public TextEncryptor textEncryptor(KeyProvider keyProvider) {
-    final StrongTextEncryptor result = new StrongTextEncryptor();
-    result.setPassword(keyProvider.getKey());
-    return result;
+  public TextEncryptor textEncryptor(ApplicationContext context) {
+    return new ClusterTokenBasedStrongEncryptor(
+        new NamedLazyObjectProvider<>("encryptionService", EncryptionService.class, context));
   }
 
   @Bean

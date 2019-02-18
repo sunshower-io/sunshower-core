@@ -22,7 +22,7 @@ public class UnsecureKeyProvider implements KeyProvider {
   }
 
   @Override
-  public void regenerate() {
-
+  public String regenerate() {
+    return "hello";
   }
 }

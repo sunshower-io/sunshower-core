@@ -8,6 +8,7 @@ import io.sunshower.core.security.InvalidTokenException;
 import io.sunshower.core.security.crypto.EncryptionService;
 import io.sunshower.model.core.auth.ClusterToken;
 import io.sunshower.model.core.auth.User;
+import io.sunshower.model.core.vault.KeyProvider;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -16,12 +17,9 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-
-import io.sunshower.model.core.vault.KeyProvider;
 import lombok.val;
 import org.jasypt.util.text.TextEncryptor;
 import org.springframework.cache.Cache;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -30,28 +28,29 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class StrongEncryptionService implements EncryptionService {
 
-
-
   static final Logger log = Logger.getLogger(StrongEncryptionService.class.getName());
 
   static final Hashes.HashFunction hashFunction = Hashes.create(Multihash.Type.SHA_2_256);
 
   static final Object lock = new Object();
 
-  @Inject private ApplicationEventPublisher publisher;
+  private final KeyProvider provider;
+  private final TextEncryptor encrypter;
 
   @Inject
   @Named("caches:authentication")
   private Cache cache;
 
-  @Inject private KeyProvider provider;
   @Inject private PasswordEncoder encoder;
-
-  @Inject private TextEncryptor encrypter;
 
   @PersistenceContext private EntityManager entityManager;
 
   @Inject private MessageAuthenticationCode messageAuthenticationCode;
+
+  public StrongEncryptionService(KeyProvider provider, TextEncryptor encrypter) {
+    this.provider = provider;
+    this.encrypter = encrypter;
+  }
 
   @PostConstruct
   public void postConstruct() {
@@ -106,15 +105,23 @@ public class StrongEncryptionService implements EncryptionService {
   @Override
   @Transactional
   public ClusterToken getClusterToken() {
-    val tokens = entityManager.createQuery("select distinct c from ClusterToken c", ClusterToken.class).getResultList();
-    if(tokens.isEmpty()) {
-      log.info("Cluster Token was not found.  Generating a new one");
-      val token = new ClusterToken();
-      token.setToken(provider.getKey());
-      entityManager.persist(token);
+    val tokens =
+        entityManager
+            .createQuery("select distinct c from ClusterToken c", ClusterToken.class)
+            .getResultList();
+    if (tokens.isEmpty()) {
+      synchronized (lock) {
+        log.info("Cluster Token was not found.  Generating a new one");
+        val token = new ClusterToken();
+        val key = provider.regenerate();
+        token.setToken(key);
+        entityManager.persist(token);
+        return token;
+      }
     }
-    if(tokens.size() > 1) {
-      throw new IllegalStateException("Error:  Multiple cluster tokens found--did Ignite or Gyre split-brain?");
+    if (tokens.size() > 1) {
+      throw new IllegalStateException(
+          "Error:  Multiple cluster tokens found--did Ignite or Gyre split-brain?");
     }
     return tokens.get(0);
   }
