@@ -1,5 +1,6 @@
 package io.sunshower.service.security.crypto;
 
+import io.sunshower.core.security.crypto.EncryptionService;
 import io.sunshower.encodings.Base58;
 import io.sunshower.model.core.vault.KeyProvider;
 import java.security.SecureRandom;
@@ -12,10 +13,19 @@ import org.springframework.stereotype.Service;
 @Singleton
 public class InstanceSecureKeyGenerator implements KeyProvider {
 
-  static final SecureRandom random = new SecureRandom();
-  static final String key = generateKey();
+  static final Object lock = new Object();
 
-  public InstanceSecureKeyGenerator() {}
+  static final SecureRandom random = new SecureRandom();
+  static String key;
+  static {
+    generateKey();
+  }
+
+  final EncryptionService service;
+
+  public InstanceSecureKeyGenerator(EncryptionService service) {
+    this.service = service;
+  }
 
   @Override
   public String secureString(int length) {
@@ -29,8 +39,15 @@ public class InstanceSecureKeyGenerator implements KeyProvider {
     return key;
   }
 
+  @Override
+  public void regenerate() {
+    generateKey();
+  }
+
   static final String generateKey() {
-    final byte[] bytes = random.generateSeed(32);
-    return Base64.getEncoder().encodeToString(bytes);
+    synchronized (lock) {
+      final byte[] bytes = random.generateSeed(32);
+      return (key = Base64.getEncoder().encodeToString(bytes));
+    }
   }
 }

@@ -128,8 +128,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
   }
 
   @Bean
-  public KeyProvider keyProvider() {
-    return new InstanceSecureKeyGenerator();
+  public KeyProvider keyProvider(EncryptionService service) {
+    return new InstanceSecureKeyGenerator(service);
   }
 
   @Bean

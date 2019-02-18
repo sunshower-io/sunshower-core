@@ -10,4 +10,6 @@ public interface KeyProvider {
   String secureString(int length);
 
   String getKey();
+
+  void regenerate();
 }
