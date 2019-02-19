@@ -28,8 +28,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
@@ -634,7 +634,7 @@ public class IdentifierJdbcMutableAclService implements MutableAclService {
 
 class AclClassIdUtils {
   private static final String DEFAULT_CLASS_ID_TYPE_COLUMN_NAME = "class_id_type";
-  private static final Log log = LogFactory.getLog(AclClassIdUtils.class);
+  private static final Logger log = LoggerFactory.getLogger(AclClassIdUtils.class);
 
   private ConversionService conversionService;
 

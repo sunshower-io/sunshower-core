@@ -8,6 +8,7 @@ import static org.junit.Assert.assertThat;
 
 import io.sunshower.common.Identifier;
 import io.sunshower.core.security.UserService;
+import io.sunshower.model.core.Image;
 import io.sunshower.model.core.Property;
 import io.sunshower.model.core.auth.Role;
 import io.sunshower.model.core.auth.User;
@@ -40,6 +41,15 @@ class DefaultUserServiceTest extends SecurityTest {
     user.addRole(new Role("frap"));
     user.setActive(true);
     return user;
+  }
+
+  @Test
+  @WithMockUser(authorities = "admin")
+  void ensureUserIsCached() {
+    final User u = createUser(false);
+    entityManager.persist(u);
+    userService.get(u.getId());
+    userService.get(u.getId());
   }
 
   @Test
@@ -92,6 +102,17 @@ class DefaultUserServiceTest extends SecurityTest {
 
   @Test
   @WithMockUser(authorities = "admin")
+  public void ensureUserImageIsFetched() {
+    final User m = createUser(false);
+    entityManager.persist(m);
+    val u = userService.get(m.getId());
+    entityManager.merge(u);
+    entityManager.detach(u);
+    u.getDetails().getImage();
+  }
+
+  @Test
+  @WithMockUser(authorities = "admin")
   public void ensureListingActiveUsersReturnsActiveUsers() {
     final User u = createUser(true);
     entityManager.persist(u);
@@ -121,6 +142,9 @@ class DefaultUserServiceTest extends SecurityTest {
 
   private User createUser(boolean b) {
     final User u = new User();
+    val img = new Image();
+    img.setData("adsfasdfadfadfadsf".getBytes());
+    u.getDetails().setImage(img);
     u.setActive(b);
     u.setUsername(UUID.randomUUID().toString());
     u.setPassword(UUID.randomUUID().toString());

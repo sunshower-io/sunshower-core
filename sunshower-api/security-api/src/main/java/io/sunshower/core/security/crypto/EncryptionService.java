@@ -1,5 +1,6 @@
 package io.sunshower.core.security.crypto;
 
+import io.sunshower.model.core.auth.ClusterToken;
 import io.sunshower.model.core.auth.User;
 
 public interface EncryptionService {
@@ -15,4 +16,8 @@ public interface EncryptionService {
   String createToken(User user);
 
   User findByToken(String token);
+
+  ClusterToken getClusterToken();
+
+  ClusterToken refreshClusterToken();
 }

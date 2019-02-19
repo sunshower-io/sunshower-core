@@ -20,4 +20,9 @@ public class UnsecureKeyProvider implements KeyProvider {
   public String getKey() {
     return secureString(32);
   }
+
+  @Override
+  public String regenerate() {
+    return "hello";
+  }
 }

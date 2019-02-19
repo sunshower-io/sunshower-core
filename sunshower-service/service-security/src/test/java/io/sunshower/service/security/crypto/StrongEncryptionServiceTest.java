@@ -58,6 +58,11 @@ public class StrongEncryptionServiceTest extends SecurityTest {
   }
 
   @Test
+  void ensureTokenIsSet() {
+    encryptionService.getClusterToken();
+  }
+
+  @Test
   @Transactional
   public void ensureCacheIsInvalidated() {
 

@@ -1,5 +1,6 @@
 apply plugin: 'java'
 dependencies {
+    implementation 'org.slf4j:slf4j-api'
     implementation 'com.zaxxer:HikariCP'
     implementation 'com.google.guava:guava'
 

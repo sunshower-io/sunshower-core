@@ -22,6 +22,17 @@ import org.springframework.security.core.userdetails.UserDetails;
 @XmlRootElement(name = "user")
 @XmlAccessorType(XmlAccessType.NONE)
 @Table(name = "PRINCIPAL", schema = Schemata.SUNSHOWER)
+@NamedEntityGraphs({
+  @NamedEntityGraph(
+    name = "sunshower:user:eager",
+    attributeNodes = {
+      @NamedAttributeNode("roles"),
+      @NamedAttributeNode(value = "details", subgraph = "details"),
+      @NamedAttributeNode("tenant")
+    },
+    subgraphs = {@NamedSubgraph(name = "details", attributeNodes = @NamedAttributeNode("image"))}
+  )
+})
 public class User extends ProtectedDistributableEntity
     implements UserDetails, TenantAware, Configurable {
 
