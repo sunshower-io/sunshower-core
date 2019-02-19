@@ -12,10 +12,8 @@ import org.springframework.stereotype.Service;
 @Singleton
 public class InstanceSecureKeyGenerator implements KeyProvider {
 
-  static final Object lock = new Object();
-
-  static final SecureRandom random = new SecureRandom();
   static String key;
+  static final SecureRandom random = new SecureRandom();
 
   static {
     generateKey();
@@ -41,9 +39,7 @@ public class InstanceSecureKeyGenerator implements KeyProvider {
   }
 
   static final String generateKey() {
-    synchronized (lock) {
-      final byte[] bytes = random.generateSeed(32);
-      return (key = Base64.getEncoder().encodeToString(bytes));
-    }
+    final byte[] bytes = random.generateSeed(32);
+    return (key = Base64.getEncoder().encodeToString(bytes));
   }
 }

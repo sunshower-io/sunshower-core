@@ -4,16 +4,22 @@ import io.sunshower.common.Identifier;
 import io.sunshower.core.security.UserService;
 import io.sunshower.model.core.AbstractProperty;
 import io.sunshower.model.core.auth.*;
+import io.sunshower.model.core.events.ImageChangedEvent;
 import io.sunshower.service.security.PermissionsService;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceContext;
+import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationListener;
 import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.security.acls.model.Permission;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,9 +27,12 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Transactional
-public class DefaultUserService implements UserService, UserDetailsService {
+public class DefaultUserService
+    implements UserService, UserDetailsService, ApplicationListener<ImageChangedEvent> {
 
+  @Inject private ApplicationContext context;
   @Inject private PermissionsService<Permission> permissionsService;
 
   @PersistenceContext private EntityManager entityManager;
@@ -51,19 +60,21 @@ public class DefaultUserService implements UserService, UserDetailsService {
   }
 
   @Override
-  @Cacheable(value = "users", key = "#id")
+  @Transactional(readOnly = true)
+  @Cacheable(value = "caches:spring:authentication", key = "#id")
   public User get(Identifier id) {
-    return entityManager.find(User.class, id);
+    val eager = createEagerHints();
+    return entityManager.find(User.class, id, eager);
   }
 
   @Override
-  @Cacheable(value = "userdata", key = "#userId")
+  @Cacheable(value = "caches:spring:authentication:configuration", key = "#userId")
   public Configuration getConfiguration(Identifier userId) {
     return entityManager.find(User.class, userId).getConfiguration();
   }
 
   @Override
-  @CacheEvict(value = "users", key = "#id")
+  @CacheEvict(value = "caches:spring:authentication", key = "#id")
   public User delete(Identifier id) {
     val user = get(id);
     entityManager.remove(user);
@@ -72,7 +83,7 @@ public class DefaultUserService implements UserService, UserDetailsService {
   }
 
   @Override
-  @CacheEvict(value = "userdata", key = "#userId")
+  @CacheEvict(value = "caches:spring:authentication:configuration", key = "#userId")
   public void setConfiguration(
       Identifier userId, Collection<? extends AbstractProperty> properties) {
     val user = get(userId);
@@ -145,5 +156,30 @@ public class DefaultUserService implements UserService, UserDetailsService {
       return users.get(0);
     }
     throw new UsernameNotFoundException("Failed to locate user: " + username);
+  }
+
+  private Map<String, Object> createEagerHints() {
+    val g = entityManager.getEntityGraph("sunshower:user:eager");
+    val m = new HashMap<String, Object>();
+    m.put("javax.persistence.fetchgraph", g);
+    return m;
+  }
+
+  @CacheEvict(value = "caches:spring:authentication", key = "#id")
+  public void evict(Identifier id) {}
+
+  @Override
+  public void onApplicationEvent(ImageChangedEvent event) {
+    val targetType = event.getTargetType();
+    if (Details.class.equals(targetType)) {
+      val id =
+          entityManager
+              .createQuery(
+                  "select distinct u.id from User u join u.details d where d.id = :id",
+                  Identifier.class)
+              .setParameter("id", event.getIdentifier())
+              .getSingleResult();
+      context.getBean(UserService.class).evict(id);
+    }
   }
 }

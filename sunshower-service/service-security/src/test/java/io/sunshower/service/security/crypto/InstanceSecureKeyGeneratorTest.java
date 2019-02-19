@@ -25,4 +25,9 @@ class InstanceSecureKeyGeneratorTest {
   void ensureStringLengthIsCorrect() {
     assertThat(provider.getKey().length(), is(44));
   }
+
+  @Test
+  void ensurePaddingIsCorrect() {
+    System.out.println(provider.regenerate());
+  }
 }

@@ -8,6 +8,9 @@ import org.jasypt.util.text.TextEncryptor;
 
 public class ClusterTokenBasedStrongEncryptor implements TextEncryptor {
 
+  final Object lock = new Object();
+
+  private volatile StrongTextEncryptor encryptor;
   private final Provider<EncryptionService> service;
 
   public ClusterTokenBasedStrongEncryptor(Provider<EncryptionService> encryptionService) {
@@ -16,8 +19,7 @@ public class ClusterTokenBasedStrongEncryptor implements TextEncryptor {
 
   @Override
   public String encrypt(String message) {
-    StrongTextEncryptor t = getEncryptor();
-    return t.encrypt(message);
+    return getEncryptor().encrypt(message);
   }
 
   @Override
@@ -26,9 +28,17 @@ public class ClusterTokenBasedStrongEncryptor implements TextEncryptor {
   }
 
   private StrongTextEncryptor getEncryptor() {
-    val svc = service.get();
-    val t = new StrongTextEncryptor();
-    t.setPassword(svc.getClusterToken().getToken());
-    return t;
+    StrongTextEncryptor lenc = encryptor;
+    if (lenc == null) {
+      synchronized (lock) {
+        lenc = encryptor;
+        if (lenc == null) {
+          val svc = service.get();
+          encryptor = (lenc = new StrongTextEncryptor());
+          encryptor.setPassword(svc.getClusterToken().getToken());
+        }
+      }
+    }
+    return lenc;
   }
 }

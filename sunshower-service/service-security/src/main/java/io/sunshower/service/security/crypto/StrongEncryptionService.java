@@ -32,8 +32,6 @@ public class StrongEncryptionService implements EncryptionService {
 
   static final Hashes.HashFunction hashFunction = Hashes.create(Multihash.Type.SHA_2_256);
 
-  static final Object lock = new Object();
-
   private final KeyProvider provider;
   private final TextEncryptor encrypter;
 
@@ -110,14 +108,12 @@ public class StrongEncryptionService implements EncryptionService {
             .createQuery("select distinct c from ClusterToken c", ClusterToken.class)
             .getResultList();
     if (tokens.isEmpty()) {
-      synchronized (lock) {
-        log.info("Cluster Token was not found.  Generating a new one");
-        val token = new ClusterToken();
-        val key = provider.regenerate();
-        token.setToken(key);
-        entityManager.persist(token);
-        return token;
-      }
+      log.info("Cluster Token was not found.  Generating a new one");
+      val token = new ClusterToken();
+      val key = provider.regenerate();
+      token.setToken(key);
+      entityManager.persist(token);
+      return token;
     }
     if (tokens.size() > 1) {
       throw new IllegalStateException(
@@ -129,13 +125,11 @@ public class StrongEncryptionService implements EncryptionService {
   @Override
   @Transactional(isolation = Isolation.REPEATABLE_READ)
   public ClusterToken refreshClusterToken() {
-    synchronized (lock) {
-      provider.regenerate();
-      val token = getClusterToken();
-      entityManager.remove(token);
-      entityManager.flush();
-      return getClusterToken();
-    }
+    provider.regenerate();
+    val token = getClusterToken();
+    entityManager.remove(token);
+    entityManager.flush();
+    return getClusterToken();
   }
 
   private boolean isLogoutRequest(String token) {

@@ -31,4 +31,6 @@ public interface UserService {
 
   @PreAuthorize("hasAuthority('admin')")
   List<User> inactiveUsers();
+
+  void evict(Identifier id);
 }
