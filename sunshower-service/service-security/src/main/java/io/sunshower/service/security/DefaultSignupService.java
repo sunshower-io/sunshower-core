@@ -6,8 +6,6 @@ import io.sunshower.core.security.crypto.EncryptionService;
 import io.sunshower.model.core.auth.Details;
 import io.sunshower.model.core.auth.Role;
 import io.sunshower.model.core.auth.User;
-import io.sunshower.security.api.ProductService;
-import io.sunshower.service.signup.Product;
 import io.sunshower.service.signup.RegistrationRequest;
 import io.sunshower.service.signup.SignupService;
 import java.util.Collections;
@@ -32,8 +30,6 @@ public class DefaultSignupService implements SignupService {
 
   @Inject private RoleService roleService;
 
-  @Inject private ProductService products;
-
   @Inject private EncryptionService encryptionService;
 
   @PersistenceContext private EntityManager entityManager;
@@ -47,26 +43,11 @@ public class DefaultSignupService implements SignupService {
 
   @Override
   public RegistrationRequest signup(User user, List<String> productIds) {
-
-    final List<Product> products;
-    if (productIds.isEmpty()) {
-      products = Collections.emptyList();
-    } else {
-      products =
-          entityManager
-              .createQuery(
-                  "select distinct(p) " + "from Product p " + "where p.name in :names",
-                  Product.class)
-              .setParameter("names", productIds)
-              .getResultList();
-    }
-
     if (user.getRoles() != null) {
       user.getRoles().clear();
     }
-    user.setActive(false);
+    user.setActive(true);
     final RegistrationRequest registrationRequest = new RegistrationRequest(user);
-    for (Product p : products) {}
     entityManager.persist(registrationRequest);
 
     final Role role = roleService.findOrCreate(DefaultRoles.TENANT_USER.toRole());
@@ -139,8 +120,8 @@ public class DefaultSignupService implements SignupService {
   public User revoke(Identifier uuid) {
     User user = entityManager.find(User.class, uuid);
     if (user != null) {
-      user.setActive(false);
       signup(user);
+      user.setActive(false);
       return user;
     } else {
       throw new EntityNotFoundException("No user identified by '" + uuid + "' was found!");

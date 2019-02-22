@@ -105,7 +105,7 @@ public class DefaultSignupServiceTest extends SecurityTest {
     user.getDetails().setEmailAddress("frapadap@gmail.com");
     RegistrationRequest request = localService.signup(user);
     User u = request.getUser();
-    assertThat(u.isEnabled(), is(false));
+    assertThat(u.isEnabled(), is(true));
     List<RegistrationRequest> registrationRequests = localService.pendingRegistrations();
     assertThat(registrationRequests.isEmpty(), is(false));
     entityManager.remove(u);
