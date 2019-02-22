@@ -2,7 +2,6 @@ package io.io.sunshower.service.security;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import io.sunshower.core.security.AuthenticationService;
@@ -69,12 +68,7 @@ class AuthenticationTest extends SecurityTest {
                 RegistrationRequest.class)
             .setParameter("id", user.getId())
             .getSingleResult();
-    try {
-      authenticationService.authenticate(user2);
-      fail("Should have failed with inactive user");
-    } catch (InvalidCredentialException ex) {
-
-    }
+    authenticationService.authenticate(user2);
     service.approve(singleResult.getRequestId());
 
     Authentication token = authenticationService.authenticate(user2);

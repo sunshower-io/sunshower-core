@@ -48,6 +48,18 @@ class ClusterTokenBasedStrongEncryptorTest {
     assertThat("hello", is(enc));
   }
 
+  @Test
+  void ensureEncryptionIsIdempotentUnderClusterToken() {
+    keyProvider = mock(KeyProvider.class);
+    doReturn("12144134134134134134343145135134").when(keyProvider).getKey();
+    token = new ClusterToken();
+    token.setToken(keyProvider.getKey());
+    service = mock(EncryptionService.class);
+    doReturn(token).when(service).getClusterToken();
+    encryptor = new ClusterTokenBasedStrongEncryptor(new IdentityProvider());
+    System.out.println(encryptor.encrypt("helloworld"));
+  }
+
   class IdentityProvider implements Provider<EncryptionService> {
 
     @Override
