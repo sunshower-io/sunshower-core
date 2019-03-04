@@ -23,7 +23,6 @@ allprojects {
     apply plugin: 'io.spring.dependency-management'
 
 
-
     spotless {
         java {
             googleJavaFormat('1.5')
@@ -65,17 +64,19 @@ allprojects {
     repositories {
         mavenLocal()
         repos.each { repo ->
-            maven { url "$repo" }
+            maven {
+                url "$repo"
+                credentials {
+                    username mavenRepositoryUsername
+                    password mavenRepositoryPassword
+                }
+            }
         }
     }
 
     dependencyManagement {
         imports {
-            mavenBom("io.sunshower.core:bom-imported:${version}") {
-                bomProperties([
-                        'env.version': '1.0.13-SNAPSHOT'
-                ])
-            }
+            mavenBom("io.sunshower.core:bom-imported:${version}")
         }
     }
 
@@ -97,10 +98,8 @@ allprojects {
             testCompile('org.junit.platform:junit-platform-launcher')
             testCompile('org.junit.platform:junit-platform-commons')
             testCompile('org.junit.jupiter:junit-jupiter-engine')
-            testCompile('org.junit.vintage:junit-vintage-engine')
         }
     }
-
 
 
     test {
