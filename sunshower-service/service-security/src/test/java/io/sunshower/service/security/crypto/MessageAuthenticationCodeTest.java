@@ -1,7 +1,7 @@
 package io.sunshower.service.security.crypto;
 
 import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 import io.sunshower.core.security.InvalidTokenException;
 import io.sunshower.model.core.vault.KeyProvider;

@@ -1,7 +1,7 @@
 package io.sunshower.service.git;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 import io.sunshower.io.Files;
 import io.sunshower.service.revision.model.Revision;

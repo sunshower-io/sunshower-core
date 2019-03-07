@@ -1,7 +1,7 @@
 package io.sunshower.model.core.auth;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 import io.sunshower.model.core.PersistenceTest;
 import javax.persistence.EntityManager;
