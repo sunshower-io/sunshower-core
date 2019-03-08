@@ -2,7 +2,7 @@ package io.sunshower.service.ext;
 
 import static io.sunshower.service.ext.BaseUserServiceTest.testUser;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import io.sunshower.core.security.RoleService;

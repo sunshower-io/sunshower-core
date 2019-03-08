@@ -1,7 +1,7 @@
 package io.sunshower.service.signup;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 import io.sunshower.jpa.flyway.FlywayConfiguration;
 import io.sunshower.model.core.PersistenceConfiguration;

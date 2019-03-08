@@ -1,5 +1,4 @@
 dependencies {
-    testCompile 'org.junit.platform:junit-platform-runner'
     implementation 'javax.inject:javax.inject'
     implementation 'org.springframework:spring-core'
 }

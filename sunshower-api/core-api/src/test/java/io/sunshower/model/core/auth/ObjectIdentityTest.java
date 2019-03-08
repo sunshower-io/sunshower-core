@@ -2,7 +2,7 @@ package io.sunshower.model.core.auth;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.*;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 import io.sunshower.common.Identifier;
 import io.sunshower.model.core.PersistenceTest;

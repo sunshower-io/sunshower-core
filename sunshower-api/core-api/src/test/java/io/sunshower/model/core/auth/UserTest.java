@@ -3,7 +3,7 @@ package io.sunshower.model.core.auth;
 import static java.lang.System.out;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.*;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.util.Collections;
 import javax.xml.bind.JAXBException;

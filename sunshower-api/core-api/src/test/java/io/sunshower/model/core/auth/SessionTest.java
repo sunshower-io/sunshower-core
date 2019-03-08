@@ -1,7 +1,8 @@
 package io.sunshower.model.core.auth;
 
 import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import io.sunshower.common.Identifier;
 import io.sunshower.test.common.SerializationAware;

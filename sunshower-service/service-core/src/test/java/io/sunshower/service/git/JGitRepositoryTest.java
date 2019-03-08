@@ -1,7 +1,8 @@
 package io.sunshower.service.git;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import io.sunshower.model.core.auth.Keypair;
 import io.sunshower.model.core.auth.Tenant;

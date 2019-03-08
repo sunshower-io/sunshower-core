@@ -1,8 +1,9 @@
 package io.io.sunshower.service.security;
 
 import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import io.sunshower.common.Identifier;
 import io.sunshower.common.crypto.Hashes;
@@ -91,7 +92,7 @@ public class DefaultSignupServiceTest extends SecurityTest {
             .pendingRegistrations()
             .stream()
             .allMatch(t -> t.getUser().getDetails().getEmailAddress() != null);
-    assertTrue("All users must have an e-mail address", b);
+    assertTrue(b, "All users must have an e-mail address");
     User revoke = localService.revoke(user.getId());
     assertThat(localService.pendingRegistrations().size(), is(1));
   }

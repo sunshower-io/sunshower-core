@@ -1,7 +1,7 @@
 package io.sunshower.scopes.conversation;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 import io.sunshower.model.core.vault.KeyProvider;
 import io.sunshower.service.security.crypto.InstanceSecureKeyGenerator;

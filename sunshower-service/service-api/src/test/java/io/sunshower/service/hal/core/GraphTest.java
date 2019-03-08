@@ -3,7 +3,7 @@ package io.sunshower.service.hal.core;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.*;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 import io.sunshower.model.core.Property;
 import io.sunshower.test.common.SerializationAware;
