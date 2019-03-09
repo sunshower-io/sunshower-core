@@ -4,7 +4,7 @@ import io.sunshower.common.Identifier;
 import io.sunshower.core.security.UserService;
 import io.sunshower.model.core.AbstractProperty;
 import io.sunshower.model.core.auth.*;
-import io.sunshower.model.core.events.ImageChangedEvent;
+import io.sunshower.model.core.events.CacheEvictionEvent;
 import io.sunshower.service.security.PermissionsService;
 import java.util.Collection;
 import java.util.HashMap;
@@ -30,7 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @Transactional
 public class DefaultUserService
-    implements UserService, UserDetailsService, ApplicationListener<ImageChangedEvent> {
+    implements UserService, UserDetailsService, ApplicationListener<CacheEvictionEvent> {
 
   @Inject private ApplicationContext context;
   @Inject private PermissionsService<Permission> permissionsService;
@@ -169,7 +169,7 @@ public class DefaultUserService
   public void evict(Identifier id) {}
 
   @Override
-  public void onApplicationEvent(ImageChangedEvent event) {
+  public void onApplicationEvent(CacheEvictionEvent event) {
     val targetType = event.getTargetType();
     if (Details.class.equals(targetType)) {
       val id =
@@ -180,6 +180,8 @@ public class DefaultUserService
               .setParameter("id", event.getIdentifier())
               .getSingleResult();
       context.getBean(UserService.class).evict(id);
+    } else if (User.class.equals(targetType)) {
+      context.getBean(UserService.class).evict(event.getIdentifier());
     }
   }
 }
