@@ -56,7 +56,7 @@ public class GitRepositoryTestCase extends SerializationTestCase {
     final User user = new User();
     user.setUsername("joe");
     user.getDetails().setEmailAddress("joe@whatever.com");
-    user.getDetails().setFirstname("frapper");
+    user.getDetails().setName("frapper");
     user.getDetails().setLastname("dapper");
 
     repository = new JGitRepository(repo, user);

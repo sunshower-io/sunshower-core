@@ -9,7 +9,6 @@ import io.sunshower.model.core.auth.Token;
 import io.sunshower.model.core.auth.User;
 import java.util.Date;
 import javax.inject.Inject;
-
 import lombok.val;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;

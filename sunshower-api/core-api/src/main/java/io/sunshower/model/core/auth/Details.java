@@ -66,7 +66,7 @@ public class Details extends ImageAware {
   @PrePersist
   protected void setDefaults() {
     super.setDefaults();
-    if(loginCount == null) {
+    if (loginCount == null) {
       loginCount = 0;
     }
   }
@@ -75,4 +75,7 @@ public class Details extends ImageAware {
     return getName();
   }
 
+  public void setFirstName(String name) {
+    setName(name);
+  }
 }

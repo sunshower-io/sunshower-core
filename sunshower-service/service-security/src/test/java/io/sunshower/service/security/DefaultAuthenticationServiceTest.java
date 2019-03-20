@@ -11,7 +11,6 @@ import io.sunshower.service.signup.SignupService;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-
 import lombok.val;
 import org.junit.jupiter.api.Test;
 
@@ -33,8 +32,14 @@ public class DefaultAuthenticationServiceTest extends SecurityTest {
     user.setPassword("password");
     user.getDetails().setEmailAddress("test@whatever.com");
     signupService.signup(user);
-    authenticationService.authenticate(user);
+
+    val auth = new User();
+    auth.setUsername("test");
+    auth.setPassword("password");
+    auth.getDetails().setEmailAddress("test@whatever.com");
+
+    authenticationService.authenticate(auth);
     val u = entityManager.find(User.class, user.getId());
-    assertThat(u.getDetails().getLoginCount(), is(0));
+    assertThat(u.getDetails().getLoginCount(), is(1));
   }
 }
