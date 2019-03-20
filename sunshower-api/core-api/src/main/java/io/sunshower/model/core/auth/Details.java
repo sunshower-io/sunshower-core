@@ -21,6 +21,9 @@ public class Details extends ImageAware {
   @Convert(converter = LocaleConverter.class)
   private Locale locale;
 
+  @Column(name = "login_count")
+  private Integer loginCount;
+
   @Basic
   @Size(min = 3, max = 255)
   private String lastname;
@@ -51,81 +54,25 @@ public class Details extends ImageAware {
   @JoinColumn(name = "root_id", insertable = false, updatable = false)
   private File root;
 
-  public Details() {}
+  public Details() {
+    super();
+  }
 
   public Details(User user) {
     this.user = user;
   }
 
-  public File getRoot() {
-    return root;
+  @Override
+  @PrePersist
+  protected void setDefaults() {
+    super.setDefaults();
+    if(loginCount == null) {
+      loginCount = 0;
+    }
   }
 
-  public void setRoot(File root) {
-    this.root = root;
-  }
-
-  public Date getActiveUntil() {
-    return activeUntil;
-  }
-
-  public void setActiveUntil(Date activeUntil) {
-    this.activeUntil = activeUntil;
-  }
-
-  public String getPhoneNumber() {
-    return phoneNumber;
-  }
-
-  public void setPhoneNumber(String phoneNumber) {
-    this.phoneNumber = phoneNumber;
-  }
-
-  public User getUser() {
-    return user;
-  }
-
-  public void setUser(User user) {
-    this.user = user;
-  }
-
-  public Date getRegistered() {
-    return registered;
-  }
-
-  public void setRegistered(Date registered) {
-    this.registered = registered;
-  }
-
-  public Date getLastActive() {
-    return lastActive;
-  }
-
-  public void setLastActive(Date lastActive) {
-    this.lastActive = lastActive;
-  }
-
-  public String getFirstname() {
+  public String getFirstName() {
     return getName();
   }
 
-  public void setFirstname(String firstname) {
-    setName(firstname);
-  }
-
-  public String getLastname() {
-    return lastname;
-  }
-
-  public void setLastname(String lastname) {
-    this.lastname = lastname;
-  }
-
-  public String getEmailAddress() {
-    return emailAddress;
-  }
-
-  public void setEmailAddress(String emailAddress) {
-    this.emailAddress = emailAddress;
-  }
 }

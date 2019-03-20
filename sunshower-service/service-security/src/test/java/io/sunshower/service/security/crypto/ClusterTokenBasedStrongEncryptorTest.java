@@ -29,7 +29,7 @@ class ClusterTokenBasedStrongEncryptorTest {
     token.setToken(keyProvider.getKey());
     service = mock(EncryptionService.class);
     doReturn(token).when(service).getClusterToken();
-    encryptor = new ClusterTokenBasedStrongEncryptor(new IdentityProvider());
+    encryptor = new ClusterTokenBasedStrongEncryptor(new IdentityProvider(), keyProvider);
   }
 
   @Test
@@ -43,7 +43,7 @@ class ClusterTokenBasedStrongEncryptorTest {
   @Test
   void ensureMultipleEncryptorsEncryptSameData() {
     val encrypted = encryptor.encrypt("hello");
-    val next = new ClusterTokenBasedStrongEncryptor(new IdentityProvider());
+    val next = new ClusterTokenBasedStrongEncryptor(new IdentityProvider(), keyProvider);
     val enc = next.decrypt(encrypted);
     assertThat("hello", is(enc));
   }
@@ -56,7 +56,7 @@ class ClusterTokenBasedStrongEncryptorTest {
     token.setToken(keyProvider.getKey());
     service = mock(EncryptionService.class);
     doReturn(token).when(service).getClusterToken();
-    encryptor = new ClusterTokenBasedStrongEncryptor(new IdentityProvider());
+    encryptor = new ClusterTokenBasedStrongEncryptor(new IdentityProvider(), keyProvider);
     System.out.println(encryptor.encrypt("helloworld"));
   }
 

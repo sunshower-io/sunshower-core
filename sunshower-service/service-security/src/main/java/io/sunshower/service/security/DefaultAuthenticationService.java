@@ -9,6 +9,8 @@ import io.sunshower.model.core.auth.Token;
 import io.sunshower.model.core.auth.User;
 import java.util.Date;
 import javax.inject.Inject;
+
+import lombok.val;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,10 +26,10 @@ public class DefaultAuthenticationService implements AuthenticationService {
   @Override
   @Transactional(noRollbackFor = InvalidCredentialException.class)
   public Authentication authenticate(User user) {
-    final String username = user.getUsername();
-    final String password = user.getPassword();
+    val username = user.getUsername();
+    val password = user.getPassword();
     try {
-      final User u = userService.findByUsername(username);
+      val u = userService.findByUsername(username);
       if (encryptionService.matches(password, u.getPassword())) {
         if (!u.isEnabled()) {
           throw new InvalidCredentialException(
@@ -35,8 +37,10 @@ public class DefaultAuthenticationService implements AuthenticationService {
                   + "If you believe "
                   + "this is in error, please contact your system administrator");
         }
-        final String token = encryptionService.createToken(u);
-        u.getDetails().setLastActive(new Date());
+        val token = encryptionService.createToken(u);
+        val details = u.getDetails();
+        details.setLastActive(new Date());
+        details.setLoginCount(details.getLoginCount() + 1);
         return new Authentication(u, new Token(token, new Date()));
       }
     } catch (UsernameNotFoundException ex) {
@@ -49,7 +53,7 @@ public class DefaultAuthenticationService implements AuthenticationService {
 
   @Override
   public Authentication validate(Token token) {
-    final User user = encryptionService.findByToken(token.getToken());
+    val user = encryptionService.findByToken(token.getToken());
     return new Authentication(user, token);
   }
 }

@@ -162,9 +162,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
   }
 
   @Bean
-  public TextEncryptor textEncryptor(ApplicationContext context) {
+  public TextEncryptor textEncryptor(ApplicationContext context, KeyProvider provider) {
     return new ClusterTokenBasedStrongEncryptor(
-        new NamedLazyObjectProvider<>("encryptionService", EncryptionService.class, context));
+        new NamedLazyObjectProvider<>("encryptionService", EncryptionService.class, context),
+        provider);
   }
 
   @Bean

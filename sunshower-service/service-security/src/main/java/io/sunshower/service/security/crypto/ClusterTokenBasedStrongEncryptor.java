@@ -1,20 +1,24 @@
 package io.sunshower.service.security.crypto;
 
 import io.sunshower.core.security.crypto.EncryptionService;
+import io.sunshower.model.core.vault.KeyProvider;
 import javax.inject.Provider;
 import lombok.val;
 import org.jasypt.encryption.pbe.PooledPBEStringEncryptor;
-import org.jasypt.salt.StringFixedSaltGenerator;
+import org.jasypt.salt.RandomSaltGenerator;
 import org.jasypt.util.text.TextEncryptor;
 
 public class ClusterTokenBasedStrongEncryptor implements TextEncryptor {
 
   final Object lock = new Object();
 
+  private final KeyProvider provider;
   private volatile TextEncryptor encryptor;
   private final Provider<EncryptionService> service;
 
-  public ClusterTokenBasedStrongEncryptor(Provider<EncryptionService> encryptionService) {
+  public ClusterTokenBasedStrongEncryptor(
+      Provider<EncryptionService> encryptionService, KeyProvider provider) {
+    this.provider = provider;
     this.service = encryptionService;
   }
 
@@ -35,12 +39,13 @@ public class ClusterTokenBasedStrongEncryptor implements TextEncryptor {
         lenc = encryptor;
         if (lenc == null) {
           val svc = service.get();
-          val token = svc.getClusterToken().getToken();
+          //          val token = svc.getClusterToken().getToken();
 
           val encryptor = new PooledPBEStringEncryptor();
-          val saltGenerator = new StringFixedSaltGenerator(token);
+          //          val saltGenerator = new StringFixedSaltGenerator(token);
+          val saltGenerator = new RandomSaltGenerator();
           encryptor.setSaltGenerator(saltGenerator);
-          encryptor.setPassword(token);
+          encryptor.setPassword(provider.getKey());
           encryptor.setPoolSize(10);
           this.encryptor = lenc = new DelegatingTextEncryptor(encryptor);
         }
