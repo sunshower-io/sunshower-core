@@ -25,8 +25,9 @@ public class Details extends ImageAware {
   private Integer loginCount;
 
   @Basic
+  @Column(name = "lastname")
   @Size(min = 3, max = 255)
-  private String lastname;
+  private String lastName;
 
   @Temporal(TemporalType.TIMESTAMP)
   @Column(name = "active_until")

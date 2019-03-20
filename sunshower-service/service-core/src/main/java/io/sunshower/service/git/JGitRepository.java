@@ -167,7 +167,7 @@ public class JGitRepository implements GitRepository {
     Details details = session.getDetails();
     PersonIdent ident =
         new PersonIdent(
-            details.getFirstName() + " " + details.getLastname(), details.getEmailAddress());
+            details.getFirstName() + " " + details.getLastName(), details.getEmailAddress());
     try {
       RevCommit call = git.commit().setAuthor(ident).setCommitter(ident).setMessage(message).call();
       return RevisionUtils.fromCommit(call);
