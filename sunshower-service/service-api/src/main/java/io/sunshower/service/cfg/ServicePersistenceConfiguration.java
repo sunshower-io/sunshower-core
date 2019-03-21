@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @Persistence(
   id = "audit",
+  order = 0,
   migrationLocations = "classpath:{dialect}",
   scannedPackages = {
     "io.sunshower.service.model",

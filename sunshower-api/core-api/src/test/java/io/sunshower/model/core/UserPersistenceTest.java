@@ -13,6 +13,7 @@ import java.util.Date;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import lombok.SneakyThrows;
+import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.annotation.Rollback;
@@ -189,5 +190,15 @@ class UserPersistenceTest extends PersistenceTest {
 
     assertThat(entityManager.find(Tenant.class, tenant.getId()).getUsers().size(), is(1));
     assertThat(entityManager.find(Tenant.class, tenant.getId()).getChildren().size(), is(1));
+  }
+
+  @Test
+  void ensureUserDetailsAreCorrect() {
+    entityManager.persist(user);
+    assertThat(entityManager.find(User.class, user.getId()).getDetails().getLoginCount(), is(0));
+    val u = entityManager.find(User.class, user.getId());
+    u.getDetails().setLoginCount(u.getDetails().getLoginCount() + 1);
+    entityManager.flush();
+    assertThat(entityManager.find(User.class, user.getId()).getDetails().getLoginCount(), is(1));
   }
 }

@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @Persistence(
+  order = 0,
   id = "audit",
   schema = "SUNSHOWER",
   migrationLocations = "classpath:{dialect}",
