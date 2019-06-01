@@ -1,42 +1,51 @@
-
-
-
 dependencies {
-    api project(':sunshower-service:service-common')
-    api project(':sunshower-service:service-api')
-    api project(':sunshower-service:service-security')
-
-    implementation 'com.google.guava:guava'
-    implementation 'org.hibernate:hibernate-search-orm'
-    implementation 'org.springframework:spring-websocket'
-    implementation 'org.springframework:spring-tx'
-    implementation 'org.springframework:spring-orm'
-    implementation 'org.springframework:spring-messaging'
-    implementation 'org.springframework:spring-web'
-    implementation 'org.springframework:spring-webmvc'
-    implementation 'io.reactivex.rxjava2:rxjava'
-    implementation project(':sunshower-api:security-api')
-    implementation project(':sunshower-schemata:schemata')
-    implementation 'io.sunshower.persist:persist-api'
-
-    implementation 'org.eclipse.jgit:org.eclipse.jgit'
-    implementation 'org.eclipse.jgit:org.eclipse.jgit.lfs'
-
-
-    implementation 'io.sunshower.persist:persist-hibernate'
-    implementation 'io.sunshower.persist:persist-ignite'
-
-    
-    implementation 'org.springframework.security:spring-security-config'
-    implementation 'org.springframework.security:spring-security-messaging'
-    testImplementation 'io.sunshower.test:test-persist'
-
-
-
-    implementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: '1.2.71'
-
-
-
-    implementation 'io.sunshower:jdenticon-kotlin'
-    testImplementation 'io.sunshower:jdenticon-kotlin'
+//    implementation 'io.reactivex.rxjava2:rxjava'
+//    implementation project(':sunshower-api:core-api')
+//
+//    testImplementation 'io.sunshower.test:test-persist'
+//
+//
+//    [
+//            'infinispan-core',
+//            'infinispan-hibernate-cache-v53'
+//    ].each {
+//        api "org.infinispan:$it:9.4.14.Final"
+//    }
+//
+//
+//    api project(':sunshower-service:service-common')
+//    api project(':sunshower-service:service-api')
+//    api project(':sunshower-service:service-security')
+//
+//    implementation 'com.google.guava:guava'
+//    implementation 'org.hibernate:hibernate-search-orm'
+//    implementation 'org.springframework:spring-websocket'
+//    implementation 'org.springframework:spring-tx'
+//    implementation 'org.springframework:spring-orm'
+//    implementation 'org.springframework:spring-messaging'
+//    implementation 'org.springframework:spring-web'
+//    implementation 'org.springframework:spring-webmvc'
+//    implementation 'io.reactivex.rxjava2:rxjava'
+//    implementation project(':sunshower-api:security-api')
+//    implementation project(':sunshower-schemata:schemata')
+//    implementation 'io.sunshower.persist:persist-api'
+//
+//    implementation 'org.eclipse.jgit:org.eclipse.jgit'
+//    implementation 'org.eclipse.jgit:org.eclipse.jgit.lfs'
+//
+//
+//    implementation 'io.sunshower.persist:persist-hibernate'
+//    implementation 'io.sunshower.persist:persist-ignite'
+//
+//
+//    implementation 'org.springframework.security:spring-security-config'
+//    implementation 'org.springframework.security:spring-security-messaging'
+//    testImplementation 'io.sunshower.test:test-persist'
+//
+//
+//
+//
+//    implementation 'io.sunshower:jdenticon-kotlin'
+//    testImplementation 'io.sunshower:jdenticon-kotlin'
+//    implementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: '1.2.71'
 }
