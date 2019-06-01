@@ -1,26 +1,23 @@
 apply plugin: 'java'
 dependencies {
-    implementation 'org.slf4j:slf4j-api'
-    implementation 'com.zaxxer:HikariCP'
-    implementation 'com.google.guava:guava'
 
+
+    api project(':sunshower-api:security-api')
     api project(':sunshower-service:service-api')
-    api project(":sunshower-api:core-api")
-    api project(":sunshower-api:security-api")
 
-    api 'org.springframework:spring-web'
-    api 'org.springframework.security:spring-security-core'
-    api 'org.springframework.security:spring-security-acl'
-    api 'org.springframework.security:spring-security-web'
-    api 'org.springframework.security:spring-security-config'
-    api 'io.sunshower.persist:persist-ignite'
-    api 'io.sunshower.persist:persist-hibernate'
+    implementation 'com.google.guava:guava'
+    implementation project(':sunshower-api:core-api')
 
-    api "org.jasypt:jasypt"
 
-    implementation 'javax.servlet:javax.servlet-api'
-    testCompile 'com.fasterxml.jackson.core:jackson-databind'
+
+    [
+            'infinispan-core',
+            'infinispan-hibernate-cache-v53'
+    ].each {
+        api "org.infinispan:$it:9.4.14.Final"
+    }
+    implementation 'org.infinispan:infinispan-spring5-embedded:9.4.14.Final'
+
 
     testImplementation 'io.sunshower.test:test-persist'
-    implementation 'javax.annotation:javax.annotation-api'
 }

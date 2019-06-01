@@ -10,8 +10,6 @@ import io.sunshower.model.core.auth.Role;
 import io.sunshower.model.core.auth.User;
 import io.sunshower.test.persist.Principal;
 import javax.inject.Inject;
-import lombok.val;
-import org.apache.ignite.IgniteCache;
 import org.junit.jupiter.api.Test;
 import org.springframework.cache.CacheManager;
 import org.springframework.security.test.context.support.WithUserDetails;
@@ -34,14 +32,5 @@ class AuthenticationSessionTest extends SecurityTest {
   @WithUserDetails("josiah")
   void ensureDetailsWorks() {
     assertThat(session.getUserConfiguration(), is(not(nullValue())));
-  }
-
-  @Test
-  void ensureCacheSerializationWorks() {
-    IgniteCache<Object, Object> proxy =
-        (IgniteCache<Object, Object>) cacheManager.getCache("test").getNativeCache();
-    proxy.put("hello", new User());
-    val user = proxy.get("hello");
-    assertThat(user instanceof User, is(true));
   }
 }

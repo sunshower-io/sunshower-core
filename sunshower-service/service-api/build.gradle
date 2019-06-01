@@ -1,5 +1,5 @@
 dependencies {
-    implementation 'io.reactivex.rxjava2:rxjava'
+    api 'io.reactivex.rxjava2:rxjava'
     implementation project(':sunshower-api:core-api')
 
     testImplementation 'io.sunshower.test:test-persist'

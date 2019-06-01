@@ -1,6 +1,9 @@
 dependencies {
 
+    api "org.jasypt:jasypt"
     api project(':sunshower-api:core-api')
+    api 'org.springframework.security:spring-security-acl'
+    api 'org.springframework.security:spring-security-config'
 
     testImplementation 'io.sunshower.test:test-common'
     testImplementation 'io.sunshower.test:test-persist'
