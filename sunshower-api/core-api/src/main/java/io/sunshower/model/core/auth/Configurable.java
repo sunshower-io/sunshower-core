@@ -5,7 +5,6 @@ import io.sunshower.model.core.Property;
 import java.util.Collections;
 import java.util.List;
 import lombok.val;
-import lombok.var;
 
 public interface Configurable {
   Configuration getConfiguration();
