@@ -189,8 +189,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
   @Primary
   public SpringEmbeddedCacheManagerFactoryBean cacheManager() {
     return new SpringEmbeddedCacheManagerFactoryBean();
-    //    return new SpringEmb
-    //    return new DefaultCacheManager();
   }
 
   @Bean
