@@ -16,7 +16,6 @@ import java.util.Arrays;
 import java.util.List;
 import javax.inject.Inject;
 import lombok.val;
-import lombok.var;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

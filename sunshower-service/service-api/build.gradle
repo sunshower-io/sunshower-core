@@ -1,14 +1,15 @@
 dependencies {
-    compile 'javax.validation:validation-api'
-    compile project(':sunshower-api:core-api')
-    compile project(':sunshower-service:service-common')
+    api 'io.reactivex.rxjava2:rxjava'
+    implementation project(':sunshower-api:core-api')
 
-    testCompile 'io.sunshower.test:test-persist'
-    compile 'org.springframework:spring-core'
+    testImplementation 'io.sunshower.test:test-persist'
 
-    compile 'org.hibernate:hibernate-search-orm'
-    compile 'org.springframework:spring-websocket'
-    compile 'io.sunshower.common:core'
-    compile 'io.sunshower.persist:persist-api'
-    compile 'io.reactivex.rxjava2:rxjava'
+
+    [
+            'infinispan-core',
+            'infinispan-hibernate-cache-v53'
+    ].each {
+        api "org.infinispan:$it:9.4.14.Final"
+    }
+
 }

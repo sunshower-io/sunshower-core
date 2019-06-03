@@ -5,11 +5,10 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.*;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-/** Created by haswell on 5/22/17. */
 public class UrlValidatorTest {
 
   private UrlValidator urlValidator;
@@ -18,7 +17,7 @@ public class UrlValidatorTest {
     int amt;
 
     @Override
-    public int compareTo(@NotNull Person o) {
+    public int compareTo(@Nonnull Person o) {
       return Integer.compare(amt, o.amt);
     }
   }

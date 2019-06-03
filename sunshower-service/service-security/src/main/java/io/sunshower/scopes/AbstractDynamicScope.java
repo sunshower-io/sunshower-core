@@ -13,7 +13,6 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Provider;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
-import lombok.var;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.config.Scope;

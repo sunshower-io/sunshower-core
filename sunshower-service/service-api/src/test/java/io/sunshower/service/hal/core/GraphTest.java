@@ -8,7 +8,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import io.sunshower.model.core.Property;
 import io.sunshower.test.common.SerializationAware;
 import io.sunshower.test.common.SerializationTestCase;
-import org.jetbrains.annotations.NotNull;
+import javax.validation.constraints.NotNull;
 import org.junit.jupiter.api.Test;
 
 public class GraphTest extends SerializationTestCase {

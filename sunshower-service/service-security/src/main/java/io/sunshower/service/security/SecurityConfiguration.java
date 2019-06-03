@@ -25,8 +25,7 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 import javax.sql.DataSource;
 import lombok.val;
-import org.apache.ignite.IgniteCache;
-import org.apache.ignite.cache.spring.SpringCacheManager;
+import org.infinispan.spring.embedded.provider.SpringEmbeddedCacheManagerFactoryBean;
 import org.jasypt.util.text.TextEncryptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -108,10 +107,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
   @SuppressWarnings("unchecked")
   @Bean(name = "caches:spring:authentication")
   public Cache authenticationCache(CacheManager cacheManager) {
-    val springCache = cacheManager.getCache("caches:spring:authentication");
-    IgniteCache<?, ?> cache = (IgniteCache<?, ?>) springCache.getNativeCache();
-    cache.withKeepBinary();
-    return springCache;
+    return cacheManager.getCache("caches:spring:authentication");
   }
 
   @Bean
@@ -191,10 +187,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
   @Bean
   @Primary
-  public CacheManager springCacheManager() {
-    final SpringCacheManager springCacheManager = new SpringCacheManager();
-    springCacheManager.setIgniteInstanceName("sunshower-data-fabric");
-    return springCacheManager;
+  public SpringEmbeddedCacheManagerFactoryBean cacheManager() {
+    return new SpringEmbeddedCacheManagerFactoryBean();
   }
 
   @Bean
